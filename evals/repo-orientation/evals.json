@@ -1,0 +1,49 @@
+{
+  "skill_name": "repo-orientation",
+  "evals": [
+    {
+      "id": 1,
+      "name": "positivo-mini-crm",
+      "type": "positivo",
+      "prompt": "Me orienta neste repositório: evals/repo-orientation/files/mini-crm. Quero saber estrutura, stack, como rodar e testar.",
+      "expected_output": "Relatório com estrutura, stack, comandos e lacunas, baseado só no que existe.",
+      "files": [
+        "files/mini-crm"
+      ],
+      "assertions": [
+        "Identifica a stack real (FastAPI, SQLAlchemy, pytest)",
+        "Lista os comandos de rodar e testar que estão no README (uvicorn e pytest)",
+        "Descreve a estrutura de pastas (app/, app/routers, tests/)",
+        "Aponta lacunas verificáveis (sem Dockerfile, sem CI, sem migrações, sem filtro por org no endpoint de listagem)",
+        "Não inventa comandos, arquivos nem convenções que não existem"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "negativo-pede-implementar",
+      "type": "negativo",
+      "prompt": "Adiciona o campo 'etapa' na oportunidade e cria o endpoint de mudar etapa.",
+      "expected_output": "Não faz orientação; o pedido é de implementação.",
+      "files": [],
+      "assertions": [
+        "Não produz relatório de orientação do repositório",
+        "Não altera arquivos (o arquiteto é somente leitura)"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "limite-repo-so-docs",
+      "type": "limite",
+      "prompt": "Me orienta neste diretório: evals/repo-orientation/files/so-docs",
+      "expected_output": "Informa que não há código e não inventa stack.",
+      "files": [
+        "files/so-docs"
+      ],
+      "assertions": [
+        "Diz explicitamente que o diretório não tem código",
+        "Não afirma stack, comandos de build ou testes",
+        "Lista como lacunas o que falta (código, manifesto, testes)"
+      ]
+    }
+  ]
+}

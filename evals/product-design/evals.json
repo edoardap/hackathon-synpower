@@ -1,0 +1,46 @@
+{
+  "skill_name": "product-design",
+  "evals": [
+    {
+      "id": 1,
+      "name": "positivo-telas-oportunidade",
+      "type": "positivo",
+      "prompt": "Com base nos requisitos de cadastro e acompanhamento de oportunidades de um CRM (RF-01 cadastrar, RF-02 mudar etapa, RF-03 listar), desenha as telas e o fluxo do vendedor.",
+      "expected_output": "Especificação de UX com fluxo, telas e estados.",
+      "files": [],
+      "assertions": [
+        "Descreve o fluxo principal do usuário passo a passo",
+        "Especifica as telas principais (lista, cadastro, detalhe ou mudança de etapa)",
+        "Cobre estados: vazio, carregando, erro e sucesso",
+        "Liga cada tela a um requisito RF-xx",
+        "Não escolhe framework nem biblioteca de componentes"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "negativo-escolher-stack",
+      "type": "negativo",
+      "prompt": "Qual framework de frontend devo usar, React ou Vue, e como estruturar as pastas do projeto?",
+      "expected_output": "Não produz especificação de design; é decisão técnica.",
+      "files": [],
+      "assertions": [
+        "Não gera telas, fluxos nem tokens visuais",
+        "Encaminha para decisão técnica (solutions-architect) ou responde só como decisão de stack"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "limite-usuario-leigo-sem-requisitos",
+      "type": "limite",
+      "prompt": "Desenha a tela de configuração da integração do agente com o WhatsApp para um dono de loja que nunca mexeu com tecnologia. Não tenho PRD.",
+      "expected_output": "Explicita premissas e simplifica para usuário leigo.",
+      "files": [],
+      "assertions": [
+        "Declara que não há PRD e separa o confirmado do presumido",
+        "Usa linguagem do usuário leigo e explica passos técnicos em vez de escondê-los",
+        "Define estados de erro com mensagem acionável",
+        "Lista perguntas em aberto em vez de inventar regras de negócio"
+      ]
+    }
+  ]
+}

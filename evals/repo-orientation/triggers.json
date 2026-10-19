@@ -1,0 +1,50 @@
+[
+  {
+    "query": "acabei de clonar esse repo, me explica como ele está organizado e como rodar",
+    "should_trigger": true
+  },
+  {
+    "query": "quais comandos de build e de teste esse projeto usa?",
+    "should_trigger": true
+  },
+  {
+    "query": "me orienta nesse repositório antes de eu mexer: stack, convenções e estrutura",
+    "should_trigger": true
+  },
+  {
+    "query": "qual o padrão de commits e de branches desse repo?",
+    "should_trigger": true
+  },
+  {
+    "query": "é um monorepo? onde ficam os testes?",
+    "should_trigger": true
+  },
+  {
+    "query": "preciso entender esse projeto legado antes de propor uma arquitetura nova",
+    "should_trigger": true
+  },
+  {
+    "query": "adiciona o campo etapa na tabela de oportunidades e no model",
+    "should_trigger": false
+  },
+  {
+    "query": "explica o que essa função faz: def total(op): return op.amount * op.quantity",
+    "should_trigger": false
+  },
+  {
+    "query": "decide qual arquitetura usar pro novo módulo de relatórios",
+    "should_trigger": false
+  },
+  {
+    "query": "roda os testes e me diz o que quebrou",
+    "should_trigger": false
+  },
+  {
+    "query": "cria um repositório novo com a estrutura de pastas padrão de um projeto FastAPI",
+    "should_trigger": false
+  },
+  {
+    "query": "faz o code review desse PR e aponta os problemas",
+    "should_trigger": false
+  }
+]

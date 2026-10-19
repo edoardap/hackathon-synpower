@@ -1,0 +1,66 @@
+{
+  "skill_name": "architecture-patterns",
+  "evals": [
+    {
+      "id": 1,
+      "name": "positivo-multitenant-crm",
+      "type": "positivo",
+      "prompt": "Contexto: pequeno CRM multi-tenant (backend Python/FastAPI, frontend React, PostgreSQL). Funcionalidade: cadastro e acompanhamento de oportunidades comerciais, com regras de acesso por organização. Time de 3 devs, 5 dias para entregar. Como devo estruturar o backend e garantir o isolamento entre organizações? Preciso de uma recomendação defendida.",
+      "expected_output": "Recomendação defendida com contexto, forças, 2-4 opções (incluindo a mais simples), tabela de trade-offs, gatilho de revisão e perguntas em aberto.",
+      "files": [],
+      "assertions": [
+        "Apresenta de 2 a 4 opções reais, incluindo a mais simples (monolito/isolamento por coluna)",
+        "Compara as opções em uma tabela de trade-offs (ganha/paga/reversível)",
+        "Recomenda uma única opção e liga a justificativa a requisitos (prazo de 5 dias, time de 3, isolamento por organização)",
+        "Informa um gatilho de revisão (em que condição mudaria de ideia)",
+        "Lista perguntas em aberto ou premissas, sem inventar números (carga, custo, latência)",
+        "Cobre o isolamento entre organizações (ex.: filtro por org_id/RLS) como decisão explícita"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "negativo-bug-endpoint",
+      "type": "negativo",
+      "prompt": "Contexto: pequeno CRM multi-tenant (backend Python/FastAPI, frontend React, PostgreSQL). Funcionalidade: cadastro e acompanhamento de oportunidades comerciais, com regras de acesso por organização.\nO endpoint abaixo retorna 500 quando `amount` vem nulo. Corrige pra mim:\n```python\n@router.post(\"/opportunities\")\ndef create(op: OpportunityIn, db=Depends(get_db), org=Depends(current_org)):\n    total = op.amount * op.quantity\n    row = Opportunity(org_id=org.id, name=op.name, total=total)\n    db.add(row); db.commit()\n    return row\n```",
+      "expected_output": "Corrige o bug sem montar análise de arquitetura.",
+      "files": [],
+      "assertions": [
+        "Corrige o tratamento de amount/quantity nulos (validação ou default)",
+        "Não produz análise de arquitetura (sem tabela de opções de padrões, sem 'Decisão:' com forças e restrições)",
+        "Resposta curta e focada no código"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "limite-sem-dados",
+      "type": "limite",
+      "prompt": "Sistema novo de gestão de contratos. Monolito ou microsserviços? Não sei o prazo, o tamanho do time nem a carga esperada. Decide por mim e me diz os números que você acha que vão ser necessários.",
+      "expected_output": "Não inventa números; registra premissas/perguntas; recomenda o mais simples com gatilho de revisão.",
+      "files": [],
+      "assertions": [
+        "Não apresenta valores numéricos de prazo, tamanho de time, carga, latência ou disponibilidade, nem rotulados como premissa",
+        "Registra explicitamente o que falta (prazo, time, carga) como pergunta em aberto",
+        "Recomenda a opção mais simples (monolito modular) e justifica sem exigir os dados que faltam",
+        "Informa gatilho de revisão ligado a condições concretas (ex.: times independentes, escala independente)"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "positivo-design-tecnico",
+      "type": "positivo",
+      "prompt": "Com base no PRD em evals/architecture-patterns/files/prd-crm-oportunidades.md e no repositório evals/repo-orientation/files/mini-crm, escreve o design técnico da funcionalidade de oportunidades.",
+      "expected_output": "Documento de design técnico no modelo de references/design-doc.md.",
+      "files": [
+        "files/prd-crm-oportunidades.md"
+      ],
+      "assertions": [
+        "Segue as seções do modelo (visão geral com Mermaid, reuso, componentes, dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto)",
+        "A seção de reuso cita arquivos reais do mini-crm (app/main.py, app/models.py, app/routers/opportunities.py)",
+        "Cada componente aponta para RF-xx e define interfaces",
+        "A cobertura de dimensões trata autenticação/isolamento por organização e marca N/A com motivo onde não se aplica",
+        "O plano de implementação tem passos em ordem sem depender de passo posterior",
+        "Salva (ou propõe salvar) em docs/architecture/<nome>/design.md"
+      ]
+    }
+  ]
+}

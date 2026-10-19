@@ -1,0 +1,50 @@
+[
+  {
+    "query": "monolito ou microsserviços pro nosso CRM? o time tem 3 devs e a gente tem 5 dias",
+    "should_trigger": true
+  },
+  {
+    "query": "como organizo os módulos do backend pra ficar fácil extrair um serviço depois?",
+    "should_trigger": true
+  },
+  {
+    "query": "qual a melhor forma de isolar os dados de cada organização no banco, schema por tenant ou coluna org_id?",
+    "should_trigger": true
+  },
+  {
+    "query": "preciso decidir entre fila e chamada síncrona pra mandar notificações, me ajuda a comparar as opções",
+    "should_trigger": true
+  },
+  {
+    "query": "desenha o diagrama C4 de containers desse sistema em mermaid",
+    "should_trigger": true
+  },
+  {
+    "query": "o PRD já foi aprovado, como eu estruturo a arquitetura do sistema?",
+    "should_trigger": true
+  },
+  {
+    "query": "esse endpoint retorna 500 quando amount é null, corrige: def create(op): total = op.amount * op.quantity",
+    "should_trigger": false
+  },
+  {
+    "query": "desenha os endpoints REST de oportunidades com métodos e códigos de status",
+    "should_trigger": false
+  },
+  {
+    "query": "implementa o CRUD de oportunidades em FastAPI",
+    "should_trigger": false
+  },
+  {
+    "query": "o que é arquitetura hexagonal? explica em poucas linhas",
+    "should_trigger": false
+  },
+  {
+    "query": "faz o deploy dessa versão no servidor de homologação",
+    "should_trigger": false
+  },
+  {
+    "query": "escreve o PRD do CRM de oportunidades",
+    "should_trigger": false
+  }
+]

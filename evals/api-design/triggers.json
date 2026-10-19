@@ -1,0 +1,50 @@
+[
+  {
+    "query": "desenha a API REST de oportunidades: criar, listar com filtro por etapa e atualizar a etapa",
+    "should_trigger": true
+  },
+  {
+    "query": "que status code devo retornar quando o recurso pertence a outra organização?",
+    "should_trigger": true
+  },
+  {
+    "query": "quero renomear o campo valor pra amount na resposta do GET /opportunities, isso quebra algum cliente?",
+    "should_trigger": true
+  },
+  {
+    "query": "como padronizo o formato de erro da API?",
+    "should_trigger": true
+  },
+  {
+    "query": "preciso receber webhook do WhatsApp, como desenho esse endpoint de forma segura?",
+    "should_trigger": true
+  },
+  {
+    "query": "gera o contrato OpenAPI do módulo de oportunidades",
+    "should_trigger": true
+  },
+  {
+    "query": "monolito ou microsserviços para esse sistema?",
+    "should_trigger": false
+  },
+  {
+    "query": "implementa o endpoint POST /opportunities em FastAPI",
+    "should_trigger": false
+  },
+  {
+    "query": "escreve a query SQL que lista as oportunidades da organização 7 ordenadas por valor",
+    "should_trigger": false
+  },
+  {
+    "query": "explica no README como chamar a API com curl",
+    "should_trigger": false
+  },
+  {
+    "query": "desenha a tela de cadastro de oportunidade com os estados de erro",
+    "should_trigger": false
+  },
+  {
+    "query": "configura o CI pra rodar os testes da API a cada push",
+    "should_trigger": false
+  }
+]

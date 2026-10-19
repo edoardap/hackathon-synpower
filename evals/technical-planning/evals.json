@@ -1,0 +1,51 @@
+{
+  "skill_name": "technical-planning",
+  "evals": [
+    {
+      "id": 1,
+      "name": "positivo-prd-crm",
+      "type": "positivo",
+      "prompt": "Lê o PRD em evals/technical-planning/files/prd-crm-oportunidades.md e quebra em épicos, histórias e critérios de aceite.",
+      "expected_output": "Planejamento com épicos, histórias HU-xx com Dado/Quando/Então, dependências e tabela de cobertura.",
+      "files": [
+        "files/prd-crm-oportunidades.md"
+      ],
+      "assertions": [
+        "Cada requisito funcional (RF-01 a RF-03) aparece em ao menos uma história, com a origem citada",
+        "Critérios de aceite estão no formato Dado/Quando/Então e incluem caso de erro ou borda",
+        "RNF-01 (isolamento entre organizações) aparece como critério transversal ou nas histórias afetadas",
+        "Inclui ordem sugerida de entrega e dependências entre histórias",
+        "Inclui tabela de cobertura requisito → histórias",
+        "Não escolhe tecnologia nem desenha tabelas"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "negativo-pede-codigo",
+      "type": "negativo",
+      "prompt": "Implementa a história HU-01 (cadastrar oportunidade) em FastAPI.",
+      "expected_output": "Não decompõe requisitos; o pedido é de implementação.",
+      "files": [],
+      "assertions": [
+        "Não gera épicos nem tabela de cobertura",
+        "Não finge implementar: indica que a implementação é de outro agente ou pede a especificação"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "limite-requisito-sem-criterio",
+      "type": "limite",
+      "prompt": "Quebra em histórias o PRD que está em evals/technical-planning/files/prd-sem-criterios.md.",
+      "expected_output": "Registra pendências em vez de inventar critério, usuário ou prioridade.",
+      "files": [
+        "files/prd-sem-criterios.md"
+      ],
+      "assertions": [
+        "RF-01 (sem critério, prioridade e origem) vira pendência ou gera pergunta, e não ganha critério inventado",
+        "Mantém a prioridade Desejável do RF-02 sem promover ou rebaixar",
+        "Não inventa estimativas de pontos ou prazos",
+        "Lista as pendências ao final"
+      ]
+    }
+  ]
+}
