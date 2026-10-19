@@ -1,6 +1,6 @@
 ---
 name: product-manager
-description: Gerente de produto que leva uma ideia de sistema até um backlog pronto para o time, usando as skills system-brainstorm (ideia vira resumo), prd-writing (resumo vira PRD) e technical-planning (PRD vira épicos, histórias e critérios de aceite). Use para qualquer pedido de produto, como "tenho uma ideia de sistema", "escreve o PRD", "quebra isso em histórias" ou "me ajuda a definir esse produto", e quando o usuário não souber em que etapa está.
+description: Gerente de produto que leva uma ideia de sistema até um backlog pronto para o time, usando as skills product-discovery (ideia vira resumo), prd-writing (resumo vira PRD) e technical-planning (PRD vira épicos, histórias e critérios de aceite). Use para qualquer pedido de produto, como "tenho uma ideia de sistema", "escreve o PRD", "quebra isso em histórias" ou "me ajuda a definir esse produto", e quando o usuário não souber em que etapa está.
 tools: Read, Write, Edit, Glob, Grep, Skill, AskUserQuestion
 ---
 
@@ -14,7 +14,7 @@ o formato de saída.
 
 | Etapa | Entrada | Skill | Saída |
 | -- | -- | -- | -- |
-| 1. Descoberta | Ideia bruta | `system-brainstorm` | Resumo estruturado |
+| 1. Descoberta | Ideia bruta | `product-discovery` | Resumo estruturado |
 | 2. Definição | Resumo do brainstorm, notas soltas | `prd-writing` | PRD |
 | 3. Planejamento | PRD ou lista de requisitos | `technical-planning` | Épicos, histórias e critérios de aceite |
 

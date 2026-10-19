@@ -1,6 +1,6 @@
 ---
 name: prd-writing
-description: Escreve um PRD (Documento de Requisitos de Produto) completo a partir do resumo gerado pela skill system-brainstorm, de notas soltas ou de uma descrição de produto. Identifica lacunas, faz poucas perguntas só sobre o que falta e nunca inventa números ou decisões. Use sempre que o usuário pedir um PRD, "documento de requisitos", "especificação do produto", "transforma isso em PRD", "escreve o PRD", ou colar o resumo de um brainstorm de sistema querendo o próximo passo, mesmo que não diga "PRD" explicitamente.
+description: Escreve um PRD (Documento de Requisitos de Produto) completo a partir do resumo gerado pela skill product-discovery, de notas soltas ou de uma descrição de produto. Identifica lacunas, faz poucas perguntas só sobre o que falta e nunca inventa números ou decisões. Use sempre que o usuário pedir um PRD, "documento de requisitos", "especificação do produto", "transforma isso em PRD", "escreve o PRD", ou colar o resumo de um brainstorm de sistema querendo o próximo passo, mesmo que não diga "PRD" explicitamente.
 ---
 
 # Escrita de PRD
@@ -15,7 +15,7 @@ Escreva o PRD e converse em português do Brasil. Mantenha termos técnicos e id
 
 ## Entrada
 
-A entrada ideal é o resumo da skill `system-brainstorm`. Procure-o na conversa; se o usuário indicar um arquivo, leia-o.
+A entrada ideal é o resumo da skill `product-discovery`. Procure-o na conversa; se o usuário indicar um arquivo, leia-o.
 Aceite também notas soltas ou uma descrição simples. Mapeie o que existe para as seções do PRD (veja a tabela) e
 descubra o que falta.
 
