@@ -30,33 +30,6 @@ Quando o usuário fechar uma decisão técnica na conversa ("vamos com X em vez 
 
 ## Modelo
 
-```markdown
-# ADR-NNNN: <título da decisão, no imperativo ou como afirmação>
-
-- **Status:** Proposto | Aceito | Rejeitado | Substituído por ADR-NNNN
-- **Data:** AAAA-MM-DD
-- **Decisores:** <nomes ou papéis; "A definir" se não souber>
-
-## Contexto
-<Problema e forças em jogo: requisitos, restrições, o que motivou a decisão. Cite a origem (PRD, conversa).>
-
-## Decisão
-<O que foi decidido, em uma ou duas frases diretas.>
-
-## Alternativas consideradas
-- **<Alternativa A>:** <prós e contras, e por que foi descartada>
-- **<Alternativa B>:** ...
-
-## Consequências
-- **Positivas:** ...
-- **Negativas / custos:** ...
-- **Riscos e gatilho de revisão:** <em que condição reabrir a decisão>
-
-## Questões em aberto
-- <o que ainda precisa ser confirmado, ou "Nenhuma">
-
-## Relacionados
-- <ADR anterior que este substitui ou complementa, diagrama em docs/architecture/, requisito (RF-xx) ou história (HU-xx) de origem; ou "Nenhum">
-```
+Leia `assets/adr.md` e preencha o modelo mantendo os títulos. Não copie texto de exemplo como se fosse dado real.
 
 Se a decisão veio de uma análise com a skill `architecture-patterns`, reaproveite as forças, as opções e o gatilho de revisão em vez de reescrever.
