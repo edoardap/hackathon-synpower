@@ -9,7 +9,7 @@ Produz uma especificação de design que outro agente ou pessoa consegue impleme
 
 ## Princípios
 
-- **Parta de quem usa.** Identifique o usuário e o contexto dele nos docs do projeto (PRD, brainstorm). Para usuários leigos, o design reduz decisões, usa a linguagem dele e explica passos técnicos em vez de escondê-los.
+- **Parta de quem usa.** Identifique o usuário e o contexto dele nos docs do projeto (PRD, descoberta). Para usuários leigos, o design reduz decisões, usa a linguagem dele e explica passos técnicos em vez de escondê-los.
 - **Rastreie cada decisão.** Cada tela, componente ou fala cita a origem (RF-xx, HU-xx). Sem origem, é especulação e deve ser questionada.
 - **Não invente.** Marca, cores da empresa, métricas de usabilidade e textos finais que o usuário não definiu ficam como proposta marcada `a validar`. Dados de pesquisa com usuários não existem até alguém coletar.
 - **Cubra todos os estados.** Toda tela tem estado vazio, carregando, sucesso e erro. Os erros dizem o que aconteceu e o que fazer.
@@ -18,7 +18,7 @@ Produz uma especificação de design que outro agente ou pessoa consegue impleme
 
 ## Passos
 
-1. **Contexto.** Leia os docs do projeto (`docs/prd/`, `docs/planejamento/`, `docs/brainstorm/`). Resuma o usuário, o objetivo e as restrições em poucas linhas, separando o confirmado do presumido.
+1. **Contexto.** Leia os docs do projeto (`docs/prd/`, `docs/planejamento/`, `docs/discovery/`). Resuma o usuário, o objetivo e as restrições em poucas linhas, separando o confirmado do presumido.
 2. **Escolha as frentes.** Veja o que o pedido exige e leia só as referências necessárias:
    - Fluxos, telas e estados: `references/ux.md`
    - Cores, tipografia, tokens e componentes: `references/visual.md`

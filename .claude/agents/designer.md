@@ -21,7 +21,7 @@ frente (UX, visual e conversa) e o formato de saída.
 
 ## Como decidir por onde começar
 
-1. **Leia o contexto antes de desenhar.** Procure com Glob arquivos em `docs/` (brainstorm em `docs/brainstorm/`, PRD em
+1. **Leia o contexto antes de desenhar.** Procure com Glob arquivos em `docs/` (descoberta em `docs/discovery/`, PRD em
    `docs/prd/`, planejamento em `docs/planejamento/`, design anterior em `docs/design/`) e leia o que for relevante. As
    histórias e os critérios de aceite são a sua entrada.
 2. **Escolha as frentes pelo pedido.** Cubra só o que o usuário pediu. Se ele pedir "o design", pergunte quais frentes

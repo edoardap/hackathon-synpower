@@ -1,6 +1,6 @@
 ---
 name: prd-writing
-description: Escreve um PRD (Documento de Requisitos de Produto) completo a partir do resumo gerado pela skill product-discovery, de notas soltas ou de uma descrição de produto. Identifica lacunas, faz poucas perguntas só sobre o que falta e nunca inventa números ou decisões. Use sempre que o usuário pedir um PRD, "documento de requisitos", "especificação do produto", "transforma isso em PRD", "escreve o PRD", ou colar o resumo de um brainstorm de sistema querendo o próximo passo, mesmo que não diga "PRD" explicitamente.
+description: Escreve um PRD (Documento de Requisitos de Produto) completo a partir do resumo gerado pela skill product-discovery, de notas soltas ou de uma descrição de produto. Identifica lacunas, faz poucas perguntas só sobre o que falta e nunca inventa números ou decisões. Use sempre que o usuário pedir um PRD, "documento de requisitos", "especificação do produto", "transforma isso em PRD", "escreve o PRD", ou colar o resumo de uma descoberta de produto querendo o próximo passo, mesmo que não diga "PRD" explicitamente.
 ---
 
 # Escrita de PRD
@@ -19,17 +19,17 @@ A entrada ideal é o resumo da skill `product-discovery`. Procure-o na conversa;
 Aceite também notas soltas ou uma descrição simples. Mapeie o que existe para as seções do PRD (veja a tabela) e
 descubra o que falta.
 
-| Seção do resumo do brainstorm | Vai para a seção do PRD |
+| Seção do relatório da descoberta (Resumo para o PRD) | Vai para a seção do PRD |
 | -- | -- |
-| Resumo, Problema e valor | Visão geral, Problema e oportunidade |
-| Usuários e necessidades | Usuários |
+| Resumo, Problema, Usuários e contexto | Visão geral, Problema e oportunidade |
+| Usuários e contexto | Usuários |
 | Escopo do MVP (dentro/fora) | Objetivos e não objetivos, Escopo |
 | Fluxo principal | Fluxos do usuário |
 | Requisitos funcionais | Requisitos funcionais |
 | Requisitos não funcionais | Requisitos não funcionais |
 | Dados e integrações, Restrições | Dependências e restrições |
 | Métricas de sucesso | Métricas de sucesso |
-| Riscos, Premissas, Perguntas em aberto | Riscos, Premissas, Perguntas em aberto |
+| Riscos e premissas, Hipóteses, Perguntas em aberto | Riscos, Premissas, Perguntas em aberto |
 | Partes interessadas, Marcos e dependências | Partes interessadas, Marcos |
 
 ## Fluxo

@@ -37,7 +37,7 @@ informou.
 5. **Prepare o que o usuário vai levar a campo,** se ele pedir: roteiro de entrevista, perguntas de um formulário ou o
    desenho do teste.
 6. **Entregue o relatório** com o modelo abaixo, incluindo uma recomendação clara e o que mudaria essa recomendação.
-   Pergunte se falta algo e ofereça o próximo passo (`system-brainstorm` ou `prd-writing`, se for seguir).
+   Se a recomendação for **Seguir** ou **Ajustar**, preencha também o "Resumo para o PRD" (escopo, requisitos, riscos), que é o que a skill `prd-writing` consome. Pergunte se falta algo e ofereça o próximo passo (`prd-writing`).
 
 ## Métodos de teste
 
@@ -102,4 +102,21 @@ Perguntas sobre comportamento passado, em ordem.
 Seguir, Ajustar, Testar mais ou Parar, com o motivo e o que mudaria a decisão.
 
 ## Perguntas em aberto
+
+## Resumo para o PRD
+Só quando a recomendação for Seguir ou Ajustar. Use apenas o que o usuário confirmou; o resto fica como pergunta em aberto.
+
+### Escopo do MVP
+- Dentro:
+- Fora:
+### Fluxo principal
+### Requisitos funcionais
+- [Essencial | Importante | Desejável] requisito, e como saber que está pronto
+### Requisitos não funcionais
+### Restrições, dados e integrações
+### Métricas de sucesso
+Métrica, valor atual e meta.
+### Riscos e premissas
+Hipóteses de risco alto ainda não validadas entram aqui.
+### Partes interessadas, marcos e dependências
 ```
