@@ -12,11 +12,12 @@ Registra uma decisão técnica para que quem chegar depois entenda o que foi dec
 - **Um ADR, uma decisão.** Se aparecerem duas, escreva dois.
 - **Só o que foi dito ou decidido.** Não invente motivos, números nem alternativas que ninguém considerou. O que faltar vai como `A definir` ou em "Questões em aberto".
 - **Imutável depois de aceito.** Para mudar uma decisão, crie um novo ADR que substitui o anterior e atualize só o campo de status do antigo.
+- **Decisivo.** Diga o que foi escolhido, não o que "poderia" ser escolhido.
 - **Curto.** Uma página basta. Escreva em português, com os termos técnicos em sua forma original.
 
 ## Quando oferecer um ADR sem ser pedido
 
-Quando o usuário fechar uma decisão técnica na conversa ("vamos com X em vez de Y", "ficou decidido que..."), ofereça registrar em uma linha e espere a resposta. Não crie o arquivo sem a confirmação dele. Ofereça só para decisões que custam caro para reverter ou que alguém vai questionar depois (stack, arquitetura, integrações, dados, segurança), e não para detalhes menores.
+Quando o usuário fechar uma decisão técnica na conversa ("vamos com X em vez de Y", "ficou decidido que..."), ofereça registrar em uma linha e espere a resposta. Não crie o arquivo sem a confirmação dele. Ofereça só quando as três condições valem: é difícil de reverter, seria surpreendente sem contexto e nasceu de um trade-off real, com alternativas e motivos específicos (stack, arquitetura, integrações, dados, segurança). Não ofereça para detalhes menores.
 
 ## Passos
 

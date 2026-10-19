@@ -18,13 +18,14 @@ Conduz uma decisão de arquitetura do requisito até uma recomendação defendid
 ## Passos
 
 1. **Contexto.** Resuma o problema em 2 ou 3 linhas e liste os requisitos que mais pesam, separando os confirmados dos presumidos. Se houver PRD ou docs do projeto, leia-os e cite a origem.
-2. **Forças e restrições.** Liste o que limita a decisão: prazo, time, stack já fixada, orçamento, regulação (ex.: LGPD), integrações externas.
-3. **Opções.** Apresente de 2 a 4 alternativas reais, incluindo a mais simples. Consulte `references/padroes.md` para o catálogo de padrões e quando cada um se aplica.
+2. **Forças e restrições.** Liste o que limita a decisão: prazo, time, stack já fixada, orçamento, regulação (ex.: LGPD), integrações externas. Passe pelas dimensões de `references/design-doc.md` (falha parcial, idempotência, auth, concorrência, ciclo de vida dos dados, observabilidade) para não deixar pontos cegos.
+3. **Opções.** Em decisão grande ou difícil de reverter, apresente de 2 a 4 alternativas reais, incluindo a mais simples. Em decisão pequena, recomende direto e cite a alternativa descartada em uma linha. Consulte `references/padroes.md` para o catálogo de padrões e quando cada um se aplica.
 4. **Trade-offs.** Compare as opções contra as forças do passo 2, em uma tabela curta. Marque riscos e o que é reversível.
 5. **Recomendação.** Escolha uma opção, justifique ligando aos requisitos e diga em que condição você mudaria de ideia (o "gatilho de revisão").
 6. **Perguntas em aberto.** Liste o que falta para confirmar a decisão e quem deveria responder.
 7. **Diagrama (opcional).** Se a decisão definir a estrutura do sistema, ofereça os diagramas de Contexto e de Container da opção escolhida, em C4 com Mermaid. Siga `references/c4-mermaid.md`. Só desenhe o que já foi decidido e marque o resto como `a validar`.
-8. **Registro.** Se a decisão for relevante, ofereça documentá-la com a skill `adr-writer`.
+8. **Design técnico.** Se a decisão pedir componentes novos, ofereça detalhar com o modelo de `references/design-doc.md` e salve em `docs/architecture/<nome>/design.md`.
+9. **Registro.** Se a decisão for relevante, ofereça documentá-la com a skill `adr-writer`.
 
 ## Formato da resposta
 
