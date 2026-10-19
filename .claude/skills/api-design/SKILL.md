@@ -11,6 +11,7 @@ Desenha o contrato de uma API a partir dos requisitos e avalia mudanças em APIs
 
 - **Parta do consumidor e dos requisitos.** Cada endpoint deve existir por causa de uma história ou requisito. Cite a origem (RF, HU). Endpoint sem origem é especulação.
 - **Siga o que já existe.** Em API existente, mantenha nomes, formato de erro, paginação e autenticação. Consistência vale mais do que a convenção "ideal". Se não conhecer o repositório, use a skill `repo-orientation`.
+- **Respeite as decisões já registradas.** Leia os ADRs com status `Aceito` em `docs/adr/` antes de desenhar. Siga-os ou, se o contrato exigir contradizer um, diga isso e proponha um ADR que o substitua (`adr-writer`).
 - **Compatível por padrão.** Adicionar campo opcional ou endpoint novo não quebra ninguém. Remover, renomear, mudar tipo ou tornar obrigatório quebra.
 - **Segurança no contrato.** Defina autenticação, autorização por recurso (um usuário só acessa o que é dele) e o que nunca é devolvido (segredos, tokens de terceiros).
 - **Não invente números.** Limites, tamanhos de página e prazos de depreciação ficam `A definir` se ninguém os informou.

@@ -17,7 +17,7 @@ Conduz uma decisão de arquitetura do requisito até uma recomendação defendid
 
 ## Passos
 
-1. **Contexto.** Resuma o problema em 2 ou 3 linhas e liste os requisitos que mais pesam, separando os confirmados dos presumidos. Se houver PRD ou docs do projeto, leia-os e cite a origem.
+1. **Contexto.** Resuma o problema em 2 ou 3 linhas e liste os requisitos que mais pesam, separando os confirmados dos presumidos. Se houver PRD ou docs do projeto, leia-os e cite a origem. Leia também os ADRs com status `Aceito` em `docs/adr/`: siga-os ou, se a nova decisão os contradiz, diga isso e proponha um ADR que substitua o antigo, em vez de decidir como se ele não existisse.
 2. **Forças e restrições.** Liste o que limita a decisão: prazo, time, stack já fixada, orçamento, regulação (ex.: LGPD), integrações externas. Passe pelas dimensões de `references/design-doc.md` (falha parcial, idempotência, auth, concorrência, ciclo de vida dos dados, observabilidade) para não deixar pontos cegos.
 3. **Opções.** Em decisão grande ou difícil de reverter, apresente de 2 a 4 alternativas reais, incluindo a mais simples. Em decisão pequena, recomende direto e cite a alternativa descartada em uma linha. Consulte `references/padroes.md` para o catálogo de padrões e quando cada um se aplica.
 4. **Trade-offs.** Compare as opções contra as forças do passo 2, em uma tabela curta. Marque riscos e o que é reversível.

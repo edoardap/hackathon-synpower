@@ -27,7 +27,7 @@ informou.
    resolve.
 2. **Separe fatos de suposições.** Pergunte de onde vem cada afirmação importante: ele viu isso acontecer, ouviu de
    alguém, tem um dado, ou é intuição? Classifique cada uma como **Evidência** (observada ou medida), **Relato** (alguém
-   contou) ou **Suposição** (ninguém verificou). Use rodadas de 2 a 4 perguntas, com AskUserQuestion quando disponível.
+   contou) ou **Suposição** (ninguém verificou). Use rodadas de no máximo 3 perguntas, com AskUserQuestion quando disponível.
 3. **Escreva as hipóteses.** Converta as suposições mais arriscadas em hipóteses testáveis, no formato "Acreditamos que
    [usuário] tem [problema]. Saberemos que é verdade se [sinal observável]". Priorize por risco: o que, se estiver
    errado, derruba o produto, e o que ainda não tem nenhuma evidência.
@@ -37,7 +37,7 @@ informou.
 5. **Prepare o que o usuário vai levar a campo,** se ele pedir: roteiro de entrevista, perguntas de um formulário ou o
    desenho do teste.
 6. **Entregue o relatório** com o modelo abaixo, incluindo uma recomendação clara e o que mudaria essa recomendação.
-   Se a recomendação for **Seguir** ou **Ajustar**, preencha também o "Resumo para o PRD" (escopo, requisitos, riscos), que é o que a skill `prd-writing` consome. Pergunte se falta algo e ofereça o próximo passo (`prd-writing`).
+   Se a recomendação for **Seguir** ou **Ajustar**, preencha também o "Resumo para o PRD" (escopo, requisitos, riscos), que é o que a skill `prd-writing` consome. Pergunte se falta algo. Só salve em arquivo depois que o usuário aceitar, em `docs/discovery/<nome>.md` (nome em minúsculas e com hífens, o mesmo do PRD), sem sobrescrever um arquivo existente sem avisar. Depois ofereça o próximo passo (`prd-writing`).
 
 ## Métodos de teste
 
