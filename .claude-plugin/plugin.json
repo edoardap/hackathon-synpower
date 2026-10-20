@@ -1,10 +1,20 @@
 {
   "name": "hackathon-g1",
-  "description": "Agentes e skills do Grupo 1 (Produto e Arquitetura) do hackathon de engenharia de software com IA.",
+  "displayName": "Hackathon AI Software Engineering: Grupo 1",
   "version": "0.1.0",
-  "experimental": {
-    "evals": "evals/plugin-eval"
+  "description": "Agentes e skills do Grupo 1 (Produto e Arquitetura) do hackathon de engenharia de software com IA.",
+  "author": {
+    "name": "Grupo 1 - Produto e Arquitetura"
   },
+  "repository": "https://github.com/edoardap/hackathon-synpower",
+  "keywords": [
+    "produto",
+    "arquitetura",
+    "prd",
+    "adr",
+    "agentes",
+    "skills"
+  ],
   "skills": [
     "./.claude/skills/"
   ],
@@ -12,5 +22,8 @@
     "./.claude/agents/designer.md",
     "./.claude/agents/product-manager.md",
     "./.claude/agents/solutions-architect.md"
-  ]
+  ],
+  "experimental": {
+    "evals": "evals/plugin-eval"
+  }
 }

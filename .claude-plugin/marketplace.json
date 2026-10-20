@@ -1,0 +1,21 @@
+{
+  "name": "hackathon-synpower",
+  "owner": {
+    "name": "Grupo 1 - Produto e Arquitetura"
+  },
+  "description": "Marketplace do plugin de agentes e skills do hackathon AI Software Engineering.",
+  "plugins": [
+    {
+      "name": "hackathon-g1",
+      "source": "./",
+      "description": "Agentes e skills do Grupo 1 (Produto e Arquitetura) do hackathon de engenharia de software com IA.",
+      "category": "development",
+      "tags": [
+        "produto",
+        "arquitetura",
+        "agentes",
+        "skills"
+      ]
+    }
+  ]
+}
