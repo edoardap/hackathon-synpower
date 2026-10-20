@@ -38,8 +38,9 @@ Se o usuário pedir para escrever código, testar ou fazer deploy, diga que isso
 
 ## Evals
 
-Os cenários de cada skill ficam em `evals/<skill>/evals.json`, com arquivos de apoio em `evals/<skill>/files/`.
-Ao rodar um eval, salve tudo em `evals/<skill>/results/iteration-N/` (`N` é o próximo número livre), nunca em `/tmp` nem no scratchpad:
+Os cenários de cada skill ficam em `evals/manual/<skill>/evals.json`, com arquivos de apoio em `evals/manual/<skill>/files/`.
+Os scripts ficam em `evals/scripts/`. Os casos no formato do `claude plugin eval` ficam em `evals/plugin-eval/` (o formato é dele, não o nosso).
+Ao rodar um eval, salve tudo em `evals/manual/<skill>/results/iteration-N/` (`N` é o próximo número livre), nunca em `/tmp` nem no scratchpad:
 
 - uma pasta por cenário: `eval-<nome>/with_skill/run-1/` e `eval-<nome>/without_skill/run-1/`, cada uma com `outputs/`, `grading.json` e `timing.json`;
 - `benchmark.json` e `benchmark.md` na raiz da iteração;

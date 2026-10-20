@@ -48,7 +48,7 @@
       "id": 4,
       "name": "positivo-design-tecnico",
       "type": "positivo",
-      "prompt": "Com base no PRD em evals/architecture-patterns/files/prd-crm-oportunidades.md e no repositório evals/repo-orientation/files/mini-crm, escreve o design técnico da funcionalidade de oportunidades.",
+      "prompt": "Com base no PRD em evals/manual/architecture-patterns/files/prd-crm-oportunidades.md e no repositório evals/manual/repo-orientation/files/mini-crm, escreve o design técnico da funcionalidade de oportunidades.",
       "expected_output": "Documento de design técnico no modelo de references/design-doc.md.",
       "files": [
         "files/prd-crm-oportunidades.md"

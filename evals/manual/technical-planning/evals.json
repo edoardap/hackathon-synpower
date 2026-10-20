@@ -5,7 +5,7 @@
       "id": 1,
       "name": "positivo-prd-crm",
       "type": "positivo",
-      "prompt": "Lê o PRD em evals/technical-planning/files/prd-crm-oportunidades.md e quebra em épicos, histórias e critérios de aceite.",
+      "prompt": "Lê o PRD em evals/manual/technical-planning/files/prd-crm-oportunidades.md e quebra em épicos, histórias e critérios de aceite.",
       "expected_output": "Planejamento com épicos, histórias HU-xx com Dado/Quando/Então, dependências e tabela de cobertura.",
       "files": [
         "files/prd-crm-oportunidades.md"
@@ -35,7 +35,7 @@
       "id": 3,
       "name": "limite-requisito-sem-criterio",
       "type": "limite",
-      "prompt": "Quebra em histórias o PRD que está em evals/technical-planning/files/prd-sem-criterios.md.",
+      "prompt": "Quebra em histórias o PRD que está em evals/manual/technical-planning/files/prd-sem-criterios.md.",
       "expected_output": "Registra pendências em vez de inventar critério, usuário ou prioridade.",
       "files": [
         "files/prd-sem-criterios.md"

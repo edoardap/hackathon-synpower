@@ -32,7 +32,7 @@
       "id": 3,
       "name": "limite-substitui-adr-existente",
       "type": "limite",
-      "prompt": "Mudamos de ideia sobre as notificações: vamos enviar os e-mails de forma síncrona na própria requisição, em vez de usar a fila. Registra isso. (Os ADRs existentes estão em evals/adr-writer/files/docs/adr/; trabalhe numa cópia.)",
+      "prompt": "Mudamos de ideia sobre as notificações: vamos enviar os e-mails de forma síncrona na própria requisição, em vez de usar a fila. Registra isso. (Os ADRs existentes estão em evals/manual/adr-writer/files/docs/adr/; trabalhe numa cópia.)",
       "expected_output": "Novo ADR 0003 que substitui o 0002, atualiza status e índice; não inventa motivo.",
       "files": [
         "files/docs"

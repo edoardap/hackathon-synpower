@@ -3,11 +3,11 @@
 Skill:<skill> aparece entre as primeiras ferramentas que o Claude chama (--within, padrão 3).
 
 Uso (no seu terminal, onde `claude -p "oi"` funciona):
-  evals/run_activation.py                                  # as 4 skills do arquiteto, 2 repetições
-  evals/run_activation.py api-design --runs 3 --within 1   # uma skill, critério estrito
-  evals/run_activation.py --selftest                       # confere o detector, sem chamar o claude
+  evals/scripts/run_activation.py                                  # as 4 skills do arquiteto, 2 repetições
+  evals/scripts/run_activation.py api-design --runs 3 --within 1   # uma skill, critério estrito
+  evals/scripts/run_activation.py --selftest                       # confere o detector, sem chamar o claude
 
-Resultado: evals/<skill>/results/activation-<data-hora>.json (nunca sobrescreve).
+Resultado: evals/manual/<skill>/results/activation-<data-hora>.json (nunca sobrescreve).
 Escrita e shell ficam bloqueados no claude -p; ele é morto assim que o critério é decidido.
 Erros de execução (ex.: limite de uso) ficam como INVÁLIDO e não entram na nota; o teste para.
 """
@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parent.parent
+REPO = Path(__file__).resolve().parent.parent.parent
 DEFAULT = ["adr-writer", "architecture-patterns", "api-design", "repo-orientation"]
 
 
@@ -102,7 +102,7 @@ def main():
         return selftest()
     stamp = datetime.now().strftime("%Y-%m-%d-%H%M")
     for s in a.skills or DEFAULT:
-        items = json.loads(Path(a.set_ or REPO / "evals" / s / "triggers.json").read_text())
+        items = json.loads(Path(a.set_ or REPO / "evals" / "manual" / s / "triggers.json").read_text())
         with ThreadPoolExecutor(a.workers) as ex:
             futs = {(i, r): ex.submit(run_one, it["query"], s, a.timeout, a.within)
                     for i, it in enumerate(items) for r in range(a.runs)}
@@ -126,7 +126,7 @@ def main():
             print(f"  ATENÇÃO: {invalid} frase(s) com erro de execução (ex.: limite de uso); não entram na nota. Não use este resultado como conclusivo.")
             if LIMITE.is_set():
                 print("  Limite de uso atingido: parando. Tente de novo depois do reset.")
-        d = REPO / "evals" / s / "results"; d.mkdir(parents=True, exist_ok=True)
+        d = REPO / "evals" / "manual" / s / "results"; d.mkdir(parents=True, exist_ok=True)
         (d / f"activation-{stamp}.json").write_text(json.dumps({"skill": s, "passed": ok, "valid": valid, "total": len(items), "within": a.within, "results": out}, ensure_ascii=False, indent=2))
         print(f"{s}: {ok}/{valid} passed (válidas) de {len(items)}")
         if LIMITE.is_set():

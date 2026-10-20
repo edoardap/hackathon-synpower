@@ -5,7 +5,7 @@
       "id": 1,
       "name": "positivo-mini-crm",
       "type": "positivo",
-      "prompt": "Me orienta neste repositório: evals/repo-orientation/files/mini-crm. Quero saber estrutura, stack, como rodar e testar.",
+      "prompt": "Me orienta neste repositório: evals/manual/repo-orientation/files/mini-crm. Quero saber estrutura, stack, como rodar e testar.",
       "expected_output": "Relatório com estrutura, stack, comandos e lacunas, baseado só no que existe.",
       "files": [
         "files/mini-crm"
@@ -34,7 +34,7 @@
       "id": 3,
       "name": "limite-repo-so-docs",
       "type": "limite",
-      "prompt": "Me orienta neste diretório: evals/repo-orientation/files/so-docs",
+      "prompt": "Me orienta neste diretório: evals/manual/repo-orientation/files/so-docs",
       "expected_output": "Informa que não há código e não inventa stack.",
       "files": [
         "files/so-docs"
