@@ -1,0 +1,16 @@
+{
+  "name": "hackathon-g1",
+  "description": "Agentes e skills do Grupo 1 (Produto e Arquitetura) do hackathon de engenharia de software com IA.",
+  "version": "0.1.0",
+  "experimental": {
+    "evals": "evals/plugin-eval"
+  },
+  "skills": [
+    "./.claude/skills/"
+  ],
+  "agents": [
+    "./.claude/agents/designer.md",
+    "./.claude/agents/product-manager.md",
+    "./.claude/agents/solutions-architect.md"
+  ]
+}
