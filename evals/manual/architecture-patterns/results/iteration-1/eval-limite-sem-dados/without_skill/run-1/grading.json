@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Não apresenta valores numéricos de prazo, tamanho de time, carga, latência ou disponibilidade, nem rotulados como premissa",
+      "passed": false,
+      "evidence": "Tabela de 'premissas de trabalho' com valores: time 3 a 8 pessoas, prazo 3 a 6 meses, dezenas por segundo, 99,5% a 99,9% de disponibilidade. Rotuladas como premissa, o que a asserção proíbe."
+    },
+    {
+      "text": "Registra explicitamente o que falta (prazo, time, carga) como pergunta em aberto",
+      "passed": true,
+      "evidence": "'Perguntas em aberto' com 5 itens (time e prazo, usuários e contratos, multiempresa, integrações, exigências legais)."
+    },
+    {
+      "text": "Recomenda a opção mais simples (monolito modular) e justifica sem exigir os dados que faltam",
+      "passed": true,
+      "evidence": "Recomenda monolito modular com justificativa que não depende dos dados."
+    },
+    {
+      "text": "Informa gatilho de revisão ligado a condições concretas (ex.: times independentes, escala independente)",
+      "passed": true,
+      "evidence": "Gatilhos concretos: dois times travando no deploy, módulo com perfil de carga diferente, carga medida que um banco não aguente."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  }
+}

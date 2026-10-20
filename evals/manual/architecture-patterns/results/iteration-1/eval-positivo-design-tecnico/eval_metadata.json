@@ -1,0 +1,13 @@
+{
+  "eval_id": 4,
+  "eval_name": "positivo-design-tecnico",
+  "prompt": "Com base no PRD em evals/architecture-patterns/files/prd-crm-oportunidades.md e no repositório evals/repo-orientation/files/mini-crm, escreve o design técnico da funcionalidade de oportunidades.",
+  "assertions": [
+    "Segue as seções do modelo (visão geral com Mermaid, reuso, componentes, dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto)",
+    "A seção de reuso cita arquivos reais do mini-crm (app/main.py, app/models.py, app/routers/opportunities.py)",
+    "Cada componente aponta para RF-xx e define interfaces",
+    "A cobertura de dimensões trata autenticação/isolamento por organização e marca N/A com motivo onde não se aplica",
+    "O plano de implementação tem passos em ordem sem depender de passo posterior",
+    "Salva (ou propõe salvar) em docs/architecture/<nome>/design.md"
+  ]
+}

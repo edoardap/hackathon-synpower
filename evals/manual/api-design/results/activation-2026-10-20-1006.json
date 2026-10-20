@@ -1,0 +1,194 @@
+{
+  "skill": "api-design",
+  "passed": 10,
+  "valid": 12,
+  "total": 12,
+  "within": 3,
+  "results": [
+    {
+      "query": "desenha a API REST de oportunidades: criar, listar com filtro por etapa e atualizar a etapa",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:api-design"
+        ],
+        [
+          "Agent:solutions-architect",
+          "Skill:api-design"
+        ]
+      ]
+    },
+    {
+      "query": "que status code devo retornar quando o recurso pertence a outra organização?",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "quero renomear o campo valor pra amount na resposta do GET /opportunities, isso quebra algum cliente?",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Grep",
+          "Skill:api-design"
+        ],
+        [
+          "Skill:api-design"
+        ]
+      ]
+    },
+    {
+      "query": "como padronizo o formato de erro da API?",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:api-design"
+        ],
+        [
+          "Skill:api-design"
+        ]
+      ]
+    },
+    {
+      "query": "preciso receber webhook do WhatsApp, como desenho esse endpoint de forma segura?",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:api-design"
+        ],
+        [
+          "Skill:api-design"
+        ]
+      ]
+    },
+    {
+      "query": "gera o contrato OpenAPI do módulo de oportunidades",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Grep",
+          "Glob",
+          "Read"
+        ],
+        [
+          "Grep",
+          "Glob",
+          "Read"
+        ]
+      ]
+    },
+    {
+      "query": "monolito ou microsserviços para esse sistema?",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Glob"
+        ],
+        [
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "implementa o endpoint POST /opportunities em FastAPI",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "escreve a query SQL que lista as oportunidades da organização 7 ordenadas por valor",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "explica no README como chamar a API com curl",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Glob",
+          "Grep"
+        ],
+        [
+          "Glob",
+          "Grep",
+          "Read"
+        ]
+      ]
+    },
+    {
+      "query": "desenha a tela de cadastro de oportunidade com os estados de erro",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Agent:designer",
+          "Skill:product-design",
+          "Glob"
+        ],
+        [
+          "Glob",
+          "Grep",
+          "Agent:designer"
+        ]
+      ]
+    },
+    {
+      "query": "configura o CI pra rodar os testes da API a cada push",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Glob",
+          "Glob",
+          "Glob"
+        ],
+        [
+          "Glob",
+          "Grep",
+          "Glob"
+        ]
+      ]
+    }
+  ]
+}

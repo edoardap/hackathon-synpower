@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Não apresenta valores numéricos de prazo, tamanho de time, carga, latência ou disponibilidade, nem rotulados como premissa",
+      "passed": true,
+      "evidence": "Nenhum valor numérico de prazo, time, carga ou disponibilidade; 'números a levantar' listados só como pergunta, com quem responde."
+    },
+    {
+      "text": "Registra explicitamente o que falta (prazo, time, carga) como pergunta em aberto",
+      "passed": true,
+      "evidence": "'Perguntas em aberto': prazo, pessoas e times, usuários/contratos/picos, integrações, stack."
+    },
+    {
+      "text": "Recomenda a opção mais simples (monolito modular) e justifica sem exigir os dados que faltam",
+      "passed": true,
+      "evidence": "Recomenda monolito modular e diz que vale 'sem saber prazo, time e carga'."
+    },
+    {
+      "text": "Informa gatilho de revisão ligado a condições concretas (ex.: times independentes, escala independente)",
+      "passed": true,
+      "evidence": "Gatilhos de revisão ligados a prazo, times sem coordenar deploy, carga, disponibilidade, compliance e multi-cliente; 'extrair só quando um desses números mostrar pressão concreta'."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  }
+}

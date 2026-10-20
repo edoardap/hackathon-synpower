@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "negativo-bug-endpoint",
+  "prompt": "Contexto: pequeno CRM multi-tenant (backend Python/FastAPI, frontend React, PostgreSQL). Funcionalidade: cadastro e acompanhamento de oportunidades comerciais, com regras de acesso por organização.\nO endpoint abaixo retorna 500 quando `amount` vem nulo. Corrige pra mim:\n```python\n@router.post(\"/opportunities\")\ndef create(op: OpportunityIn, db=Depends(get_db), org=Depends(current_org)):\n    total = op.amount * op.quantity\n    row = Opportunity(org_id=org.id, name=op.name, total=total)\n    db.add(row); db.commit()\n    return row\n```",
+  "assertions": [
+    "Corrige o tratamento de amount/quantity nulos (validação ou default)",
+    "Não produz análise de arquitetura (sem tabela de opções de padrões, sem 'Decisão:' com forças e restrições)",
+    "Resposta curta e focada no código"
+  ]
+}

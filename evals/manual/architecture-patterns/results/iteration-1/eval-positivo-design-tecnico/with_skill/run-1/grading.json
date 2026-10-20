@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Segue as seções do modelo (visão geral com Mermaid, reuso, componentes, dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto)",
+      "passed": true,
+      "evidence": "Seções: visão geral com Mermaid, reuso, componentes, modelos de dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto."
+    },
+    {
+      "text": "A seção de reuso cita arquivos reais do mini-crm (app/main.py, app/models.py, app/routers/opportunities.py)",
+      "passed": true,
+      "evidence": "'Reuso do que já existe' cita app/main.py (3x), app/models.py (6x) e app/routers/opportunities.py (4x)."
+    },
+    {
+      "text": "Cada componente aponta para RF-xx e define interfaces",
+      "passed": true,
+      "evidence": "Os 4 componentes têm '**Interfaces:**' e '**Atende:** RF-xx' (4 de 4)."
+    },
+    {
+      "text": "A cobertura de dimensões trata autenticação/isolamento por organização e marca N/A com motivo onde não se aplica",
+      "passed": true,
+      "evidence": "Tabela de cobertura de dimensões trata autenticação/autorização e isolamento; rate limit, lock otimista e dependência externa marcados N/A com motivo."
+    },
+    {
+      "text": "O plano de implementação tem passos em ordem sem depender de passo posterior",
+      "passed": true,
+      "evidence": "Plano em 4 passos, cada um com 'Depende de' apontando só para passos anteriores (3 depende de 1 e 2; 4 depende de 3)."
+    },
+    {
+      "text": "Salva (ou propõe salvar) em docs/architecture/<nome>/design.md",
+      "passed": true,
+      "evidence": "Cabeçalho: 'Destino pretendido: docs/architecture/crm-oportunidades/design.md'; arquivo não criado em docs/."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

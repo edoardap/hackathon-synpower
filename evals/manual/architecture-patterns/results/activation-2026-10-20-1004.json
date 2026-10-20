@@ -1,0 +1,189 @@
+{
+  "skill": "architecture-patterns",
+  "passed": 9,
+  "valid": 12,
+  "total": 12,
+  "within": 3,
+  "results": [
+    {
+      "query": "monolito ou microsserviços pro nosso CRM? o time tem 3 devs e a gente tem 5 dias",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Glob"
+        ],
+        [
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "como organizo os módulos do backend pra ficar fácil extrair um serviço depois?",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Agent:solutions-architect",
+          "Skill:architecture-patterns"
+        ],
+        [
+          "Skill:architecture-patterns"
+        ]
+      ]
+    },
+    {
+      "query": "qual a melhor forma de isolar os dados de cada organização no banco, schema por tenant ou coluna org_id?",
+      "should_trigger": true,
+      "triggers": 1,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Grep"
+        ],
+        [
+          "Skill:architecture-patterns"
+        ]
+      ]
+    },
+    {
+      "query": "preciso decidir entre fila e chamada síncrona pra mandar notificações, me ajuda a comparar as opções",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:architecture-patterns"
+        ],
+        [
+          "Skill:architecture-patterns"
+        ]
+      ]
+    },
+    {
+      "query": "desenha o diagrama C4 de containers desse sistema em mermaid",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Glob",
+          "Glob"
+        ],
+        [
+          "Glob",
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "o PRD já foi aprovado, como eu estruturo a arquitetura do sistema?",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Glob",
+          "Glob"
+        ],
+        [
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "esse endpoint retorna 500 quando amount é null, corrige: def create(op): total = op.amount * op.quantity",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Grep"
+        ],
+        [
+          "Grep"
+        ]
+      ]
+    },
+    {
+      "query": "desenha os endpoints REST de oportunidades com métodos e códigos de status",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:api-design",
+          "Grep",
+          "Glob"
+        ],
+        [
+          "Grep",
+          "Glob",
+          "Skill:api-design"
+        ]
+      ]
+    },
+    {
+      "query": "implementa o CRUD de oportunidades em FastAPI",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "o que é arquitetura hexagonal? explica em poucas linhas",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "faz o deploy dessa versão no servidor de homologação",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "escreve o PRD do CRM de oportunidades",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Agent:product-manager",
+          "Skill:prd-writing",
+          "Glob"
+        ],
+        [
+          "Agent:product-manager",
+          "Glob",
+          "Grep"
+        ]
+      ]
+    }
+  ]
+}

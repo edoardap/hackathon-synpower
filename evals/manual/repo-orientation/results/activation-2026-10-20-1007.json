@@ -1,0 +1,216 @@
+{
+  "skill": "repo-orientation",
+  "passed": 8,
+  "valid": 12,
+  "total": 12,
+  "within": 3,
+  "results": [
+    {
+      "query": "acabei de clonar esse repo, me explica como ele está organizado e como rodar",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Glob",
+          "Read",
+          "Glob"
+        ],
+        [
+          "Glob",
+          "Read",
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "quais comandos de build e de teste esse projeto usa?",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Glob",
+          "Grep"
+        ],
+        [
+          "Glob",
+          "Grep",
+          "Read"
+        ]
+      ]
+    },
+    {
+      "query": "me orienta nesse repositório antes de eu mexer: stack, convenções e estrutura",
+      "should_trigger": true,
+      "triggers": 2,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:repo-orientation"
+        ],
+        [
+          "Skill:repo-orientation"
+        ]
+      ]
+    },
+    {
+      "query": "qual o padrão de commits e de branches desse repo?",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Bash",
+          "Glob",
+          "Read"
+        ],
+        [
+          "Bash",
+          "Glob",
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "é um monorepo? onde ficam os testes?",
+      "should_trigger": true,
+      "triggers": 0,
+      "runs": 2,
+      "pass": false,
+      "ferramentas": [
+        [
+          "Glob",
+          "Glob",
+          "Glob"
+        ],
+        [
+          "Glob",
+          "Glob",
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "preciso entender esse projeto legado antes de propor uma arquitetura nova",
+      "should_trigger": true,
+      "triggers": 1,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        [
+          "Skill:repo-orientation"
+        ]
+      ]
+    },
+    {
+      "query": "adiciona o campo etapa na tabela de oportunidades e no model",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Grep",
+          "Grep",
+          "Read"
+        ],
+        [
+          "Grep",
+          "Read",
+          "Grep"
+        ]
+      ]
+    },
+    {
+      "query": "explica o que essa função faz: def total(op): return op.amount * op.quantity",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [],
+        []
+      ]
+    },
+    {
+      "query": "decide qual arquitetura usar pro novo módulo de relatórios",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Agent:solutions-architect",
+          "Glob",
+          "Grep"
+        ],
+        [
+          "Agent:solutions-architect",
+          "Glob",
+          "Skill:architecture-patterns"
+        ]
+      ]
+    },
+    {
+      "query": "roda os testes e me diz o que quebrou",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Glob",
+          "Grep",
+          "Glob"
+        ],
+        [
+          "Glob",
+          "Grep",
+          "Read"
+        ]
+      ]
+    },
+    {
+      "query": "cria um repositório novo com a estrutura de pastas padrão de um projeto FastAPI",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Glob"
+        ],
+        [
+          "Agent:general-purpose",
+          "Bash",
+          "Glob"
+        ]
+      ]
+    },
+    {
+      "query": "faz o code review desse PR e aponta os problemas",
+      "should_trigger": false,
+      "triggers": 0,
+      "runs": 2,
+      "pass": true,
+      "ferramentas": [
+        [
+          "Skill:code-review",
+          "Bash",
+          "Read"
+        ],
+        [
+          "Skill:code-review",
+          "Bash",
+          "Read"
+        ]
+      ]
+    }
+  ]
+}

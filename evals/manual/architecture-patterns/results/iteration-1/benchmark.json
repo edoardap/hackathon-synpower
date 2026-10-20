@@ -1,0 +1,401 @@
+{
+  "metadata": {
+    "skill_name": "architecture-patterns",
+    "skill_path": ".claude/skills/architecture-patterns",
+    "executor_model": "sonnet (subagentes)",
+    "analyzer_model": "correção feita na sessão principal",
+    "timestamp": "2026-10-20T12:17:07Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "runs_per_configuration": 1,
+    "nota": "Com 1 execução por cenário, o stddev é a variação entre os 4 cenários, não ruído de execução."
+  },
+  "runs": [
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 32.9,
+        "tokens": 34665,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Não apresenta valores numéricos de prazo, tamanho de time, carga, latência ou disponibilidade, nem rotulados como premissa",
+          "passed": true,
+          "evidence": "Nenhum valor numérico de prazo, time, carga ou disponibilidade; 'números a levantar' listados só como pergunta, com quem responde."
+        },
+        {
+          "text": "Registra explicitamente o que falta (prazo, time, carga) como pergunta em aberto",
+          "passed": true,
+          "evidence": "'Perguntas em aberto': prazo, pessoas e times, usuários/contratos/picos, integrações, stack."
+        },
+        {
+          "text": "Recomenda a opção mais simples (monolito modular) e justifica sem exigir os dados que faltam",
+          "passed": true,
+          "evidence": "Recomenda monolito modular e diz que vale 'sem saber prazo, time e carga'."
+        },
+        {
+          "text": "Informa gatilho de revisão ligado a condições concretas (ex.: times independentes, escala independente)",
+          "passed": true,
+          "evidence": "Gatilhos de revisão ligados a prazo, times sem coordenar deploy, carga, disponibilidade, compliance e multi-cliente; 'extrair só quando um desses números mostrar pressão concreta'."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 11.2,
+        "tokens": 31264,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Corrige o tratamento de amount/quantity nulos (validação ou default)",
+          "passed": true,
+          "evidence": "total = None if op.amount is None or op.quantity is None else op.amount * op.quantity; alternativa de 422 se amount for obrigatório."
+        },
+        {
+          "text": "Não produz análise de arquitetura (sem tabela de opções de padrões, sem 'Decisão:' com forças e restrições)",
+          "passed": true,
+          "evidence": "Diz que 'a skill não se aplica: é um bug pontual'; sem tabela de opções nem 'Decisão:'."
+        },
+        {
+          "text": "Resposta curta e focada no código",
+          "passed": true,
+          "evidence": "Resposta de poucas linhas, só código e uma premissa."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 51.7,
+        "tokens": 43332,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Segue as seções do modelo (visão geral com Mermaid, reuso, componentes, dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto)",
+          "passed": true,
+          "evidence": "Seções: visão geral com Mermaid, reuso, componentes, modelos de dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto."
+        },
+        {
+          "text": "A seção de reuso cita arquivos reais do mini-crm (app/main.py, app/models.py, app/routers/opportunities.py)",
+          "passed": true,
+          "evidence": "'Reuso do que já existe' cita app/main.py (3x), app/models.py (6x) e app/routers/opportunities.py (4x)."
+        },
+        {
+          "text": "Cada componente aponta para RF-xx e define interfaces",
+          "passed": true,
+          "evidence": "Os 4 componentes têm '**Interfaces:**' e '**Atende:** RF-xx' (4 de 4)."
+        },
+        {
+          "text": "A cobertura de dimensões trata autenticação/isolamento por organização e marca N/A com motivo onde não se aplica",
+          "passed": true,
+          "evidence": "Tabela de cobertura de dimensões trata autenticação/autorização e isolamento; rate limit, lock otimista e dependência externa marcados N/A com motivo."
+        },
+        {
+          "text": "O plano de implementação tem passos em ordem sem depender de passo posterior",
+          "passed": true,
+          "evidence": "Plano em 4 passos, cada um com 'Depende de' apontando só para passos anteriores (3 depende de 1 e 2; 4 depende de 3)."
+        },
+        {
+          "text": "Salva (ou propõe salvar) em docs/architecture/<nome>/design.md",
+          "passed": true,
+          "evidence": "Cabeçalho: 'Destino pretendido: docs/architecture/crm-oportunidades/design.md'; arquivo não criado em docs/."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 43.1,
+        "tokens": 38905,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Apresenta de 2 a 4 opções reais, incluindo a mais simples (monolito/isolamento por coluna)",
+          "passed": true,
+          "evidence": "Tabela com 4 opções de isolamento (A banco por org, B esquema, C org_id só no app, D org_id+RLS) mais monolito modular vs microsserviços; C é a mais simples."
+        },
+        {
+          "text": "Compara as opções em uma tabela de trade-offs (ganha/paga/reversível)",
+          "passed": true,
+          "evidence": "Tabela 'Opção | Ganha | Paga | Reversível?' presente."
+        },
+        {
+          "text": "Recomenda uma única opção e liga a justificativa a requisitos (prazo de 5 dias, time de 3, isolamento por organização)",
+          "passed": true,
+          "evidence": "Recomenda 'monolito modular + org_id com RLS (D)' e liga a '5 dias', '3 devs' e ao risco de vazamento entre organizações."
+        },
+        {
+          "text": "Informa um gatilho de revisão (em que condição mudaria de ideia)",
+          "passed": true,
+          "evidence": "'Gatilho de revisão: exigência de isolamento físico, exclusão/backup por cliente, ou organização que degrade as demais'."
+        },
+        {
+          "text": "Lista perguntas em aberto ou premissas, sem inventar números (carga, custo, latência)",
+          "passed": true,
+          "evidence": "Seção 'Perguntas em aberto' com 6 itens e presumidos marcados; nenhum número de carga, custo ou latência."
+        },
+        {
+          "text": "Cobre o isolamento entre organizações (ex.: filtro por org_id/RLS) como decisão explícita",
+          "passed": true,
+          "evidence": "Isolamento é a decisão central: org_id NOT NULL, RLS por tabela, papel sem BYPASSRLS, FKs compostas, teste de 404 entre orgs."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 25.4,
+        "tokens": 31066,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Não apresenta valores numéricos de prazo, tamanho de time, carga, latência ou disponibilidade, nem rotulados como premissa",
+          "passed": false,
+          "evidence": "Tabela de 'premissas de trabalho' com valores: time 3 a 8 pessoas, prazo 3 a 6 meses, dezenas por segundo, 99,5% a 99,9% de disponibilidade. Rotuladas como premissa, o que a asserção proíbe."
+        },
+        {
+          "text": "Registra explicitamente o que falta (prazo, time, carga) como pergunta em aberto",
+          "passed": true,
+          "evidence": "'Perguntas em aberto' com 5 itens (time e prazo, usuários e contratos, multiempresa, integrações, exigências legais)."
+        },
+        {
+          "text": "Recomenda a opção mais simples (monolito modular) e justifica sem exigir os dados que faltam",
+          "passed": true,
+          "evidence": "Recomenda monolito modular com justificativa que não depende dos dados."
+        },
+        {
+          "text": "Informa gatilho de revisão ligado a condições concretas (ex.: times independentes, escala independente)",
+          "passed": true,
+          "evidence": "Gatilhos concretos: dois times travando no deploy, módulo com perfil de carga diferente, carga medida que um banco não aguente."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 10.9,
+        "tokens": 29049,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Corrige o tratamento de amount/quantity nulos (validação ou default)",
+          "passed": true,
+          "evidence": "Mesma correção com None e alternativa de 422 (amount: Decimal sem Optional)."
+        },
+        {
+          "text": "Não produz análise de arquitetura (sem tabela de opções de padrões, sem 'Decisão:' com forças e restrições)",
+          "passed": true,
+          "evidence": "Sem análise de arquitetura."
+        },
+        {
+          "text": "Resposta curta e focada no código",
+          "passed": true,
+          "evidence": "Resposta curta e focada no código."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 6,
+        "total": 6,
+        "time_seconds": 31.0,
+        "tokens": 32828,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Segue as seções do modelo (visão geral com Mermaid, reuso, componentes, dados, cobertura de dimensões, erros, riscos, decisões, plano, premissas, perguntas em aberto)",
+          "passed": false,
+          "evidence": "Tem contexto, decisão, componentes, dados, API, rastreabilidade, perguntas e ADRs; faltam reuso, cobertura de dimensões, erros, riscos e plano de implementação. Tem 1 bloco Mermaid."
+        },
+        {
+          "text": "A seção de reuso cita arquivos reais do mini-crm (app/main.py, app/models.py, app/routers/opportunities.py)",
+          "passed": false,
+          "evidence": "Não há seção de reuso; cita app/models.py e app/routers/opportunities.py (2x cada), sem app/main.py."
+        },
+        {
+          "text": "Cada componente aponta para RF-xx e define interfaces",
+          "passed": false,
+          "evidence": "Componentes listam arquivos e funções, mas nenhum cita RF-xx e não definem interfaces (0 RF na seção); o RF aparece só na seção de rastreabilidade."
+        },
+        {
+          "text": "A cobertura de dimensões trata autenticação/isolamento por organização e marca N/A com motivo onde não se aplica",
+          "passed": false,
+          "evidence": "Não há cobertura de dimensões; autenticação e isolamento aparecem só em prosa, sem N/A com motivo."
+        },
+        {
+          "text": "O plano de implementação tem passos em ordem sem depender de passo posterior",
+          "passed": false,
+          "evidence": "Não há plano de implementação em passos."
+        },
+        {
+          "text": "Salva (ou propõe salvar) em docs/architecture/<nome>/design.md",
+          "passed": false,
+          "evidence": "Não menciona docs/architecture/<nome>/design.md."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 28.7,
+        "tokens": 31369,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Apresenta de 2 a 4 opções reais, incluindo a mais simples (monolito/isolamento por coluna)",
+          "passed": true,
+          "evidence": "Recomendação mais 3 alternativas descartadas (só WHERE org_id, schema/banco por tenant, microsserviços), incluindo a mais simples."
+        },
+        {
+          "text": "Compara as opções em uma tabela de trade-offs (ganha/paga/reversível)",
+          "passed": false,
+          "evidence": "Alternativas aparecem em lista de uma linha cada; não há tabela de trade-offs (ganha/paga/reversível)."
+        },
+        {
+          "text": "Recomenda uma única opção e liga a justificativa a requisitos (prazo de 5 dias, time de 3, isolamento por organização)",
+          "passed": true,
+          "evidence": "Liga a escolha a 'Com 3 devs e 5 dias' e ao custo de schema por tenant 'alto demais para esse prazo'."
+        },
+        {
+          "text": "Informa um gatilho de revisão (em que condição mudaria de ideia)",
+          "passed": false,
+          "evidence": "Não há gatilho de revisão (em que condição mudaria de ideia); só riscos tratados e premissas."
+        },
+        {
+          "text": "Lista perguntas em aberto ou premissas, sem inventar números (carga, custo, latência)",
+          "passed": true,
+          "evidence": "'Premissas e pontos em aberto' (usuário em uma org, papéis A definir); nenhum número inventado."
+        },
+        {
+          "text": "Cobre o isolamento entre organizações (ex.: filtro por org_id/RLS) como decisão explícita",
+          "passed": true,
+          "evidence": "Isolamento em três camadas (JWT, RLS com set_config, FKs compostas) e teste de isolamento com 404."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 34.725,
+        "stddev": 17.4647,
+        "min": 11.2,
+        "max": 51.7
+      },
+      "tokens": {
+        "mean": 37041.5,
+        "stddev": 5230.369,
+        "min": 31264,
+        "max": 43332
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.605,
+        "stddev": 0.4271,
+        "min": 0.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 24.0,
+        "stddev": 9.0307,
+        "min": 10.9,
+        "max": 31.0
+      },
+      "tokens": {
+        "mean": 31078.0,
+        "stddev": 1556.0812,
+        "min": 29049,
+        "max": 32828
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.40",
+      "time_seconds": "+10.7",
+      "tokens": "+5964"
+    }
+  },
+  "notes": []
+}

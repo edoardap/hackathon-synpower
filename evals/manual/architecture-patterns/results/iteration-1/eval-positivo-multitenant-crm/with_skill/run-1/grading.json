@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "Apresenta de 2 a 4 opções reais, incluindo a mais simples (monolito/isolamento por coluna)",
+      "passed": true,
+      "evidence": "Tabela com 4 opções de isolamento (A banco por org, B esquema, C org_id só no app, D org_id+RLS) mais monolito modular vs microsserviços; C é a mais simples."
+    },
+    {
+      "text": "Compara as opções em uma tabela de trade-offs (ganha/paga/reversível)",
+      "passed": true,
+      "evidence": "Tabela 'Opção | Ganha | Paga | Reversível?' presente."
+    },
+    {
+      "text": "Recomenda uma única opção e liga a justificativa a requisitos (prazo de 5 dias, time de 3, isolamento por organização)",
+      "passed": true,
+      "evidence": "Recomenda 'monolito modular + org_id com RLS (D)' e liga a '5 dias', '3 devs' e ao risco de vazamento entre organizações."
+    },
+    {
+      "text": "Informa um gatilho de revisão (em que condição mudaria de ideia)",
+      "passed": true,
+      "evidence": "'Gatilho de revisão: exigência de isolamento físico, exclusão/backup por cliente, ou organização que degrade as demais'."
+    },
+    {
+      "text": "Lista perguntas em aberto ou premissas, sem inventar números (carga, custo, latência)",
+      "passed": true,
+      "evidence": "Seção 'Perguntas em aberto' com 6 itens e presumidos marcados; nenhum número de carga, custo ou latência."
+    },
+    {
+      "text": "Cobre o isolamento entre organizações (ex.: filtro por org_id/RLS) como decisão explícita",
+      "passed": true,
+      "evidence": "Isolamento é a decisão central: org_id NOT NULL, RLS por tabela, papel sem BYPASSRLS, FKs compostas, teste de 404 entre orgs."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}
