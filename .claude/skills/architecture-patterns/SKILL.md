@@ -1,6 +1,6 @@
 ---
 name: architecture-patterns
-description: Ajuda a tomar decisões de arquitetura de software: escolher entre padrões e estilos (monolito, monolito modular, microsserviços, camadas, hexagonal, event-driven, filas, CQRS, multi-tenant, plugins/adapters), separar responsabilidades, definir limites entre módulos e avaliar trade-offs contra requisitos e restrições reais. Use sempre que o usuário perguntar "qual arquitetura usar", "como estruturar esse sistema", "monolito ou microsserviços", "como organizar os módulos", "como deixar extensível", pedir desenho técnico a partir de um PRD, comparar abordagens de design, ou pedir diagramas de arquitetura (C4, Mermaid, contexto, containers), mesmo que não diga a palavra "arquitetura".
+description: 'Ajuda a tomar decisões de arquitetura de software: escolher entre padrões e estilos (monolito, monolito modular, microsserviços, camadas, hexagonal, event-driven, filas, CQRS, multi-tenant, plugins/adapters), separar responsabilidades, definir limites entre módulos e avaliar trade-offs contra requisitos e restrições reais. Use sempre que o usuário perguntar "qual arquitetura usar", "como estruturar esse sistema", "monolito ou microsserviços", "como organizar os módulos", "como deixar extensível", pedir desenho técnico a partir de um PRD, comparar abordagens de design, ou pedir diagramas de arquitetura (C4, Mermaid, contexto, containers), mesmo que não diga a palavra "arquitetura".'
 ---
 
 # Architecture Patterns

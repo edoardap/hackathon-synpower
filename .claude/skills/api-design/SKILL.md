@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: Ajuda a desenhar e evoluir APIs (REST/HTTP, webhooks e contratos entre módulos): recursos e endpoints, métodos, formato de requisição e resposta, erros, paginação, autenticação, idempotência, versionamento e mudanças compatíveis ou que quebram clientes. Use sempre que o usuário pedir para "desenhar a API", "definir os endpoints", "contrato da API", "OpenAPI/Swagger", "como versionar", "esse campo quebra o cliente?", "como receber webhook", revisar uma API existente, ou transformar histórias e requisitos em endpoints, mesmo que não diga a palavra "API".
+description: 'Ajuda a desenhar e evoluir APIs (REST/HTTP, webhooks e contratos entre módulos): recursos e endpoints, métodos, formato de requisição e resposta, erros, paginação, autenticação, idempotência, versionamento e mudanças compatíveis ou que quebram clientes. Use sempre que o usuário pedir para "desenhar a API", "definir os endpoints", "contrato da API", "OpenAPI/Swagger", "como versionar", "esse campo quebra o cliente?", "como receber webhook", revisar uma API existente, ou transformar histórias e requisitos em endpoints, mesmo que não diga a palavra "API".'
 ---
 
 # API Design
