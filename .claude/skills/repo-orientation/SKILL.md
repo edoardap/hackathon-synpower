@@ -17,7 +17,7 @@ Mapeia um repositório e entrega um relatório que outro agente consegue usar se
 ## Passos
 
 1. **Visão geral.** Liste a raiz (`ls -la`) e as pastas de primeiro nível. Verifique se é git (`git rev-parse --is-inside-work-tree`), a branch atual, e se é monorepo (workspaces, `packages/`, `apps/`, `go.work`, `Cargo.toml` com `[workspace]`).
-2. **Docs de orientação.** Leia `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `README*` e `docs/` quando existirem.
+2. **Docs de orientação.** Leia `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `README*` e `docs/` quando existirem. Se existir `graphify-out/`, leia o `GRAPH_REPORT.md` e use `graphify query` para perguntas de dependência e impacto; o grafo não traz comandos nem convenções, e pode estar desatualizado (compare o commit do relatório com `git rev-parse HEAD`).
 3. **Stack.** Detecte pelos manifestos: `package.json`, `pyproject.toml`, `requirements*.txt`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle`, `Gemfile`, `composer.json`, `*.csproj`. Anote linguagens, frameworks, versões fixadas (`.nvmrc`, `.python-version`, `.tool-versions`) e gerenciador de pacotes (pelo lockfile).
 4. **Comandos.** Extraia de `scripts` do `package.json`, `Makefile`, `justfile`, `Taskfile`, `tox.ini`, `pyproject.toml` e CI. Cubra instalar, rodar em dev, build, testes (todos e um só), lint e formatação. Se CI e docs divergirem, registre as duas versões.
 5. **Convenções de código.** Leia configs de lint e formatação (`.eslintrc*`, `prettier`, `ruff`, `black`, `.editorconfig`, `rustfmt.toml`). Olhe 2 ou 3 arquivos representativos para nome de arquivos, imports e estilo de testes. Localize onde ficam os testes e como são nomeados.

@@ -13,7 +13,7 @@ Conduz uma decisão de arquitetura do requisito até uma recomendação defendid
 - **Comece simples.** Prefira o monolito modular a microsserviços até existir um motivo concreto (escala independente, times independentes, isolamento de falha). Uma extensibilidade exigida pode ser atendida com uma fronteira bem desenhada (interface/adapter), sem serviços separados.
 - **Toda escolha tem custo.** Para cada opção, diga o que se ganha e o que se paga (complexidade operacional, consistência, curva de aprendizado, risco de prazo).
 - **Decisões difíceis de reverter merecem mais análise.** Dados, contratos públicos e fronteiras entre módulos custam caro para mudar. Detalhes internos não.
-- **Respeite o que já existe.** Em repositório existente, entenda a estrutura e as convenções antes de propor (use a skill `repo-orientation` se ainda não foi feita).
+- **Respeite o que já existe.** Em repositório existente, entenda a estrutura e as convenções antes de propor (use a skill `repo-orientation` se ainda não foi feita e consulte o `graphify` quando houver `graphify-out/`).
 
 ## Passos
 

@@ -35,6 +35,9 @@ números, prazos nem decisões.
 | `solutions-architect` | "qual arquitetura usar", "desenha a API", "documenta essa decisão", "monolito ou microsserviços" | `repo-orientation`, `architecture-patterns`, `api-design`, `adr-writer` | Decisão defendida, design técnico, contrato de API, ADRs |
 
 Ordem natural quando o pedido toca em mais de um: `product-manager`, depois `designer` e `solutions-architect`.
+
+**graphify (opcional).** O `solutions-architect` consulta o grafo do código quando existir `graphify-out/` no repositório alvo, para entender dependência e impacto. O `graphify` é uma ferramenta de linha de comando (pacote `graphifyy`) e este plugin não traz a skill dele: no repositório alvo, rode `graphify install --project` e gere o grafo com `/graphify .`. Sem o grafo, a `repo-orientation` segue sozinha.
+
 Quem pedir para escrever código, testar ou fazer deploy deve ser direcionado aos agentes de implementação, qualidade e DevOps.
 
 ### Skills (`.claude/skills/`)
@@ -45,7 +48,7 @@ Quem pedir para escrever código, testar ou fazer deploy deve ser direcionado ao
 | `prd-writing` | Escreve o PRD a partir da descoberta ou de notas soltas, sem inventar números |
 | `technical-planning` | Quebra o PRD em épicos, histórias e critérios de aceite verificáveis, com rastreabilidade |
 | `product-design` | Gera a especificação de design: fluxos, telas e estados, tokens visuais e roteiro de conversa |
-| `repo-orientation` | Mapeia a estrutura, os comandos e as convenções de um repositório existente |
+| `repo-orientation` | Mapeia a estrutura, os comandos e as convenções de um repositório existente; usa o grafo do `graphify` quando houver `graphify-out/` |
 | `architecture-patterns` | Conduz uma decisão de arquitetura, do requisito a uma recomendação defendida, com diagramas C4 em Mermaid |
 | `api-design` | Desenha o contrato de uma API e julga se uma mudança é compatível ou quebra clientes |
 | `adr-writer` | Registra decisões técnicas como ADRs, com índice e numeração sequencial |

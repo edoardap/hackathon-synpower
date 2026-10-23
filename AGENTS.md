@@ -36,6 +36,12 @@ Se o usuário pedir para escrever código, testar ou fazer deploy, diga que isso
 - O arquiteto só lê o código: não roda build nem testes e não altera código sem o usuário pedir.
 - Commits: mensagem curta no imperativo, com prefixo (`feat:`, `fix:`, `docs:`, `refactor:`). Não faça push sem o usuário pedir.
 
+## Grafo do código (graphify)
+
+O `graphify` é uma ferramenta de linha de comando (pacote `graphifyy`, instalada fora deste repositório) e é opcional: serve para entender dependência e impacto de um código existente. Este plugin não traz a skill dele. No repositório alvo, rode `graphify install --project`, que registra a skill e os hooks no `.claude/` do alvo, e gere o grafo com `/graphify .`; o `graphify-out/` fica lá.
+Se `graphify-out/graph.json` existir, comece perguntas sobre o código com `graphify query "<pergunta>"` (use `./.venv/bin/graphify` quando existir, senão o `graphify` do `PATH`). Se o executável não funcionar, leia os arquivos direto e reporte a limitação. Sem o grafo, a `repo-orientation` segue sozinha.
+O arquiteto só consulta o grafo (`query`, `path`, `explain`); rodar `graphify update` depois de alterar código é de quem alterou.
+
 ## Evals
 
 Os evals usam só o `claude plugin eval`. Os casos ficam em `evals/plugin-eval/` (o formato é dele, não o nosso) e os resultados em `evals/plugin-eval/results/`.

@@ -10,7 +10,7 @@ Só para mudança com decisão de arquitetura, componente novo ou interação en
 
 1. Leia o PRD, as histórias e os critérios de aceite. Cada componente deve apontar para um `RF-xx`/`HU-xx`.
 2. Leia os ADRs com status `Aceito` em `docs/adr/`. Cada um é uma restrição: o design deve **seguir** ou **substituir** (novo ADR, antigo marcado `Substituído por ADR-NNNN`). Nunca ignore em silêncio.
-3. Rode `repo-orientation` se houver código que você ainda não conhece. A análise de reuso depende dela.
+3. Rode `repo-orientation` (e consulte o `graphify`, com `graphify query`, se houver `graphify-out/`) se houver código que você ainda não conhece. A análise de reuso depende disso.
 4. Pesquise o que for desconhecido nesta ordem: código do repositório, docs do projeto, documentação oficial da tecnologia, web. Se não achar, escreva "não verificado". Não invente API, padrão ou comportamento.
 
 ## Modelo

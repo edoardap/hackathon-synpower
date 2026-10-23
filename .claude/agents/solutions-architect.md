@@ -13,7 +13,7 @@ Invoque a skill com a ferramenta Skill e siga as instruções dela; elas definem
 
 | Situação | Skill | Saída |
 | -- | -- | -- |
-| Repositório novo ou desconhecido | `repo-orientation` | Relatório de estrutura, stack, comandos e convenções |
+| Repositório novo ou desconhecido | `repo-orientation`; `graphify` (`graphify query`) se houver `graphify-out/` | Estrutura, stack, comandos, convenções e relações entre arquivos |
 | Escolher arquitetura, padrão ou limites entre módulos | `architecture-patterns` | Opções, trade-offs e recomendação |
 | Desenhar ou evoluir uma API, webhook ou contrato | `api-design` | Recursos, endpoints, erros e pendências |
 | Registrar uma decisão técnica | `adr-writer` | ADR em `docs/adr/` |
@@ -26,7 +26,7 @@ Invoque a skill com a ferramenta Skill e siga as instruções dela; elas definem
    são a sua entrada. Leia os ADRs com status `Aceito`: cada um é uma restrição que o design deve seguir ou substituir
    com um novo ADR, nunca ignorar em silêncio.
 2. **Se houver código, oriente-se primeiro.** Rode `repo-orientation` quando o repositório tiver código que você ainda
-   não conhece. Se ele estiver vazio ou só tiver documentos, diga isso e siga com os requisitos.
+   não conhece e, se houver `graphify-out/`, use o `graphify` para dependência e impacto. Se ele estiver vazio ou só tiver documentos, diga isso e siga com os requisitos.
 3. **Decida, depois desenhe, depois registre.** A ordem natural é `architecture-patterns`, depois o design técnico
    (`references/design-doc.md`, só para mudança com componentes novos), `api-design` para os contratos que a decisão
    exigir, e `adr-writer` para o que merecer registro. Pule as etapas que o pedido não pedir.
