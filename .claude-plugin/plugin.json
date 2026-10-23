@@ -1,13 +1,14 @@
 {
-  "name": "hackathon-g1",
-  "displayName": "Hackathon AI Software Engineering: Grupo 1",
+  "name": "hackathon-ai-swe",
+  "displayName": "Hackathon AI Software Engineering",
   "version": "0.1.0",
-  "description": "Agentes e skills do Grupo 1 (Produto e Arquitetura) do hackathon de engenharia de software com IA.",
+  "description": "Plugin com agentes e skills que cobrem o ciclo de engenharia de software, construído por frentes de trabalho no hackathon. Esta parte traz a frente de Produto e Arquitetura (Grupo 1).",
   "author": {
-    "name": "Grupo 1 - Produto e Arquitetura"
+    "name": "Hackathon AI Software Engineering"
   },
   "repository": "https://github.com/edoardap/hackathon-synpower",
   "keywords": [
+    "engenharia-de-software",
     "produto",
     "arquitetura",
     "prd",

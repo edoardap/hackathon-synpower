@@ -1,8 +1,9 @@
 # Hackathon AI Software Engineering: Grupo 1 (Produto e Arquitetura)
 
-Plugin do Claude Code com **agentes e skills** que levam uma ideia de sistema até um design técnico pronto para ser
-implementado. Este repositório é a parte do Grupo 1 de um plugin maior, que os Grupos 2 (implementação, qualidade e
-segurança) e 3 (DevOps, SRE e documentação) completam.
+Plugin do Claude Code (`hackathon-ai-swe`) com **agentes e skills** que cobrem o ciclo de engenharia de software, construído
+por frentes de trabalho. Este repositório traz a frente de **Produto e Arquitetura** (Grupo 1): leva uma ideia de sistema
+até um design técnico pronto para ser implementado. Os Grupos 2 (implementação, qualidade e segurança) e 3 (DevOps, SRE e
+documentação) completam o plugin.
 
 ```
 ideia vaga → descoberta → PRD → épicos e histórias → design de UX → arquitetura, API e ADRs → (Grupo 2)
@@ -68,19 +69,19 @@ Qual arquitetura usar para isolar os dados de cada organização?
 Documenta essa decisão como ADR.
 ```
 
-**Como plugin (instalação).** O repo é um plugin (`hackathon-g1`) e também o próprio marketplace (`hackathon-synpower`).
+**Como plugin (instalação).** O repo é um plugin (`hackathon-ai-swe`) e também o próprio marketplace (`hackathon-synpower`).
 Em qualquer projeto, dentro do Claude Code:
 
 ```text
 /plugin marketplace add edoardap/hackathon-synpower
-/plugin install hackathon-g1@hackathon-synpower
+/plugin install hackathon-ai-swe@hackathon-synpower
 ```
 
 Ou, no terminal:
 
 ```bash
 claude plugin marketplace add edoardap/hackathon-synpower
-claude plugin install hackathon-g1@hackathon-synpower
+claude plugin install hackathon-ai-swe@hackathon-synpower
 ```
 
 Para só experimentar, sem instalar, a partir da raiz do repo: `claude --plugin-dir .`
@@ -90,22 +91,15 @@ Para só experimentar, sem instalar, a partir da raiz do repo: `claude --plugin-
 só funciona depois que o `marketplace.json` estiver publicado no GitHub, e esse caminho em si ainda não foi exercitado.
 
 **Versão.** O `plugin.json` fixa a versão (`0.1.0`). Quem já instalou **só recebe atualização quando a versão muda**, então
-aumente o número a cada entrega. Para atualizar: `claude plugin update hackathon-g1@hackathon-synpower`.
+aumente o número a cada entrega. Para atualizar: `claude plugin update hackathon-ai-swe@hackathon-synpower`.
 
 Ao criar um agente novo, acrescente o arquivo dele em `agents` no `plugin.json`, porque o manifesto não aceita pasta de
 agentes.
 
 ## Como sabemos que funciona
 
-Uma skill só está pronta quando se mostra que o agente a usa e que o resultado atende ao esperado. Por isso existem dois
-testes, separados:
-
-- **Qualidade da saída**: cenários positivo, negativo e de limite, rodados com e sem a skill.
-- **Ativação**: o Claude escolhe a skill quando deveria e não escolhe quando não deveria.
-
-Os cenários, os scripts, os resultados e a comparação com o `claude plugin eval` do Claude Code estão em
-[`evals/README.md`](evals/README.md), que também tem o resumo atualizado do que já foi medido e do que falta rodar.
-Nem todas as skills foram avaliadas ainda.
+Os testes usam o `claude plugin eval` do Claude Code e checam a **ativação**: o Claude escolhe a skill ou o agente quando
+deveria e não escolhe quando não deveria. Os casos e os resultados estão em [`evals/`](evals/README.md).
 
 ## Estrutura do repositório
 
@@ -113,7 +107,7 @@ Nem todas as skills foram avaliadas ainda.
 .claude/agents/       agentes (product-manager, designer, solutions-architect)
 .claude/skills/       skills, cada uma com SKILL.md e, quando preciso, assets/ ou references/
 .claude-plugin/       plugin.json (o plugin) e marketplace.json (como instalar)
-evals/                testes das skills (manual/ é nosso, plugin-eval/ é do Claude), scripts e comparação
+evals/                casos e resultados do `claude plugin eval`
 AGENTS.md             regras para todos os agentes e convenções do repositório
 ```
 
