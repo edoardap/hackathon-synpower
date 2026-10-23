@@ -71,3 +71,8 @@ Escolha o mais simples que responda à pergunta.
 Mantenha cada seção curta e concreta. Omita uma seção só se ela realmente não se aplicar.
 
 Leia `assets/relatorio-descoberta.md` e preencha o modelo mantendo os títulos. Não copie texto de exemplo como se fosse dado real.
+
+## Referências
+
+- `references/hipoteses.md`: ao escrever hipóteses, definir critérios de confirmação e refutação, priorizar por risco e fechar a recomendação.
+- `references/entrevistas.md`: quando o usuário pedir roteiro de entrevista ou precisar conduzir e registrar conversas com usuários.

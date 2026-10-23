@@ -56,3 +56,4 @@ máximo 3 perguntas) ou registre como pendência na história.
 ## Modelo de saída
 
 Leia `assets/planejamento.md` e preencha o modelo mantendo os títulos. Não copie texto de exemplo como se fosse dado real.
+Consulte `references/historias-e-criterios.md` ao agrupar épicos, quebrar histórias, escrever critérios Dado/Quando/Então e conferir a cobertura.

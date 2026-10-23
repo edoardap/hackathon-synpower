@@ -55,3 +55,4 @@ descubra o que falta.
 ## Modelo do PRD
 
 Leia `assets/prd.md` e preencha o modelo mantendo os títulos. Não copie texto de exemplo como se fosse dado real.
+Consulte `references/qualidade-de-requisitos.md` ao escrever e revisar as seções (problema, métricas, RF, RNF, prioridade, riscos) e para a checagem final antes de mostrar o PRD.
