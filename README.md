@@ -15,7 +15,7 @@ O plugin é único e construído por frentes de trabalho.
 |---|---|
 | Produto, Discovery e UX | `product-manager`, `designer` |
 | Arquitetura e Engenharia de Software | `solutions-architect` |
-| Implementação: backend, frontend e dados | `backend-engineer`, `frontend-engineer` |
+| Implementação: backend, frontend e dados | `orchestrator`, `software-engineer` (no papel de `backend-engineer` e `frontend-engineer`) |
 | Qualidade, Testes e Segurança | `qa-engineer`, `security-reviewer`, `code-reviewer` |
 | DevOps, SRE e Operações | `devops-engineer`, `sre-engineer` |
 | Documentação e Conhecimento Técnico | `tech-writer` |
@@ -33,12 +33,18 @@ números, prazos nem decisões.
 | `product-manager` | "tenho uma ideia de sistema", "vale a pena construir?", "escreve o PRD", "quebra isso em histórias" | `product-discovery`, `prd-writing`, `technical-planning` | Descoberta, PRD, épicos e histórias com critérios de aceite |
 | `designer` | "desenha as telas", "fluxo do usuário", "paleta e tipografia", "roteiro da conversa do agente" | `product-design` | Especificação de design (UX, visual, conversa) |
 | `solutions-architect` | "qual arquitetura usar", "desenha a API", "documenta essa decisão", "monolito ou microsserviços" | `repo-orientation`, `architecture-patterns`, `api-design`, `adr-writer` | Decisão defendida, design técnico, contrato de API, ADRs |
+| `orchestrator` | (chamado pela `implement-feature`) | — | Fases da rodada em ondas, commits aprovados, revisão do PR e análise final |
+| `software-engineer` | "implementa o endpoint", "faz a tela", "corrige o que a revisão apontou" | `backend-patterns`, `frontend-patterns`, `database-migration-plan`, `tdd`, `verification-before-completion`, `receiving-code-review` | Change do OpenSpec, código com teste e correções |
+| `code-reviewer` | "revisa esse PR", "essa entrega pode ir para merge?" | `code-review-reliability` | Relatório único com gravidade, recomendação e veredito |
+| `qa-engineer` | "revisa a qualidade desse PR", "prova esse bug com um teste" | `code-review-reliability`, `test-generation` | Relatório e testes de regressão |
+| `security-reviewer` | "revisa a segurança desse PR", "dá pra uma empresa ver dados da outra?" | `code-review-reliability`, `secret-handling-review` | Relatório com a requisição que explora cada falha |
 
 Ordem natural quando o pedido toca em mais de um: `product-manager`, depois `designer` e `solutions-architect`.
 
 **graphify (opcional).** O `solutions-architect` consulta o grafo do código quando existir `graphify-out/` no repositório alvo, para entender dependência e impacto. O `graphify` é uma ferramenta de linha de comando (pacote `graphifyy`) e este plugin não traz a skill dele: no repositório alvo, rode `graphify install --project` e gere o grafo com `/graphify .`. Sem o grafo, a `repo-orientation` segue sozinha.
 
-Quem pedir para escrever código, testar ou fazer deploy deve ser direcionado aos agentes de implementação, qualidade e DevOps.
+Para implementar, peça a funcionalidade em rodadas pequenas: a skill `implement-feature` conduz o plano, as fases, a
+revisão do PR e o encerramento. Deploy é dos agentes de DevOps.
 
 ### Skills (`.claude/skills/`)
 
@@ -52,6 +58,15 @@ Quem pedir para escrever código, testar ou fazer deploy deve ser direcionado ao
 | `architecture-patterns` | Conduz uma decisão de arquitetura, do requisito a uma recomendação defendida, com diagramas C4 em Mermaid |
 | `api-design` | Desenha o contrato de uma API e julga se uma mudança é compatível ou quebra clientes |
 | `adr-writer` | Registra decisões técnicas como ADRs, com índice e numeração sequencial |
+| `implement-feature` | Conduz uma rodada de implementação: change do OpenSpec, plano aprovado, fases com commit aprovado, revisão do PR e encerramento com limpeza da change |
+| `backend-patterns` | Onde fica cada código FastAPI, validação na fronteira e isolamento por organização |
+| `frontend-patterns` | Estrutura de tela React, cliente gerado, cache, formulário e os estados de carregando, vazio e erro |
+| `database-migration-plan` | Mudança de schema com plano aprovado e rollback provado só em banco local |
+| `code-review-reliability` | Revisão com prova, gravidade, escopo e veredito |
+| `test-generation` | Testes para código existente, com o teste de regressão falhando antes da correção |
+| `secret-handling-review` | Busca de segredo exposto, com valores mascarados |
+| `diff-review` | Página de revisão de diff para uma pessoa anotar |
+| `tdd`, `verification-before-completion`, `receiving-code-review` | Teste antes do código, prova antes de dizer "pronto" e correção conferida, usadas pelo `software-engineer` |
 
 ## Onde ficam os resultados
 
@@ -66,6 +81,9 @@ da funcionalidade.
 | Design de UX | `docs/design/<nome>.md` |
 | Design técnico e diagramas | `docs/architecture/<nome>/design.md` |
 | Decisões técnicas | `docs/adr/NNNN-titulo.md`, com índice em `docs/adr/README.md` |
+| Plano de uma rodada de implementação | `openspec/changes/<change>/`, apagada no encerramento depois de commitada |
+| Comportamento entregue (manual vivo) | `openspec/specs/<capacidade>/spec.md` |
+| Itens deferidos nas revisões | `openspec/backlog.md` |
 
 A rastreabilidade é `RF-xx` → `HU-xx` → componente do design → ADR. Os ADRs com status `Aceito` valem para as próximas
 decisões: siga-os ou substitua com um novo ADR.
@@ -81,7 +99,12 @@ Escreve o PRD a partir dessa descoberta.
 Quebra o PRD em histórias com critérios de aceite.
 Qual arquitetura usar para isolar os dados de cada organização?
 Documenta essa decisão como ADR.
+vamos começar pelo backend: implementa só a parte de organizações do design de oportunidades
+agora a API de oportunidades: cadastrar, listar, ver e mudar o estágio
+revisa tudo que foi feito em oportunidades antes de eu abrir o PR
 ```
+
+A implementação usa o OpenSpec: `npm install -g @fission-ai/openspec@1.4.1`.
 
 **Como plugin (instalação).** O repo é um plugin (`hackathon-ai-swe`) e também o próprio marketplace (`hackathon-synpower`).
 Em qualquer projeto, dentro do Claude Code:
@@ -128,6 +151,9 @@ deveria e não escolhe quando não deveria. Os casos e os resultados estão em [
     references/        padrões, checklists e material de consulta
     assets/            templates reutilizáveis
 evals/plugin-eval/     casos e resultados do `claude plugin eval`
+hooks/hooks.json       gancho que bloqueia segredos e pede confirmação de todo `git commit`
+tools/, adapters/, config/   secret-guard e diff-review, usados pelo gancho e pelas skills
+tests/                 testes das ferramentas: `sh tests/run.sh`
 AGENTS.md              roteamento e regras para todos os agentes
 ```
 

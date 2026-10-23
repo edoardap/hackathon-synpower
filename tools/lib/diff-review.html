@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review de diff</title>
+<link rel="stylesheet" media="(prefers-color-scheme: light)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" integrity="sha512-0aPQyyeZrWj9sCA46UlmWgKOP0mUipLQ6OZXu8l4IcAmD2u31EPEy9VcIMvl7SoAaKe8bLXZhYoMaE/in+gcgA==" crossorigin="anonymous">
+<link rel="stylesheet" media="(prefers-color-scheme: dark)" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin="anonymous"></script>
+<style>
+:root {
+  --fg: #1f2328; --muted: #59636e; --border: #d1d9e0; --bg: #ffffff; --subtle: #f6f8fa; --hover: #eff2f5;
+  --accent: #0969da; --accent-subtle: #ddf4ff; --success: #1a7f37; --danger: #d1242f; --attention: #9a6700;
+  --btn-primary: #1f883d; --btn-primary-hover: #1c8139; --btn-bg: #f6f8fa; --btn-hover: #eff2f5;
+  --add-bg: #dafbe1; --add-num: #aceebb; --add-word: #aceebb;
+  --del-bg: #ffebe9; --del-num: #ffcecb; --del-word: #ffcecb;
+  --hunk-bg: #ddf4ff; --hunk-num: #b6e3ff; --sel-bg: #fff8c5; --sel-num: #f7e38a;
+  --shadow: 0 8px 24px rgba(140,149,159,.2);
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --tb: 57px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #f0f6fc; --muted: #9198a1; --border: #3d444d; --bg: #0d1117; --subtle: #151b23; --hover: #1f242c;
+    --accent: #4493f8; --accent-subtle: rgba(56,139,253,.15); --success: #3fb950; --danger: #f85149; --attention: #d29922;
+    --btn-primary: #238636; --btn-primary-hover: #29903b; --btn-bg: #212830; --btn-hover: #262c36;
+    --add-bg: rgba(46,160,67,.15); --add-num: rgba(63,185,80,.3); --add-word: rgba(46,160,67,.4);
+    --del-bg: rgba(248,81,73,.1); --del-num: rgba(248,81,73,.3); --del-word: rgba(248,81,73,.4);
+    --hunk-bg: rgba(56,139,253,.1); --hunk-num: rgba(56,139,253,.4); --sel-bg: rgba(187,128,9,.15); --sel-num: rgba(187,128,9,.4);
+    --shadow: 0 8px 24px rgba(1,4,9,.8);
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; }
+button { font: inherit; color: inherit; }
+code, .mono { font-family: var(--mono); font-size: 12px; }
+[hidden] { display: none !important; }
+.muted { color: var(--muted); }
+.spacer { flex: 1; }
+svg { vertical-align: text-bottom; flex-shrink: 0; }
+
+.topbar { display: flex; align-items: center; gap: 8px; padding: 16px 24px; background: var(--subtle); border-bottom: 1px solid var(--border); }
+.topbar .repo { font-size: 16px; }
+.topbar .repo b { font-weight: 600; }
+.pr-head { padding: 24px 24px 0; }
+.pr-head h1 { margin: 0 0 8px; font-size: 26px; font-weight: 400; line-height: 1.25; word-break: break-word; }
+.pr-head h1 .muted { font-weight: 300; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--muted); }
+.state { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 2em; background: var(--btn-primary); color: #fff; font-weight: 500; }
+.branch { padding: 2px 6px; border-radius: 6px; background: var(--accent-subtle); color: var(--accent); }
+.tabs { display: flex; gap: 8px; margin-top: 16px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tabs button { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid transparent; border-bottom: 0; border-radius: 6px 6px 0 0; background: none; cursor: pointer; color: var(--muted); margin-bottom: -1px; white-space: nowrap; }
+.tabs button.active { border-color: var(--border); background: var(--bg); color: var(--fg); }
+.tabs button:hover:not(.active) { color: var(--fg); }
+.counter { display: inline-block; min-width: 20px; padding: 0 6px; border-radius: 2em; background: var(--hover); color: var(--fg); font-size: 12px; font-weight: 500; line-height: 18px; text-align: center; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--btn-bg); font-size: 14px; font-weight: 500; line-height: 20px; cursor: pointer; white-space: nowrap; }
+.btn:hover { background: var(--btn-hover); }
+.btn.sm { padding: 3px 8px; font-size: 12px; }
+.btn.primary { background: var(--btn-primary); border-color: rgba(31,35,40,.15); color: #fff; }
+.btn.primary:hover { background: var(--btn-primary-hover); }
+.btn.primary .counter { background: rgba(255,255,255,.2); color: #fff; }
+.btn.danger { color: var(--danger); }
+.btn.danger:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+.icon-btn { display: inline-flex; padding: 4px; border: 0; border-radius: 6px; background: none; color: var(--muted); cursor: pointer; }
+.icon-btn:hover { background: var(--hover); color: var(--fg); }
+.seg { display: inline-flex; }
+.seg button { padding: 3px 12px; border: 1px solid var(--border); background: var(--btn-bg); font-size: 12px; font-weight: 500; line-height: 20px; cursor: pointer; }
+.seg button:first-child { border-radius: 6px 0 0 6px; }
+.seg button:last-child { border-radius: 0 6px 6px 0; border-left: 0; }
+.seg button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.toolbar { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 12px 24px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.toolbar label { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); cursor: pointer; }
+.stat { font-family: var(--mono); font-size: 12px; font-weight: 600; }
+.add-t { color: var(--success); }
+.del-t { color: var(--danger); }
+.progress { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.bar { width: 80px; height: 8px; border-radius: 4px; background: var(--hover); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--success); transition: width .2s; }
+
+.layout { display: grid; grid-template-columns: 296px minmax(0, 1fr); gap: 24px; padding: 16px 24px 64px; }
+body.no-tree .layout { grid-template-columns: minmax(0, 1fr); }
+body.no-tree #tree { display: none; }
+#tree { position: sticky; top: calc(var(--tb) + 16px); align-self: start; max-height: calc(100vh - var(--tb) - 32px); display: flex; flex-direction: column; }
+#filter { width: 100%; padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); font: inherit; }
+#filter:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+#treeList { margin-top: 8px; overflow-y: auto; font-size: 14px; }
+#treeList details > summary { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 6px; cursor: pointer; list-style: none; color: var(--fg); user-select: none; }
+#treeList details > summary::-webkit-details-marker { display: none; }
+#treeList details > summary::before { content: ""; width: 12px; height: 12px; flex-shrink: 0; background: currentColor; opacity: .6; clip-path: polygon(20% 30%, 80% 30%, 50% 75%); }
+#treeList details:not([open]) > summary::before { transform: rotate(-90deg); }
+#treeList summary:hover, .tree-file:hover { background: var(--hover); }
+.tree-file { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 6px; color: var(--fg); text-decoration: none; position: relative; }
+.tree-file.active { background: var(--hover); }
+.tree-file.active::after { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 4px; border-radius: 6px; background: var(--accent); }
+.tree-file .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.tree-file .tick { color: var(--muted); display: none; }
+.tree-file.viewed .name { color: var(--muted); }
+.tree-file.viewed .tick { display: inline-flex; }
+.badge { display: inline-flex; align-items: center; gap: 2px; padding: 0 6px; border-radius: 2em; background: var(--accent-subtle); color: var(--accent); font-size: 12px; font-weight: 600; line-height: 18px; }
+.st-added { color: var(--success); } .st-deleted { color: var(--danger); } .st-modified { color: var(--attention); } .st-renamed { color: var(--muted); }
+
+.file { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 6px; scroll-margin-top: calc(var(--tb) + 16px); }
+.file-header { position: sticky; top: var(--tb); z-index: 10; display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 4px; background: var(--subtle); border-bottom: 1px solid var(--border); border-radius: 6px 6px 0 0; flex-wrap: wrap; }
+.file.collapsed .file-header { border-bottom: 0; border-radius: 6px; }
+.file.collapsed .file-body { display: none; }
+.file.collapsed .chev svg { transform: rotate(-90deg); }
+.file-header .path { font-family: var(--mono); font-size: 12px; font-weight: 600; word-break: break-all; }
+.file-header .path .dir { font-weight: 400; color: var(--muted); }
+.blocks { display: inline-flex; gap: 1px; }
+.blocks i { width: 8px; height: 8px; background: var(--hover); border: 1px solid var(--border); border-radius: 1px; }
+.blocks i.a { background: var(--success); border-color: var(--success); }
+.blocks i.d { background: var(--danger); border-color: var(--danger); }
+.label { padding: 0 7px; border: 1px solid var(--border); border-radius: 2em; font-size: 12px; font-weight: 500; line-height: 18px; }
+.label.added { color: var(--success); border-color: var(--success); }
+.label.deleted { color: var(--danger); border-color: var(--danger); }
+.label.renamed, .label.big { color: var(--muted); }
+.viewed-box { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; cursor: pointer; background: var(--bg); }
+.viewed-box.on { background: var(--accent-subtle); border-color: var(--accent); color: var(--accent); }
+.file-body { overflow-x: auto; }
+.empty-msg { padding: 16px; text-align: center; color: var(--muted); }
+.file.single-hidden { display: none; }
+
+table.diff { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; line-height: 20px; table-layout: fixed; }
+table.diff td { padding: 0; vertical-align: top; }
+table.diff col.n { width: 50px; }
+table.diff.split col.n { width: 44px; }
+table.diff td.num[data-k] { cursor: pointer; }
+table.diff td.num { padding: 0 10px; text-align: right; color: var(--muted); user-select: none; }
+table.diff td.code { position: relative; padding: 0 10px 0 22px; white-space: pre-wrap; overflow-wrap: anywhere; }
+table.diff.split td.code { border-right: 1px solid var(--border); }
+table.diff.split td.code:last-child { border-right: 0; }
+td.code .mk { position: absolute; left: 8px; user-select: none; }
+td.add { background: var(--add-bg); } td.num.add { background: var(--add-num); color: var(--fg); }
+td.del { background: var(--del-bg); } td.num.del { background: var(--del-num); color: var(--fg); }
+td.code.add .x { background: var(--add-word); border-radius: 2px; }
+td.code.del .x { background: var(--del-word); border-radius: 2px; }
+td.blank { background: var(--subtle); }
+tr.hunk td { background: var(--hunk-bg); color: var(--muted); padding-top: 4px; padding-bottom: 4px; }
+tr.hunk td.num { background: var(--hunk-num); }
+tr.nonl td.code { color: var(--muted); }
+td.sel, td.num.sel { background: var(--sel-bg) !important; }
+td.num.sel { background: var(--sel-num) !important; }
+.add-note { position: absolute; left: -10px; top: 1px; z-index: 2; display: none; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: 600 14px/20px sans-serif; cursor: pointer; transform: scale(.85); transition: transform .1s; }
+.add-note:hover { transform: scale(1); }
+table.diff tr:hover .add-note, table.diff td.code:hover .add-note { display: block; }
+table.diff.split tr:hover .add-note { display: none; }
+table.diff.split td.code:hover .add-note { display: block; }
+
+tr.note-row > td, tr.form-row > td { padding: 8px 16px; background: var(--subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5; white-space: normal; }
+.comment { max-width: 880px; margin: 4px 0; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+.comment-head { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--subtle); border-bottom: 1px solid var(--border); border-radius: 6px 6px 0 0; font-size: 13px; flex-wrap: wrap; }
+.avatar { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 10px; font-weight: 600; }
+.chip { font-family: var(--mono); font-size: 11px; padding: 0 6px; border-radius: 6px; background: var(--accent-subtle); color: var(--accent); }
+.comment-body { padding: 8px 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.link { border: 0; background: none; padding: 0 4px; color: var(--muted); font-size: 12px; cursor: pointer; }
+.link:hover { color: var(--accent); text-decoration: underline; }
+.link.danger:hover { color: var(--danger); }
+.file-notes { padding: 8px 16px; background: var(--subtle); border-bottom: 1px solid var(--border); }
+.file-notes h4 { margin: 4px 0; font-size: 12px; font-weight: 600; color: var(--muted); }
+.orphan-snip { margin: 0; padding: 4px 12px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; white-space: pre-wrap; color: var(--muted); }
+.comment-form { max-width: 880px; margin: 4px 0; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+.comment-form .form-title { padding: 6px 12px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+.comment-form textarea { display: block; width: calc(100% - 16px); min-height: 96px; margin: 8px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--subtle); color: var(--fg); font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; resize: vertical; }
+.form-actions { display: flex; align-items: center; gap: 8px; padding: 0 8px 8px; }
+.form-actions .hint { flex: 1; font-size: 12px; color: var(--muted); }
+
+#commits { padding: 16px 24px 64px; }
+.commit-list { border: 1px solid var(--border); border-radius: 6px; }
+.commit-list .title { padding: 8px 16px; background: var(--subtle); border-bottom: 1px solid var(--border); border-radius: 6px 6px 0 0; color: var(--muted); font-size: 13px; }
+.commit { display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid var(--border); }
+.commit:last-child { border-bottom: 0; }
+.commit .t { font-weight: 600; overflow-wrap: anywhere; }
+.commit .sha { padding: 2px 8px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+
+dialog { width: min(880px, calc(100vw - 32px)); max-height: calc(100vh - 64px); padding: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--fg); box-shadow: var(--shadow); }
+dialog::backdrop { background: rgba(31,35,40,.5); }
+.dlg { display: flex; flex-direction: column; max-height: calc(100vh - 66px); }
+.dlg-head { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); }
+.dlg-head h2 { margin: 0; font-size: 14px; font-weight: 600; flex: 1; }
+.dlg-body { padding: 16px; overflow-y: auto; }
+.dlg-body label { display: block; margin-bottom: 6px; font-weight: 600; }
+.dlg-body textarea { width: 100%; min-height: 80px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--subtle); color: var(--fg); font: inherit; resize: vertical; }
+#md { margin: 0; padding: 12px; max-height: 45vh; overflow: auto; border: 1px solid var(--border); border-radius: 6px; background: var(--subtle); font-family: var(--mono); font-size: 12px; white-space: pre-wrap; }
+.dlg-actions { display: flex; gap: 8px; padding: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.touch-hint { display: none; font-size: 12px; color: var(--muted); }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 50; padding: 8px 16px; border-radius: 6px; background: var(--fg); color: var(--bg); font-size: 13px; box-shadow: var(--shadow); }
+
+#fullView { display: none; padding: 16px 24px 64px; }
+body.full-mode #fullView { display: block; }
+body.full-mode .pr-head, body.full-mode #filesTab, body.full-mode #commits { display: none; }
+.full .file-header { top: 0; }
+.full-cols { display: grid; grid-template-columns: 1fr 1fr; flex: 0 0 calc(100% + 12px); margin: 6px -8px -6px -4px; border-top: 1px solid var(--border); font-size: 12px; }
+.full-cols div { padding: 6px 12px; overflow-wrap: anywhere; }
+.full-cols div + div { border-left: 1px solid var(--border); }
+a.btn { text-decoration: none; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 12px 16px 48px; }
+  .toolbar, .pr-head, .topbar, #commits, #fullView { padding-left: 16px; padding-right: 16px; }
+}
+@media (max-width: 768px) {
+  :root { --tb: 0px !important; }
+  .pr-head { padding-top: 16px; }
+  .pr-head h1 { font-size: 20px; }
+  .toolbar { position: static; padding-top: 8px; padding-bottom: 8px; }
+  .toolbar .seg, #expandAll, #collapseAll { display: none; }
+  .touch-hint { display: block; flex-basis: 100%; }
+  #finish { position: fixed; right: 16px; bottom: 16px; z-index: 30; box-shadow: var(--shadow); }
+  .toast { bottom: 72px; }
+  body.no-tree #tree, #tree { display: flex; position: fixed; inset: 0 auto 0 0; z-index: 40; width: min(320px, 85vw); max-height: none; padding: 16px; background: var(--bg); border-right: 1px solid var(--border); box-shadow: var(--shadow); transform: translateX(-105%); transition: transform .2s; }
+  body.tree-open #tree { transform: none; }
+  body.tree-open::after { content: ""; position: fixed; inset: 0; z-index: 39; background: rgba(31,35,40,.5); }
+  .file-header { gap: 6px; }
+  .file-header .path { flex-basis: calc(100% - 40px); order: -1; padding-left: 4px; }
+  .file-header .blocks { display: none; }
+  .file-header .chev { order: -2; }
+  table.diff { table-layout: auto; width: max-content; min-width: 100%; }
+  table.diff col.n { width: 40px; }
+  table.diff td.num { padding: 0 6px; }
+  table.diff td.code { white-space: pre; overflow-wrap: normal; }
+  .row-wrap { position: sticky; left: 16px; width: calc(100vw - 66px); }
+  tr.note-row > td, tr.form-row > td { padding-left: 0; padding-right: 0; }
+  .full .file-header { position: static; }
+  .change-nav { position: fixed; right: 16px; bottom: 16px; z-index: 30; display: flex; gap: 8px; }
+  .change-nav .btn { padding: 8px 12px; box-shadow: var(--shadow); }
+  .full-cols { grid-template-columns: 1fr; }
+  .full-cols div + div { border-left: 0; border-top: 1px solid var(--border); }
+  textarea, #filter { font-size: 16px !important; }
+  .commit { flex-wrap: wrap; gap: 8px; }
+  dialog { width: calc(100vw - 16px); max-height: calc(100vh - 16px); }
+  .dlg { max-height: calc(100vh - 18px); }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <svg width="20" height="20" viewBox="0 0 16 16"><path d="M2 2.5A1.5 1.5 0 0 1 3.5 1h8A1.5 1.5 0 0 1 13 2.5v9.5h-9a1 1 0 0 0 0 2h9v1H4a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+  <span class="repo"><span class="muted">local /</span> <b id="repoName"></b></span>
+</header>
+<div class="pr-head">
+  <h1 id="title"></h1>
+  <div class="meta" id="meta"></div>
+  <nav class="tabs">
+    <button data-tab="files" class="active">Arquivos alterados <span class="counter" id="nFiles"></span></button>
+    <button data-tab="commits">Commits <span class="counter" id="nCommits"></span></button>
+  </nav>
+</div>
+
+<div id="filesTab">
+  <div class="toolbar" id="toolbar">
+    <button class="icon-btn" id="toggleTree" title="Mostrar ou ocultar a árvore de arquivos"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 3h12M2 8h12M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    <div class="seg"><button data-view="unified">Unificado</button><button data-view="split">Lado a lado</button></div>
+    <label><input type="checkbox" id="single"> Um arquivo por vez</label>
+    <span id="singleNav" hidden><button class="btn sm" id="prev">← Anterior</button> <button class="btn sm" id="next">Próximo →</button></span>
+    <button class="btn sm" id="expandAll">Expandir tudo</button>
+    <button class="btn sm" id="collapseAll">Recolher tudo</button>
+    <span class="spacer"></span>
+    <span class="touch-hint">Toque no número de uma linha para anotar.</span>
+    <span class="stat" id="totals"></span>
+    <span class="progress"><span id="progressTxt"></span><span class="bar"><i id="progressBar"></i></span></span>
+    <button class="btn primary" id="finish">Finalizar review <span class="counter" id="noteCount">0</span></button>
+  </div>
+  <main class="layout">
+    <aside id="tree"><input id="filter" aria-label="Filtrar arquivos" placeholder="Filtrar arquivos…" autocomplete="off"><div id="treeList"></div></aside>
+    <section id="files"></section>
+  </main>
+</div>
+
+<section id="fullView">
+  <div class="file full">
+    <div class="file-header">
+      <a class="btn sm" href="#">← Voltar ao diff</a>
+      <span class="path" id="fullPath"></span>
+      <span class="stat" id="fullStat"></span>
+      <span class="spacer"></span>
+      <span class="muted" id="fullCount" style="font-size:12px"></span>
+      <span class="change-nav"><button class="btn sm" id="prevChange">↑ Mudança anterior</button> <button class="btn sm" id="nextChange">↓ Próxima mudança</button></span>
+      <div class="full-cols" id="fullCols"></div>
+    </div>
+    <div class="file-body" id="fullBody"></div>
+  </div>
+</section>
+
+<section id="commits" hidden><div class="commit-list"><div class="title" id="commitsTitle"></div><div id="commitRows"></div></div></section>
+
+<dialog id="dlg">
+  <div class="dlg">
+    <div class="dlg-head"><h2>Finalizar review</h2><button class="icon-btn" id="closeDlg" title="Fechar">✕</button></div>
+    <div class="dlg-body">
+      <label for="general">Comentário geral</label>
+      <textarea id="general" placeholder="Observação que vale para a implementação inteira (opcional)"></textarea>
+      <p class="muted" style="margin:16px 0 6px">Markdown para o agente de codificação</p>
+      <pre id="md"></pre>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn danger" id="clearAll">Apagar todas as notas</button>
+      <span class="spacer"></span>
+      <button class="btn" id="download">Baixar .md</button>
+      <button class="btn primary" id="copyMd">Copiar Markdown</button>
+    </div>
+  </div>
+</dialog>
+
+<script id="dados" type="application/json">__DADOS__</script>
+<script>
+const D = JSON.parse(document.getElementById('dados').textContent);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const KEY = `diff-review:${D.repo}:${D.base}:${D.head}`;
+const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } })();
+const S = { notes: saved.notes || [], viewed: saved.viewed || {}, general: saved.general || '', view: saved.view || 'unified', single: !!saved.single };
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} updateCounts(); };
+
+const svg = (d, extra = '') => `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+const ICON = {
+  chev: svg('<path d="M4 6l4 4 4-4"/>'),
+  copy: svg('<rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5v-2a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2"/>'),
+  comment: svg('<path d="M2.5 3.5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H7l-3 2.5v-2.5h-.5a1 1 0 0 1-1-1z"/>'),
+  check: svg('<path d="M3.5 8.5l3 3 6-7"/>'),
+  folder: svg('<path d="M1.75 3.5h4l1.5 1.5h7v7.5h-12.5z"/>', 'class="muted"'),
+  added: svg('<rect x="2" y="2" width="12" height="12" rx="2"/><path d="M8 5v6M5 8h6"/>', 'class="st-added"'),
+  deleted: svg('<rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6"/>', 'class="st-deleted"'),
+  modified: svg('<rect x="2" y="2" width="12" height="12" rx="2"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/>', 'class="st-modified"'),
+  renamed: svg('<rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M8.5 5.5L11 8l-2.5 2.5"/>', 'class="st-renamed"'),
+};
+const STATUS = { added: 'adicionado', deleted: 'removido', renamed: 'renomeado', modified: 'modificado' };
+const CLS = { '+': 'add', '-': 'del', ' ': 'ctx' };
+const EXT = { py: 'python', js: 'javascript', mjs: 'javascript', cjs: 'javascript', jsx: 'javascript', ts: 'typescript', tsx: 'typescript', json: 'json', yml: 'yaml', yaml: 'yaml', md: 'markdown', sql: 'sql', sh: 'bash', bash: 'bash', zsh: 'bash', toml: 'ini', ini: 'ini', cfg: 'ini', html: 'xml', xml: 'xml', svg: 'xml', css: 'css', scss: 'scss', go: 'go', rs: 'rust', java: 'java', kt: 'kotlin', rb: 'ruby', tf: 'ini', mk: 'makefile' };
+
+function langOf(path) {
+  const name = path.split('/').pop().toLowerCase();
+  const lang = name.startsWith('dockerfile') ? 'dockerfile' : name === 'makefile' ? 'makefile' : EXT[name.split('.').pop()];
+  return lang && window.hljs && hljs.getLanguage(lang) ? lang : null;
+}
+function hl(s, lang) {
+  if (!s) return '';
+  if (lang) try { return hljs.highlight(s, { language: lang, ignoreIllegals: true }).value; } catch {}
+  return esc(s);
+}
+function codeHtml(l, lang) {
+  if (l.h != null) return l.h;
+  if (!l.ix) return (l.h = hl(l.s, lang));
+  const [a, b] = l.ix;
+  return (l.h = hl(l.s.slice(0, a), lang) + `<span class="x">${hl(l.s.slice(a, b), lang)}</span>` + hl(l.s.slice(b), lang));
+}
+
+function changeBlocks(lines, onPair) {
+  const L = lines.filter(l => l.t !== '\\');
+  for (let i = 0; i < L.length;) {
+    if (L[i].t === ' ') { onPair(L[i], L[i]); i++; continue; }
+    const dels = [], adds = [];
+    while (i < L.length && L[i].t === '-') dels.push(L[i++]);
+    while (i < L.length && L[i].t === '+') adds.push(L[i++]);
+    for (let k = 0; k < Math.max(dels.length, adds.length); k++) onPair(dels[k] || null, adds[k] || null);
+  }
+}
+function intraline(a, b) {
+  const x = a.s, y = b.s;
+  let p = 0, s = 0;
+  while (p < x.length && p < y.length && x[p] === y[p]) p++;
+  while (s < x.length - p && s < y.length - p && x[x.length - 1 - s] === y[y.length - 1 - s]) s++;
+  if (p + s < Math.min(x.length, y.length) * 0.4) return;
+  if (x.length - p - s > 0) a.ix = [p, x.length - s];
+  if (y.length - p - s > 0) b.ix = [p, y.length - s];
+}
+
+function prep(f) {
+  f.flat = []; f.lang = langOf(f.path);
+  for (const h of f.hunks) for (const l of h.lines) {
+    l.k = l.t === '\\' ? null : l.n != null ? 'n' + l.n : 'o' + l.o;
+    l.idx = f.flat.length; f.flat.push(l);
+  }
+  for (const h of f.hunks) changeBlocks(h.lines, (o, n) => { if (o && n && o !== n) intraline(o, n); });
+}
+D.files.forEach((f, i) => {
+  f.i = i; f.id = 'f' + i;
+  prep(f);
+  f.big = f.add + f.del > 600 || /(^|\/)(uv\.lock|poetry\.lock|package-lock\.json|yarn\.lock|pnpm-lock\.yaml|Cargo\.lock)$/.test(f.path);
+  f.collapsed = !!S.viewed[f.path] || f.big;
+});
+
+function buildTree() {
+  const root = { dirs: {}, files: [] };
+  for (const f of D.files) {
+    let node = root;
+    for (const part of f.path.split('/').slice(0, -1)) node = node.dirs[part] ??= { dirs: {}, files: [] };
+    node.files.push(f);
+  }
+  return root;
+}
+const ORDER = [];
+function treeHtml(node, depth) {
+  let h = '';
+  for (let [name, d] of Object.entries(node.dirs).sort((a, b) => a[0].localeCompare(b[0]))) {
+    while (!d.files.length && Object.keys(d.dirs).length === 1) { const [n2, d2] = Object.entries(d.dirs)[0]; name += '/' + n2; d = d2; }
+    h += `<details open><summary style="padding-left:${depth * 12 + 8}px">${ICON.folder}<span>${esc(name)}</span></summary>${treeHtml(d, depth + 1)}</details>`;
+  }
+  for (const f of node.files.sort((a, b) => a.path.localeCompare(b.path))) {
+    ORDER.push(f);
+    h += `<a class="tree-file" href="#${f.id}" data-f="${f.i}" title="${esc(f.path)}" style="padding-left:${depth * 12 + 20}px">${ICON[f.status]}<span class="name">${esc(f.path.split('/').pop())}</span><span class="badge" hidden></span><span class="tick">${ICON.check}</span></a>`;
+  }
+  return h;
+}
+
+function blocks(f) {
+  const n = f.add + f.del || 1, a = Math.round(5 * f.add / n), d = Math.min(5 - a, Math.round(5 * f.del / n));
+  return `<span class="blocks">${'<i class="a"></i>'.repeat(a)}${'<i class="d"></i>'.repeat(d)}${'<i></i>'.repeat(5 - a - d)}</span>`;
+}
+function pathHtml(p) {
+  const i = p.lastIndexOf('/');
+  return `<span class="dir">${esc(p.slice(0, i + 1))}</span>${esc(p.slice(i + 1))}`;
+}
+function fileCard(f) {
+  const el = document.createElement('div');
+  el.className = 'file' + (f.collapsed ? ' collapsed' : '');
+  el.id = f.id;
+  const path = f.status === 'renamed' ? `${pathHtml(f.old)} <span class="muted">→</span> ${pathHtml(f.new)}` : pathHtml(f.path);
+  el.innerHTML = `<div class="file-header">
+    <button class="icon-btn chev" title="Recolher ou expandir">${ICON.chev}</button>
+    <span class="stat"><span class="add-t">+${f.add}</span> <span class="del-t">−${f.del}</span></span>${blocks(f)}
+    <span class="path">${path}</span>
+    <button class="icon-btn copy" title="Copiar caminho">${ICON.copy}</button>
+    ${f.status !== 'modified' ? `<span class="label ${f.status}">${STATUS[f.status]}</span>` : ''}
+    ${f.big ? '<span class="label big" title="Recolhido por padrão por ser grande ou lockfile">diff grande</span>' : ''}
+    <span class="spacer"></span>
+    ${f.binary ? '' : `<a class="btn sm" href="#completo=${encodeURIComponent(f.path)}" target="_blank" title="Abre em outra aba o arquivo inteiro, base e head lado a lado">Arquivo completo</a>`}
+    <button class="btn sm file-note">${ICON.comment} Nota no arquivo</button>
+    <label class="viewed-box${S.viewed[f.path] ? ' on' : ''}"><input type="checkbox" class="viewed"${S.viewed[f.path] ? ' checked' : ''}> Visto</label>
+  </div><div class="file-body"></div>`;
+  return el;
+}
+
+const narrow = matchMedia('(max-width: 768px)');
+const view = () => narrow.matches ? 'unified' : S.view;
+const plus = (f, l) => f.readonly ? '' : `<button class="add-note" data-f="${f.i}" data-idx="${l.idx}" title="Adicionar nota (Shift+clique marca um intervalo)">+</button>`;
+const notesByKey = f => S.notes.filter(n => n.file === f.path && n.kind === 'line').reduce((m, n) => ((m[n.key] ??= []).push(n), m), {});
+function fmtDate(iso) { return new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }); }
+function commentHtml(n, orphan) {
+  const snip = orphan ? `<pre class="orphan-snip">${esc(n.snippet.join('\n'))}</pre>` : '';
+  return `<div class="comment" data-id="${n.id}"><div class="comment-head"><span class="avatar">EU</span><strong>Você</strong><span class="chip">${esc(n.label || 'arquivo')}</span><span class="muted">${fmtDate(n.at)}</span><span class="spacer"></span><button class="link edit">Editar</button><button class="link danger del">Excluir</button></div>${snip}<div class="comment-body">${esc(n.body)}</div></div>`;
+}
+const noteRow = (notes, cols) => `<tr class="note-row"><td colspan="${cols}"><div class="row-wrap">${notes.map(n => commentHtml(n)).join('')}</div></td></tr>`;
+
+function unifiedRows(f, byKey) {
+  let h = '';
+  for (const hk of f.hunks) {
+    h += `<tr class="hunk"><td class="num"></td><td class="num"></td><td class="code">${esc(hk.h)}</td></tr>`;
+    for (const l of hk.lines) {
+      if (l.t === '\\') { h += `<tr class="nonl"><td class="num"></td><td class="num"></td><td class="code">\\${esc(l.s)}</td></tr>`; continue; }
+      const c = CLS[l.t], k = `data-k="${l.k}"`;
+      h += `<tr><td class="num ${c}" ${k}>${l.o ?? ''}</td><td class="num ${c}" ${k}>${l.n ?? ''}</td><td class="code ${c}" ${k}>${plus(f, l)}<span class="mk">${l.t}</span>${codeHtml(l, f.lang)}</td></tr>`;
+      if (byKey[l.k]) h += noteRow(byKey[l.k], 3);
+    }
+  }
+  return h;
+}
+function splitSide(f, l, which) {
+  if (!l) return '<td class="num blank"></td><td class="code blank"></td>';
+  const c = CLS[l.t], k = `data-k="${l.k}"`;
+  const btn = l.t !== ' ' || which === 'n' ? plus(f, l) : '';
+  return `<td class="num ${c}" ${k}>${(which === 'o' ? l.o : l.n) ?? ''}</td><td class="code ${c}" ${k}>${btn}<span class="mk">${l.t}</span>${codeHtml(l, f.lang)}</td>`;
+}
+function splitRows(f, byKey) {
+  let h = '';
+  for (const hk of f.hunks) {
+    h += `<tr class="hunk"><td class="num"></td><td class="code" colspan="3">${esc(hk.h)}</td></tr>`;
+    changeBlocks(hk.lines, (o, n) => {
+      h += `<tr>${splitSide(f, o, 'o')}${splitSide(f, n, 'n')}</tr>`;
+      const notes = [...new Set([o, n].filter(Boolean).map(l => l.k))].flatMap(k => byKey[k] || []);
+      if (notes.length) h += noteRow(notes, 4);
+    });
+  }
+  return h;
+}
+function diffTable(f, byKey, v) {
+  const cols = v === 'split' ? '<col class="n"><col><col class="n"><col>' : '<col class="n"><col class="n"><col>';
+  return `<table class="diff ${v}"><colgroup>${cols}</colgroup>${(v === 'split' ? splitRows : unifiedRows)(f, byKey)}</table>`;
+}
+function renderBody(f) {
+  f.rendered = true;
+  const body = $(`#${f.id} .file-body`);
+  const mine = S.notes.filter(n => n.file === f.path);
+  const keys = new Set(f.flat.map(l => l.k));
+  const fileNotes = mine.filter(n => n.kind === 'file');
+  const orphans = mine.filter(n => n.kind === 'line' && !keys.has(n.key));
+  let h = '<div class="file-form-slot"></div>';
+  if (fileNotes.length) h += `<div class="file-notes"><h4>Notas do arquivo</h4>${fileNotes.map(n => commentHtml(n)).join('')}</div>`;
+  if (orphans.length) h += `<div class="file-notes"><h4>Notas em linhas que não estão mais no diff</h4>${orphans.map(n => commentHtml(n, true)).join('')}</div>`;
+  if (f.binary) h += '<div class="empty-msg">Arquivo binário.</div>';
+  else if (!f.hunks.length) h += `<div class="empty-msg">${f.status === 'renamed' ? 'Arquivo renomeado sem mudança de conteúdo.' : 'Sem mudança de conteúdo.'}</div>`;
+  else h += diffTable(f, notesByKey(f), view());
+  body.innerHTML = h;
+}
+function setCollapsed(f, c) {
+  f.collapsed = c;
+  $('#' + f.id).classList.toggle('collapsed', c);
+  if (!c && !f.rendered) renderBody(f);
+}
+
+let draft = null, anchor = null;
+function clearSel() { $$('.sel').forEach(e => e.classList.remove('sel')); }
+function discardDraft() {
+  if (draft && draft.querySelector('textarea').value.trim() && !confirm('Há uma nota não salva. Descartar?')) return false;
+  draft?.remove(); draft = null; clearSel();
+  return true;
+}
+function makeForm(title, text, saveLabel, onSave, onCancel) {
+  const el = document.createElement('div');
+  el.className = 'comment-form';
+  el.innerHTML = `<div class="form-title">${title}</div><textarea placeholder="Deixe uma nota para o agente de codificação"></textarea><div class="form-actions"><span class="hint">Ctrl+Enter salva · Esc cancela</span><button class="btn sm cancel">Cancelar</button><button class="btn sm primary save">${saveLabel}</button></div>`;
+  const ta = el.querySelector('textarea');
+  ta.value = text;
+  const ok = () => { if (ta.value.trim()) onSave(ta.value.trim()); };
+  el.querySelector('.save').onclick = ok;
+  el.querySelector('.cancel').onclick = onCancel;
+  ta.onkeydown = e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) ok();
+    if (e.key === 'Escape') onCancel();
+  };
+  setTimeout(() => ta.focus());
+  return el;
+}
+const lineLabel = l => l.t === '-' ? `base L${l.o}` : `L${l.n}`;
+function addNote(n) {
+  S.notes.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), at: new Date().toISOString(), ...n });
+  save();
+}
+let extending = false;
+function onLine(f, idx, shift) {
+  if ((shift || extending) && anchor?.f === f) {
+    const text = draft?.querySelector('textarea')?.value || '';
+    draft?.remove(); draft = null; clearSel(); extending = false;
+    openLineForm(f, Math.min(anchor.idx, idx), Math.max(anchor.idx, idx), text);
+    return;
+  }
+  extending = false;
+  if (!discardDraft()) return;
+  anchor = { f, idx };
+  openLineForm(f, idx, idx);
+}
+function openLineForm(f, from, to, text = '') {
+  const lines = f.flat.slice(from, to + 1).filter(l => l.k);
+  const last = lines.at(-1);
+  const label = lines.length > 1 ? `${lineLabel(lines[0])}–${lineLabel(last)}` : lineLabel(last);
+  for (const l of lines) $$(`#${f.id} [data-k="${l.k}"]`).forEach(td => td.classList.add('sel'));
+  let row = $(`#${f.id} td.code[data-k="${last.k}"]`).closest('tr');
+  while (row.nextElementSibling?.classList.contains('note-row')) row = row.nextElementSibling;
+  const tr = document.createElement('tr');
+  tr.className = 'form-row';
+  tr.innerHTML = `<td colspan="${view() === 'split' ? 4 : 3}"><div class="row-wrap"></div></td>`;
+  const close = () => { tr.remove(); draft = null; clearSel(); };
+  const form = makeForm(`Nota em <span class="chip">${label}</span> <button class="link extend">Estender intervalo</button>`, text, 'Adicionar nota', body => {
+    draft = null;
+    addNote({ file: f.path, kind: 'line', key: last.k, label, snippet: lines.map(l => l.t + l.s), body });
+    renderBody(f);
+  }, close);
+  form.querySelector('.extend').onclick = () => { extending = true; toast('Toque na última linha do intervalo'); };
+  tr.querySelector('.row-wrap').append(form);
+  row.after(tr);
+  draft = tr;
+}
+function openFileForm(f) {
+  if (!discardDraft()) return;
+  setCollapsed(f, false);
+  const slot = $(`#${f.id} .file-form-slot`);
+  slot.style.padding = '8px 16px';
+  const form = makeForm('Nota sobre o arquivo inteiro', '', 'Adicionar nota', body => {
+    draft = null;
+    addNote({ file: f.path, kind: 'file', body });
+    renderBody(f);
+  }, () => { form.remove(); draft = null; slot.style.padding = ''; });
+  slot.append(form);
+  draft = form;
+}
+function editNote(f, el) {
+  const n = S.notes.find(x => x.id === el.dataset.id);
+  const form = makeForm(`Editando nota${n.label ? ` em <span class="chip">${esc(n.label)}</span>` : ''}`, n.body, 'Salvar', body => {
+    n.body = body; save(); renderBody(f);
+  }, () => renderBody(f));
+  el.replaceWith(form);
+}
+
+const filesEl = $('#files');
+filesEl.addEventListener('click', e => {
+  const card = e.target.closest('.file');
+  if (!card) return;
+  const f = D.files[+card.id.slice(1)];
+  const num = e.target.closest('td.num[data-k]');
+  const lineBtn = num?.parentElement.querySelector(`td.code[data-k="${num.dataset.k}"] .add-note`);
+  if (lineBtn) return onLine(f, +lineBtn.dataset.idx, e.shiftKey);
+  const t = e.target.closest('button');
+  if (!t) return;
+  if (t.classList.contains('add-note')) onLine(f, +t.dataset.idx, e.shiftKey);
+  else if (t.classList.contains('chev')) setCollapsed(f, !f.collapsed);
+  else if (t.classList.contains('copy')) copyText(f.path, 'Caminho copiado');
+  else if (t.classList.contains('file-note')) openFileForm(f);
+  else if (t.classList.contains('edit')) editNote(f, t.closest('.comment'));
+  else if (t.classList.contains('del') && confirm('Excluir esta nota?')) {
+    S.notes = S.notes.filter(n => n.id !== t.closest('.comment').dataset.id);
+    save(); renderBody(f);
+  }
+});
+filesEl.addEventListener('change', e => {
+  if (!e.target.classList.contains('viewed')) return;
+  const card = e.target.closest('.file'), f = D.files[+card.id.slice(1)];
+  S.viewed[f.path] = e.target.checked;
+  if (!e.target.checked) delete S.viewed[f.path];
+  e.target.parentElement.classList.toggle('on', e.target.checked);
+  setCollapsed(f, e.target.checked);
+  if (e.target.checked && card.getBoundingClientRect().top < 0) card.scrollIntoView();
+  save();
+});
+
+function updateCounts() {
+  const count = {};
+  for (const n of S.notes) count[n.file] = (count[n.file] || 0) + 1;
+  for (const a of $$('.tree-file')) {
+    const f = D.files[+a.dataset.f], b = a.querySelector('.badge');
+    b.hidden = !count[f.path];
+    b.textContent = count[f.path] || '';
+    a.classList.toggle('viewed', !!S.viewed[f.path]);
+  }
+  const seen = D.files.filter(f => S.viewed[f.path]).length;
+  $('#noteCount').textContent = S.notes.length;
+  $('#progressTxt').textContent = `${seen} / ${D.files.length} vistos`;
+  $('#progressBar').style.width = `${D.files.length ? 100 * seen / D.files.length : 0}%`;
+}
+
+let current = null;
+function selectFile(f, scroll = true) {
+  current = f;
+  $$('.tree-file').forEach(a => a.classList.toggle('active', +a.dataset.f === f.i));
+  if (S.single) D.files.forEach(x => $('#' + x.id).classList.toggle('single-hidden', x !== f));
+  if (!S.viewed[f.path]) setCollapsed(f, false);
+  if (scroll) $('#' + f.id).scrollIntoView();
+}
+function applySingle() {
+  $('#single').checked = S.single;
+  $('#singleNav').hidden = !S.single;
+  if (S.single && ORDER.length) selectFile(current || ORDER[0], false);
+  else D.files.forEach(x => $('#' + x.id).classList.remove('single-hidden'));
+}
+function applyView() {
+  $$('.seg button').forEach(b => b.classList.toggle('active', b.dataset.view === S.view));
+  draft = null;
+  D.files.forEach(f => { if (f.rendered) renderBody(f); });
+}
+
+function copyText(s, msg) {
+  const done = () => toast(msg);
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(s).then(done, fallback);
+  else fallback();
+  function fallback() {
+    const ta = document.createElement('textarea');
+    ta.value = s; document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove(); done();
+  }
+}
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg; document.body.append(t);
+  setTimeout(() => t.remove(), 1800);
+}
+
+function compile() {
+  const F = '```';
+  const indent = s => s.split('\n').map(x => x ? '   ' + x : x).join('\n');
+  const total = S.notes.length;
+  let md = `# Review de código: ${D.repo}\n\n`;
+  md += `- Branch revisada: \`${D.head}\` em \`${D.headSha}\`\n- Branch de destino: \`${D.base}\` em \`${D.baseSha}\`, merge-base \`${D.mergeBase}\`\n- Observações: ${total}\n\n`;
+  md += `## Instruções\n\nAplique as observações deste code review no repositório \`${D.repo}\`, na branch \`${D.head}\`. Cada observação aponta um arquivo e, quando é de linha, traz o trecho do diff comentado.\n\n`;
+  md += `- \`L42\` é a linha 42 do arquivo em \`${D.head}\`. \`base L42\` é uma linha que existia em \`${D.base}\` e foi removida.\n`;
+  md += `- No bloco \`diff\`, \`+\` é linha adicionada, \`-\` é linha removida e espaço é contexto.\n`;
+  md += `- Leia o arquivo atual antes de editar: as linhas podem ter mudado desde o review.\n`;
+  md += `- Não aplique a observação de que discordar ou que não fizer sentido no código; explique o motivo na resposta.\n`;
+  md += `- Não altere nada além do que as observações pedem.\n`;
+  md += `- Ao terminar, responda com uma linha por observação, pelo número, dizendo o que foi feito.\n\n`;
+  if (S.general.trim()) md += `## Observação geral\n\n${S.general.trim()}\n\n`;
+  if (!total) return md + '_Nenhuma nota de arquivo ou de linha._\n';
+  md += `## Observações por arquivo\n\n`;
+  let k = 0;
+  const known = new Set(D.files.map(f => f.path));
+  const files = [...ORDER, ...[...new Set(S.notes.map(n => n.file))].filter(p => !known.has(p)).map(p => ({ path: p, flat: [] }))];
+  for (const f of files) {
+    const pos = new Map(f.flat.map(l => [l.k, l.idx]));
+    const notes = S.notes.filter(n => n.file === f.path)
+      .sort((a, b) => (a.kind === 'file' ? -1 : pos.get(a.key) ?? 1e9) - (b.kind === 'file' ? -1 : pos.get(b.key) ?? 1e9));
+    if (!notes.length) continue;
+    md += `### \`${f.path}\`\n\n`;
+    for (const n of notes) {
+      k++;
+      if (n.kind === 'file') { md += `${k}. **Arquivo inteiro.**\n\n${indent(n.body)}\n\n`; continue; }
+      const fence = n.snippet.some(s => s.includes('```')) ? '````' : F;
+      md += `${k}. **${n.label}**${pos.has(n.key) ? '' : ' (linha fora do diff atual)'}\n\n${indent(`${fence}diff\n${n.snippet.join('\n')}\n${fence}`)}\n\n${indent(n.body)}\n\n`;
+    }
+  }
+  return md;
+}
+function openFinish() {
+  $('#general').value = S.general;
+  $('#md').textContent = compile();
+  $('#dlg').showModal();
+}
+
+document.title = `Review · ${D.repo} · ${D.head}`;
+$('#repoName').textContent = D.repo;
+$('#title').innerHTML = `${esc(D.head)} <span class="muted">→ ${esc(D.base)}</span>`;
+$('#meta').innerHTML = `<span class="state">${ICON.comment} Em review</span> <span>Comparando <code class="branch">${esc(D.base)}</code> ← <code class="branch">${esc(D.head)}</code> a partir do merge-base <code>${esc(D.mergeBase)}</code></span>`;
+$('#nFiles').textContent = D.files.length;
+$('#nCommits').textContent = D.commits.length;
+const add = D.files.reduce((s, f) => s + f.add, 0), del = D.files.reduce((s, f) => s + f.del, 0);
+$('#totals').innerHTML = `${D.files.length} arquivos <span class="add-t">+${add}</span> <span class="del-t">−${del}</span>`;
+$('#commitsTitle').textContent = `${D.commits.length} commits em ${D.head} que não estão em ${D.base}`;
+$('#commitRows').innerHTML = D.commits.map(c => `<div class="commit"><div class="spacer"><div class="t">${esc(c.titulo)}</div><div class="muted" style="font-size:12px">${esc(c.autor)} · ${esc(c.data)}</div></div><code class="sha">${esc(c.sha)}</code></div>`).join('') || '<div class="empty-msg">Nenhum commit.</div>';
+
+$('#treeList').innerHTML = treeHtml(buildTree(), 0);
+for (const f of ORDER) { filesEl.append(fileCard(f)); if (!f.collapsed) renderBody(f); }
+if (!D.files.length) filesEl.innerHTML = '<div class="empty-msg">As duas branches não têm diferença.</div>';
+
+$('#treeList').addEventListener('click', e => {
+  const a = e.target.closest('.tree-file');
+  if (!a) return;
+  e.preventDefault();
+  document.body.classList.remove('tree-open');
+  selectFile(D.files[+a.dataset.f]);
+});
+$('#filter').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  for (const a of $$('.tree-file')) {
+    const f = D.files[+a.dataset.f], hit = f.path.toLowerCase().includes(q);
+    a.hidden = !hit;
+    $('#' + f.id).hidden = !hit;
+  }
+  for (const d of $$('#treeList details').reverse()) d.hidden = !d.querySelector('.tree-file:not([hidden])');
+});
+$$('.tabs button').forEach(b => b.onclick = () => {
+  $$('.tabs button').forEach(x => x.classList.toggle('active', x === b));
+  $('#filesTab').hidden = b.dataset.tab !== 'files';
+  $('#commits').hidden = b.dataset.tab !== 'commits';
+});
+$$('.seg button').forEach(b => b.onclick = () => { if (S.view !== b.dataset.view && discardDraft()) { S.view = b.dataset.view; save(); applyView(); } });
+$('#single').onchange = e => { S.single = e.target.checked; save(); applySingle(); };
+const step = d => { const i = ORDER.indexOf(current); selectFile(ORDER[(i + d + ORDER.length) % ORDER.length]); };
+$('#prev').onclick = () => step(-1);
+$('#next').onclick = () => step(1);
+$('#expandAll').onclick = () => D.files.forEach(f => setCollapsed(f, false));
+$('#collapseAll').onclick = () => D.files.forEach(f => setCollapsed(f, true));
+$('#toggleTree').onclick = () => document.body.classList.toggle(narrow.matches ? 'tree-open' : 'no-tree');
+document.addEventListener('click', e => {
+  if (document.body.classList.contains('tree-open') && !e.target.closest('#tree, #toggleTree')) document.body.classList.remove('tree-open');
+});
+$('#finish').onclick = openFinish;
+$('#closeDlg').onclick = () => $('#dlg').close();
+$('#general').oninput = e => { S.general = e.target.value; save(); $('#md').textContent = compile(); };
+$('#copyMd').onclick = () => copyText(compile(), 'Markdown copiado');
+$('#download').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([compile()], { type: 'text/markdown' }));
+  a.download = `review-${D.repo}-${D.head.replace(/[^\w.-]+/g, '_')}.md`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+$('#clearAll').onclick = () => {
+  if (!confirm(`Apagar as ${S.notes.length} notas e o comentário geral deste review?`)) return;
+  S.notes = []; S.general = ''; save();
+  $('#general').value = ''; $('#md').textContent = compile();
+  D.files.forEach(f => { if (f.rendered) renderBody(f); });
+};
+
+new ResizeObserver(() => document.documentElement.style.setProperty('--tb', $('#toolbar').offsetHeight + 'px')).observe($('#toolbar'));
+const spy = new IntersectionObserver(entries => {
+  const top = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+  if (top && !S.single) $$('.tree-file').forEach(a => a.classList.toggle('active', a.dataset.f === top.target.id.slice(1)));
+}, { rootMargin: '-80px 0px -70% 0px' });
+$$('.file').forEach(el => spy.observe(el));
+
+function renderFull(f) {
+  const ff = { ...f, id: 'full', readonly: true, hunks: f.full || f.hunks };
+  prep(ff);
+  document.title = `${f.path.split('/').pop()} · completo · ${D.head}`;
+  $('#fullPath').innerHTML = f.status === 'renamed' ? `${pathHtml(f.old)} <span class="muted">→</span> ${pathHtml(f.new)}` : pathHtml(f.path);
+  $('#fullStat').innerHTML = `<span class="add-t">+${f.add}</span> <span class="del-t">−${f.del}</span>`;
+  $('#fullCols').innerHTML = `<div><span class="del-t">−</span> <b>${esc(D.base)}</b> <span class="muted">merge-base <code>${esc(D.mergeBase)}</code></span></div><div><span class="add-t">+</span> <b>${esc(D.head)}</b> <span class="muted"><code>${esc(D.headSha)}</code></span></div>`;
+  $('#fullBody').innerHTML = f.binary ? '<div class="empty-msg">Arquivo binário.</div>'
+    : !ff.hunks.length ? '<div class="empty-msg">Conteúdo igual nas duas branches.</div>'
+    : diffTable(ff, {}, narrow.matches ? 'unified' : 'split');
+  $('#fullCount').textContent = `${changeStarts().length} trechos alterados`;
+  scrollTo(0, 0);
+}
+const isChange = r => r?.querySelector('td.add, td.del');
+const changeStarts = () => $$('#fullBody tr').filter(r => isChange(r) && !isChange(r.previousElementSibling));
+function jump(dir) {
+  const mid = innerHeight / 2, rows = changeStarts();
+  const center = r => { const b = r.getBoundingClientRect(); return (b.top + b.bottom) / 2; };
+  const target = dir > 0 ? rows.find(r => center(r) > mid + 10) : rows.reverse().find(r => center(r) < mid - 10);
+  target?.scrollIntoView({ block: 'center' });
+}
+$('#nextChange').onclick = () => jump(1);
+$('#prevChange').onclick = () => jump(-1);
+function route() {
+  const m = location.hash.match(/^#completo=(.+)$/);
+  const f = m && D.files.find(x => x.path === decodeURIComponent(m[1]));
+  document.body.classList.toggle('full-mode', !!f);
+  if (f) renderFull(f);
+  else document.title = `Review · ${D.repo} · ${D.head}`;
+}
+addEventListener('hashchange', route);
+narrow.addEventListener('change', () => { draft = null; applyView(); route(); });
+
+route();
+applyView();
+applySingle();
+updateCounts();
+</script>
+</body>
+</html>

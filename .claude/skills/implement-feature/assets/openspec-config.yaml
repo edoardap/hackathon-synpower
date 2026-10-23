@@ -1,0 +1,23 @@
+schema: spec-driven
+
+context: |
+  Escreva todos os artefatos em português do Brasil. Cada change é uma rodada da implementação de uma funcionalidade:
+  ela cobre só o recorte pedido (algumas histórias ou uma camada), e o plano parte do PRD, das histórias com critérios
+  de aceite (HU-xx) e do design técnico em docs/architecture/<nome>/ (ou docs/issues/<domínio>/ nos projetos antigos). Código só muda dentro deste repositório. O que o
+  repositório já tem (helper, componente, dependência) vem antes de código novo.
+
+rules:
+  proposal:
+    - "Abra com o recorte da rodada e as histórias que ela cobre, por número (HU-xx), com o caminho do design técnico"
+    - O escopo segue o recorte. O que a entrada pede e esta rodada não faz entra em fora de escopo
+  specs:
+    - Um cenário por critério de aceite das histórias do recorte
+    - Requisitos descrevem comportamento observável, sem nome de classe, tabela nem exceção
+  design:
+    - Comece pelo link do design técnico da entrada; registre só as decisões que valem para esta rodada
+    - Liste os pontos de teste, cada um uma interface pública (rota, função exportada, tela)
+    - Se a rodada muda o schema, inclua o plano de migração no modelo da skill database-migration-plan
+  tasks:
+    - "Cada fase é um grupo `## N. <título>` e traz `Depende de:`, `Aceite:` (cenários das specs) e `Skill:` (backend-patterns, frontend-patterns ou database-migration-plan)"
+    - "Cada fase termina em `Verificação:` com um comando que roda no repositório e prova o aceite, sem caminho absoluto da máquina"
+    - Fases sem dependência entre si editam arquivos disjuntos; mudança de schema é a primeira fase

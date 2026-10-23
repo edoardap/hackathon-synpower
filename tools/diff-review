@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""Gera um HTML de review do diff entre duas branches locais, no estilo de PR do GitHub/GitLab.
+
+Uso: tools/diff-review <repo> <base> [head] [-o saida.html] [-U N] [--open]
+
+O diff é o de PR: `git diff base...head`, a partir do merge-base. Mudança não commitada fica de fora.
+As notas ficam no localStorage do navegador e o botão "Finalizar review" compila tudo em Markdown.
+O HTML leva também o arquivo inteiro das duas versões, mostrado lado a lado pelo botão "Arquivo completo".
+"""
+import argparse
+import json
+import re
+import subprocess
+import sys
+import webbrowser
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parent.parent
+HUNK = re.compile(r"^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@ ?(.*)")
+
+
+def git(repo, *args):
+    r = subprocess.run(["git", "-C", str(repo), "-c", "core.quotepath=off", *args],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if r.returncode:
+        raise RuntimeError(r.stderr.strip())
+    return r.stdout
+
+
+def parse_diff(text):
+    files, f, old, new = [], None, 0, 0
+    for line in text.split("\n"):
+        if line.startswith("diff --git "):
+            m = re.match(r"diff --git a/(.*) b/(.*)$", line)
+            f = {"old": m and m[1], "new": m and m[2], "status": "modified", "binary": False,
+                 "add": 0, "del": 0, "hunks": []}
+            files.append(f)
+            continue
+        if f is None:
+            continue
+        m = HUNK.match(line)
+        if m:
+            old, new = int(m[1]), int(m[2])
+            f["hunks"].append({"h": line, "ctx": m[3], "lines": []})
+        elif f["hunks"] and line[:1] in ("+", "-", " ", "\\") and line:
+            t, s = line[0], line[1:]
+            if t == "+":
+                f["hunks"][-1]["lines"].append({"t": t, "o": None, "n": new, "s": s})
+                new += 1
+                f["add"] += 1
+            elif t == "-":
+                f["hunks"][-1]["lines"].append({"t": t, "o": old, "n": None, "s": s})
+                old += 1
+                f["del"] += 1
+            elif t == " ":
+                f["hunks"][-1]["lines"].append({"t": t, "o": old, "n": new, "s": s})
+                old += 1
+                new += 1
+            else:
+                f["hunks"][-1]["lines"].append({"t": t, "o": None, "n": None, "s": s})
+        elif line.startswith("new file mode"):
+            f["status"] = "added"
+        elif line.startswith("deleted file mode"):
+            f["status"] = "deleted"
+        elif line.startswith("rename from "):
+            f["old"], f["status"] = line[12:], "renamed"
+        elif line.startswith("rename to "):
+            f["new"] = line[10:]
+        elif line.startswith("Binary files ") or line == "GIT binary patch":
+            f["binary"] = True
+        elif line.startswith("--- ") and line != "--- /dev/null":
+            f["old"] = line[6:].rstrip("\t")
+        elif line.startswith("+++ ") and line != "+++ /dev/null":
+            f["new"] = line[6:].rstrip("\t")
+    for f in files:
+        f["path"] = f["old"] if f["status"] == "deleted" else f["new"]
+    return files
+
+
+def resolver_ref(repo, ref):
+    try:
+        return git(repo, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}").strip()
+    except RuntimeError:
+        branches = git(repo, "branch", "--format=%(refname:short)").split()
+        sys.exit(f"ref '{ref}' não existe em {repo}. Branches locais:\n  " + "\n  ".join(branches))
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    p.add_argument("repo", help="caminho do repositório ou nome de pasta na raiz do workspace (ex.: ai-agents)")
+    p.add_argument("base", help="branch de destino, como o alvo do MR (ex.: dev)")
+    p.add_argument("head", nargs="?", help="branch com a implementação; padrão: a branch atual do repo")
+    p.add_argument("-o", "--saida", help="arquivo HTML; padrão: .cache/diff-review/<repo>--<base>--<head>.html")
+    p.add_argument("-U", "--contexto", type=int, default=3, help="linhas de contexto em volta de cada mudança")
+    p.add_argument("--open", action="store_true", help="abre o HTML no navegador")
+    a = p.parse_args()
+
+    repo = Path(a.repo) if Path(a.repo).is_dir() else RAIZ / a.repo
+    if not (repo / ".git").exists():
+        sys.exit(f"repositório git não encontrado: {repo}")
+    head = a.head or git(repo, "rev-parse", "--abbrev-ref", "HEAD").strip()
+    base_sha, head_sha = resolver_ref(repo, a.base), resolver_ref(repo, head)
+    merge_base = git(repo, "merge-base", base_sha, head_sha).strip()
+
+    diff = lambda u: parse_diff(git(repo, "diff", "--no-color", "--no-ext-diff", "-M", f"-U{u}",
+                                    f"{merge_base}..{head_sha}"))
+    files = diff(a.contexto)
+    completo = {f["path"]: f["hunks"] for f in diff(999999999)}
+    linhas = lambda hunks: sum(len(h["lines"]) for h in hunks)
+    for f in files:
+        if linhas(completo.get(f["path"], [])) > linhas(f["hunks"]):
+            f["full"] = completo[f["path"]]
+    commits = [dict(zip(("sha", "autor", "data", "titulo"), c.split("\t", 3)))
+               for c in git(repo, "log", "--format=%h%x09%an%x09%ad%x09%s", "--date=short",
+                            f"{base_sha}..{head_sha}").splitlines()]
+    dados = {"repo": repo.resolve().name, "base": a.base, "head": head, "baseSha": base_sha[:10],
+             "headSha": head_sha[:10], "mergeBase": merge_base[:10], "commits": commits, "files": files}
+
+    seguro = lambda s: re.sub(r"[^\w.-]+", "_", s)
+    saida = Path(a.saida) if a.saida else (RAIZ / ".cache/diff-review" /
+                                          f"{seguro(dados['repo'])}--{seguro(a.base)}--{seguro(head)}.html")
+    saida.parent.mkdir(parents=True, exist_ok=True)
+    template = (Path(__file__).resolve().parent / "lib/diff-review.html").read_text(encoding="utf-8")
+    saida.write_text(template.replace("__DADOS__", json.dumps(dados).replace("<", "\\u003c")), encoding="utf-8")
+    print(saida)
+    if a.open:
+        webbrowser.open(saida.resolve().as_uri())
+
+
+if __name__ == "__main__":
+    main()
