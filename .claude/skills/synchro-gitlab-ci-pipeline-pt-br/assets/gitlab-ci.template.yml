@@ -1,0 +1,233 @@
+# Ponto de partida para um novo pipeline Synchro / ia_produtos.
+# Substitua todo <PLACEHOLDER>, apague as seções que não se aplicam a este projeto
+# (veja o passo 2 do SKILL.md) e mantenha a ordem dos stages inalterada.
+
+include:
+  - component: $CI_SERVER_FQDN/devsecops/secret-detection/gitleaks@${SECRET_DETECTION_COMPONENT_VERSION}
+  - component: $CI_SERVER_FQDN/devsecops/checkov-iac/checkov-iac@${CHECKOV_IAC_COMPONENT_VERSION}
+  - component: $CI_SERVER_FQDN/devsecops/cdxgen/cdxgen@${CDXGEN_IAC_COMPONENT_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/renovate/renovate@${RENOVATE_COMPONENT_VERSION}
+    inputs:
+      stage: security
+      renovate_config_path: renovate.json
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/uv@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/rules@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/lint@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/test@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/import-linter@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/uv-lock@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/python-qa/sonarqube@${PYTHON_QA_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/release/base-docker@${RELEASE_COMPONENT_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/release/docker-build@${RELEASE_COMPONENT_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/release/git-tag@${RELEASE_COMPONENT_VERSION}
+  - component: $CI_SERVER_FQDN/ia_produtos/ci-catalog/release/release@${RELEASE_COMPONENT_VERSION}
+
+stages:
+  - security
+  - code-checks
+  - tests
+  - sast
+  # - ai-code-review   # descomente somente se este projeto adotou revisão de código automatizada por IA
+  - tag
+  - docker-build
+  - release
+
+variables:
+  UV_CACHE_DIR: "$CI_PROJECT_DIR/.uv-cache"
+  UV_PROJECT_ENVIRONMENT: "$CI_PROJECT_DIR/.venv"
+
+# --- jobs base compartilhados -------------------------------------------------
+
+.standard-rules:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "dev"'
+      when: on_success
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - if: '$CI_COMMIT_TAG'
+      when: on_success
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: on_success
+    - when: never
+
+.base-uv-image:
+  image: astral/uv:python3.14-trixie-slim
+  interruptible: true
+
+.base-uv-full:
+  extends: .base-uv-image
+  before_script:
+    - uv sync --locked --all-groups
+
+.base-uv-tools:
+  extends: .base-uv-image
+  before_script:
+    - uv sync --locked --no-default-groups --group lint
+
+# --- stage security ------------------------------------------------------------
+
+gitleaks:
+  allow_failure: true
+
+checkov:
+  allow_failure: true
+
+sbom:
+  extends: .generate_source_sbom_template
+  stage: security
+  variables:
+    CDXGEN_TARGET_DIRECTORY: "src"
+    ENABLE_DEPENDENCY_TRACK: true
+    DTRACK_PROJECT_GROUP: "IA Produtos"
+    DTRACK_PROJECT_NAME: "<PROJECT_NAME>"
+    DTRACK_PROJECT_VERSION: "$CI_COMMIT_REF_NAME"
+    DTRACK_PROJECT_PARENT_NAME: "IA_Produtos"
+
+renovate:
+  extends: .renovate-job
+
+# --- stage code-checks ---------------------------------------------------------
+
+validate-mr-title:
+  stage: code-checks
+  image: registry.synchro.com.br/library/alpine:latest
+  allow_failure: false
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: on_success
+    - when: never
+  script:
+    - |
+      TITLE="${CI_MERGE_REQUEST_TITLE:-}"
+      VALID_TAGS="Breaking|Feature|Fix|Refactor|Chore|Spike|Docs|Test"
+
+      if [ -z "$TITLE" ]; then
+        echo "❌ Erro: Título do Merge Request não encontrado (variável vazia)."
+        exit 1
+      fi
+
+      if ! echo "$TITLE" | grep -Eq "^\[($VALID_TAGS)\] "; then
+        echo "❌ Erro: O título do MR usa uma tag inválida ou ausente."
+        echo "   Tags aceitas: $VALID_TAGS"
+        echo "   Exemplo válido: [Feature] Adicionar endpoint de artifacts"
+        exit 1
+      fi
+
+      if ! echo "$TITLE" | grep -Eq "^\[($VALID_TAGS)\] [A-Z]"; then
+        echo "❌ Erro: A descrição do título deve começar com letra maiúscula."
+        echo "   Exemplo válido: [Refactor] Ajustar validação do pipeline"
+        echo "   Exemplo inválido: [Refactor] ajustar validação do pipeline"
+        exit 1
+      fi
+
+      echo "✅ Título do MR validado com sucesso: $TITLE"
+
+lint:
+  extends: .lint-job
+
+format:
+  extends: .format-job
+
+markdown-lint:
+  extends: .markdown-lint-job
+
+import-linter:
+  extends: .import-linter-job
+
+uv-lock-check:
+  extends: .uv-lock-check-job
+
+dockerfile-lint:
+  extends: .dockerfile-lint-job
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+      changes:
+        - "docker/**/*.Dockerfile"
+      when: on_success
+
+# Adicione um job de drift check por artefato gerado que o projeto versiona.
+# Veja references/custom-jobs.md para o padrão completo (openapi-check, *-k8s-check, *-docker-check).
+#
+# <artefato>-check:
+#   extends:
+#     - .base-uv-full
+#   stage: code-checks
+#   allow_failure: false
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+#       changes:
+#         - "<caminhos de origem que alimentam o artefato>"
+#       when: on_success
+#     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "dev"'
+#       when: always
+#     - when: never
+#   script:
+#     - PYTHONPATH=./src/ uv run python -m cli.main <comando-de-regeneracao-ou-verificacao>
+
+# --- stage tests ---------------------------------------------------------------
+
+pytest:
+  extends: .pytest-job
+
+sonarqube:
+  extends: .sonarqube-job
+
+# --- stage tag -----------------------------------------------------------------
+
+create-tag:
+  extends: .create-tag-job
+
+# --- stage docker-build --------------------------------------------------------
+
+docker-build-dev:
+  extends:
+    - .docker-build-dev-job
+  parallel:
+    matrix:
+      - NAME: <image-name>
+        DOCKERFILE: "docker/<image-name>.Dockerfile"
+        BUILD_CONTEXT: .
+        DOCKER_BUILD_USE_GITLAB_TOKEN: "false"
+      # - NAME: <another-image>
+      #   DOCKERFILE: "docker/<another-image>.Dockerfile"
+      #   BUILD_CONTEXT: .
+      #   BUILD_TARGET: <target>            # somente para Dockerfiles multi-stage
+      #   DOCKER_BUILD_USE_GITLAB_TOKEN: "false"
+
+docker-build-release:
+  extends:
+    - .docker-build-release-job
+  variables:
+    TAG: "$CI_COMMIT_TAG"
+  parallel:
+    matrix:
+      - NAME: <image-name>
+        DOCKERFILE: "docker/<image-name>.Dockerfile"
+        BUILD_CONTEXT: .
+        DOCKER_BUILD_USE_GITLAB_TOKEN: "false"
+
+# --- stage release -------------------------------------------------------------
+
+generate-changelog:
+  extends: .generate-changelog-job
+
+create-release:
+  extends: .create-release-job
+  needs:
+    - job: generate-changelog
+      artifacts: true
+
+# Só adicione este job se o projeto expuser um contrato OpenAPI versionado destinado a consumidores de SDK.
+# Veja references/custom-jobs.md para o corpo completo do job.
+#
+# publish-python-sdk:
+#   extends: .base-uv-full
+#   stage: release
+#   needs:
+#     - job: docker-build-release
+#       artifacts: false
+#   rules:
+#     - if: $CI_COMMIT_TAG
+#       when: on_success
+#     - when: never
+#   ...
