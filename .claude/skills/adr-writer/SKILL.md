@@ -31,5 +31,6 @@ Quando o usuário fechar uma decisão técnica na conversa ("vamos com X em vez 
 ## Modelo
 
 Leia `assets/adr.md` e preencha o modelo mantendo os títulos. Não copie texto de exemplo como se fosse dado real.
+Consulte `references/boas-praticas.md` para saber quando vale um ADR, como escrever cada seção, o ciclo de vida do status e os sinais de um ADR fraco.
 
 Se a decisão veio de uma análise com a skill `architecture-patterns`, reaproveite as forças, as opções e o gatilho de revisão em vez de reescrever.

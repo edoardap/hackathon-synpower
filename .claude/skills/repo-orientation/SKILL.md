@@ -24,6 +24,11 @@ Mapeia um repositório e entrega um relatório que outro agente consegue usar se
 6. **Commits e branches.** Veja `git log --oneline -20` para o padrão de mensagem (Conventional Commits, prefixos de ticket etc.), `commitlint`, hooks (`.husky/`, `.pre-commit-config.yaml`) e modelos de PR (`.github/`).
 7. **Armadilhas.** Anote o que pode surpreender: variáveis de ambiente exigidas (`.env.example`), serviços externos (Docker, banco), código gerado que não deve ser editado, pastas ignoradas.
 
+## Referências
+
+- `references/stack.md`: no passo 3, para ler manifestos, lockfiles e versões, reconhecer monorepo e tratar repo sem código.
+- `references/comandos-e-convencoes.md`: nos passos 4 a 7, para saber onde achar cada comando, convenção, padrão de commit e armadilha, e como registrar lacunas sem chutar.
+
 ## Formato da saída
 
 Responda em português, neste formato exato, para que o agente seguinte consiga ler por seção. Omita seções sem conteúdo só se escrever `não encontrado`.
