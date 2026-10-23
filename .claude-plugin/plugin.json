@@ -2,7 +2,7 @@
   "name": "hackathon-ai-swe",
   "displayName": "Hackathon AI Software Engineering",
   "version": "0.1.0",
-  "description": "Plugin com agentes e skills que cobrem o ciclo de engenharia de software, construído por frentes de trabalho no hackathon. Esta parte traz a frente de Produto e Arquitetura (Grupo 1).",
+  "description": "Plugin com agentes e skills que cobrem o ciclo de engenharia de software, construído por frentes de trabalho no hackathon.",
   "author": {
     "name": "Hackathon AI Software Engineering"
   },

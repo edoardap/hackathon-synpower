@@ -12,7 +12,7 @@ Os agentes ficam em `.claude/agents/` e as skills em `.claude/skills/`. Converse
 | Arquitetura, API, design técnico, ADR, "como estruturar" | `solutions-architect` | PRD e histórias, repositório | Decisão, design técnico, ADR |
 
 Se o pedido tocar em mais de um, siga a ordem: `product-manager`, depois `designer` e `solutions-architect`.
-Se o usuário pedir para escrever código, testar ou fazer deploy, diga que isso é de outro agente (grupos 2 e 3).
+Se o usuário pedir para escrever código, testar ou fazer deploy, diga que isso é de outro agente (implementação, qualidade ou DevOps).
 
 ## Onde salvar (cada arquivo só depois de o usuário aceitar)
 

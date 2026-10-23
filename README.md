@@ -1,13 +1,24 @@
-# Hackathon AI Software Engineering: Grupo 1 (Produto e Arquitetura)
+# Hackathon AI Software Engineering: plugin
 
 Plugin do Claude Code (`hackathon-ai-swe`) com **agentes e skills** que cobrem o ciclo de engenharia de software, construído
-por frentes de trabalho. Este repositório traz a frente de **Produto e Arquitetura** (Grupo 1): leva uma ideia de sistema
-até um design técnico pronto para ser implementado. Os Grupos 2 (implementação, qualidade e segurança) e 3 (DevOps, SRE e
-documentação) completam o plugin.
+por frentes de trabalho: produto, arquitetura, implementação, qualidade, DevOps e documentação.
 
 ```
-ideia vaga → descoberta → PRD → épicos e histórias → design de UX → arquitetura, API e ADRs → (Grupo 2)
+ideia vaga → descoberta → PRD → épicos e histórias → design de UX → arquitetura, API e ADRs → implementação → qualidade → operação
 ```
+
+## Frentes do plugin
+
+O plugin é único e construído por frentes de trabalho.
+
+| Frente | Agentes |
+|---|---|
+| Produto, Discovery e UX | `product-manager`, `designer` |
+| Arquitetura e Engenharia de Software | `solutions-architect` |
+| Implementação: backend, frontend e dados | `backend-engineer`, `frontend-engineer` |
+| Qualidade, Testes e Segurança | `qa-engineer`, `security-reviewer`, `code-reviewer` |
+| DevOps, SRE e Operações | `devops-engineer`, `sre-engineer` |
+| Documentação e Conhecimento Técnico | `tech-writer` |
 
 ## O que faz
 
@@ -24,7 +35,7 @@ números, prazos nem decisões.
 | `solutions-architect` | "qual arquitetura usar", "desenha a API", "documenta essa decisão", "monolito ou microsserviços" | `repo-orientation`, `architecture-patterns`, `api-design`, `adr-writer` | Decisão defendida, design técnico, contrato de API, ADRs |
 
 Ordem natural quando o pedido toca em mais de um: `product-manager`, depois `designer` e `solutions-architect`.
-Quem pedir para escrever código, testar ou fazer deploy deve ser direcionado aos Grupos 2 e 3.
+Quem pedir para escrever código, testar ou fazer deploy deve ser direcionado aos agentes de implementação, qualidade e DevOps.
 
 ### Skills (`.claude/skills/`)
 
@@ -104,20 +115,30 @@ deveria e não escolhe quando não deveria. Os casos e os resultados estão em [
 ## Estrutura do repositório
 
 ```
-.claude/agents/       agentes (product-manager, designer, solutions-architect)
-.claude/skills/       skills, cada uma com SKILL.md e, quando preciso, assets/ ou references/
-.claude-plugin/       plugin.json (o plugin) e marketplace.json (como instalar)
-evals/                casos e resultados do `claude plugin eval`
-AGENTS.md             regras para todos os agentes e convenções do repositório
+.claude-plugin/
+  plugin.json          manifesto do plugin
+  marketplace.json     permite instalar o plugin por marketplace
+.claude/
+  agents/<agente>.md   um arquivo por agente
+  skills/<skill>/      um diretório por skill
+    SKILL.md           frontmatter, gatilhos, fluxo e validação
+    references/        padrões, checklists e material de consulta
+    assets/            templates reutilizáveis
+evals/plugin-eval/     casos e resultados do `claude plugin eval`
+AGENTS.md              roteamento e regras para todos os agentes
 ```
+
+## Como adicionar um agente ou uma skill
+
+1. Crie `.claude/agents/<nome>.md` ou `.claude/skills/<nome>/SKILL.md`.
+2. Escreva a descrição com os pedidos que devem ativá-la, e o que não deve.
+3. Acrescente a linha correspondente na tabela de roteamento do `AGENTS.md`.
+4. Skills entram no plugin só de existir na pasta. Para agente novo, liste o arquivo em `agents` no `plugin.json`, porque o manifesto exige caminhos terminados em `.md`.
+5. Crie os casos em `evals/plugin-eval/` e aumente a `version` do `plugin.json`.
 
 ## Convenções
 
 As regras de trabalho (não inventar dados, perguntar pouco, confirmar antes de seguir, formato dos commits) estão em
 [`AGENTS.md`](AGENTS.md).
-
-## Equipe
-
-Grupo 1: Isaac, Maria Eduarda e Andreza.
 
 Referências do hackathon: <https://agentskills.io>.

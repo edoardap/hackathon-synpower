@@ -8,7 +8,7 @@
     {
       "name": "hackathon-ai-swe",
       "source": "./",
-      "description": "Agentes e skills que cobrem o ciclo de engenharia de software, de produto à operação. Esta parte traz a frente de Produto e Arquitetura (Grupo 1).",
+      "description": "Agentes e skills que cobrem o ciclo de engenharia de software, de produto à operação.",
       "category": "development",
       "tags": [
         "engenharia-de-software",
