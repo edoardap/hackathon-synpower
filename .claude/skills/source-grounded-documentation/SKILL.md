@@ -1,186 +1,69 @@
 ---
 name: source-grounded-documentation
-description: Criar documentação inicial de um repositório com base em código, testes, configuração e CI verificáveis. Usar quando o README.md ou o diretório docs/ estiver ausente ou quando a documentação existente for insuficiente ou não confiável.
+description: Criar documentação inicial de um repositório (README.md e docs/) com base em código, testes, configuração e CI verificáveis, sem transformar suposição em fato. Use sempre que o README.md ou o docs/ estiver ausente, quando a documentação existente for insuficiente ou não confiável, ou quando o usuário pedir "documenta esse projeto", "cria o README", "como rodar isso?" ou "gera a documentação inicial", mesmo que ele não diga "source-grounded". Não use para atualizar a documentação a partir de um PR/MR ou diff específico; nesse caso use `impact-aware-documentation`.
 ---
 
 # Source-Grounded Documentation
 
-## Objetivo
+Cria uma base documental útil e verificável para um repositório, usando evidências reais. A documentação só vale se o leitor puder confiar nela: por isso cada afirmação relevante precisa de uma fonte, e o que não tem fonte fica marcado como lacuna.
 
-Criar uma base documental útil e verificável para um repositório, utilizando evidências reais e sem transformar suposições em fatos.
+A entrega mínima é um `README.md` na raiz e um `docs/` com páginas sustentadas por evidências.
 
-A entrega mínima consiste em um `README.md` na raiz e um diretório `docs/` com páginas que contenham informações sustentadas por evidências.
+## Entradas
 
-## Quando usar
+Obtenha, quando disponíveis: raiz Git, branch e commit de referência, público-alvo e objetivo da documentação, caminhos autorizados para escrita, comandos obrigatórios e o responsável humano que valida o objetivo geral.
 
-Use esta Skill quando:
-
-- O projeto não possuir documentação suficiente.
-- O `README.md` estiver ausente ou não explicar como configurar e executar o projeto.
-- O diretório `docs/` não existir ou não contiver documentação útil.
-- A documentação existente não permitir compreender o objetivo, a configuração, os testes e os componentes relevantes do projeto.
-
-Não use esta Skill para atualizar a documentação com base em um PR/MR específico. Nesse caso, utilize `impact-aware-documentation`.
-
-## Entradas necessárias
-
-Obtenha, quando disponíveis:
-
-- Caminho do repositório e raiz Git.
-- Público-alvo e objetivo da documentação.
-- Branch e commit de referência.
-- Caminhos autorizados para escrita.
-- Comandos e verificações obrigatórios.
-- Responsável humano pela validação do objetivo geral do projeto.
-
-Se o público-alvo, o objetivo de negócio ou o escopo de escrita forem desconhecidos, continue a investigação técnica e registre as lacunas. Não apresente interpretações não confirmadas como fatos.
+Se público-alvo, objetivo de negócio ou escopo de escrita forem desconhecidos, continue a investigação técnica e registre as lacunas. Não apresente interpretação não confirmada como fato.
 
 ## Workflow
 
 ### 1. Identificar o contexto
 
-1. Identifique a raiz Git, a branch, o commit e o estado do repositório.
-2. Leia `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `CONTRIBUTING.md` e as demais instruções aplicáveis, incluindo as do ambiente de execução.
-3. Verifique se `README.md` e `docs/` existem e avalie a qualidade do conteúdo atual.
-4. Preserve a documentação existente. Se ela já for substancial, prefira atualizações incrementais a uma reconstrução completa.
+- Identifique raiz Git, branch, commit e estado do repositório.
+- Leia `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `CONTRIBUTING.md` e outras instruções aplicáveis.
+- Avalie o `README.md` e o `docs/` existentes. Se já forem substanciais, prefira atualização incremental a reconstrução, para não perder conteúdo.
 
 ### 2. Inventariar o projeto
 
-Investigue o repositório sem presumir tecnologias, nomes de arquivos ou ferramentas.
+Investigue sem presumir tecnologia, nome de arquivo ou ferramenta. Fontes a considerar: manifests e lockfiles (`package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `pom.xml` e equivalentes), automação (`Makefile`, `Taskfile`, scripts), containers e infraestrutura, configuração (`.env.example`, schemas), CI e release, implementação (entry points, rotas, módulos, testes, exemplos) e documentação existente.
 
-Considere as seguintes fontes:
+Registre linguagens e versões, gerenciadores de pacotes, dependências e ferramentas externas, serviços auxiliares, portas, bancos, configurações necessárias e comandos de instalação, execução e validação. Diferencie requisito confirmado de requisito inferido.
 
-- **Dependências e runtimes:** `package.json`, lockfiles, `pyproject.toml`, `requirements*.txt`, `go.mod`, `Cargo.toml`, `pom.xml`, `build.gradle` e equivalentes.
-- **Automação:** `Makefile`, `Taskfile`, scripts de build e comandos de desenvolvimento.
-- **Containers e infraestrutura:** `Dockerfile`, `.dockerignore`, `compose.yaml`, `docker-compose.yml`, manifests e configurações de infraestrutura.
-- **Configuração:** `.env.example`, `.env.sample`, schemas e arquivos de configuração.
-- **CI e release:** workflows, scripts de release e pipelines.
-- **Implementação:** entry points, rotas, módulos principais, testes e exemplos.
-- **Documentação:** README, arquivos em `docs/` e demais materiais mantidos pelo projeto.
+### 3. Validar a inicialização
 
-Identifique e registre:
+Trace o caminho de um checkout limpo até a aplicação funcionando: pré-requisitos, dependências, serviços e containers, variáveis de ambiente, inicialização, verificação e, por fim, testes, lint, type-check e build.
 
-- Linguagens, runtimes e versões.
-- Gerenciadores de pacotes.
-- Dependências e ferramentas externas.
-- Serviços auxiliares, portas e bancos de dados.
-- Credenciais e configurações necessárias.
-- Comandos de instalação, execução e validação.
+- Priorize comandos já definidos em manifests, scripts ou CI.
+- Execute em sequência segura. Não instale dependências nem inicie serviços sem autorização e sem avaliar o impacto.
+- Só declare um comando verificado se o executou ou se há fonte autoritativa explícita do comportamento dele.
 
-Diferencie requisitos confirmados de requisitos inferidos.
+### 4. Criar a estrutura
 
-### 3. Validar o processo de inicialização
-
-Defina o caminho necessário para partir de um checkout limpo e chegar a uma aplicação funcional.
-
-Investigue, nesta ordem lógica:
-
-1. Pré-requisitos.
-2. Instalação das dependências.
-3. Preparação de serviços externos e containers.
-4. Configuração das variáveis de ambiente.
-5. Inicialização da aplicação.
-6. Verificação do funcionamento.
-7. Execução de testes, lint, type-check e build.
-
-Priorize comandos já definidos em manifests, scripts, `Makefile`, `Taskfile` ou CI.
-
-Execute os comandos em uma sequência segura, quando possível. Não instale dependências nem inicie serviços sem autorização e sem avaliar o impacto da execução.
-
-Não declare comandos como verificados sem executá-los ou sem uma fonte autoritativa explícita que comprove seu comportamento.
-
-### 4. Criar a estrutura documental
-
-Garanta a existência de:
-
-```text
-README.md
-docs/
-```
-
-Crie os diretórios e arquivos somente nos caminhos autorizados.
-
-Utilize a estrutura existente quando ela for adequada. Caso seja necessário estabelecer uma estrutura inicial, considere:
-
-- `docs/architecture.md`: componentes, dependências e fluxos.
-- `docs/development.md`: configuração do ambiente e desenvolvimento local.
-- `docs/testing.md`: estratégia e execução dos testes.
-- `docs/configuration.md`: configuração e variáveis de ambiente.
-- `docs/operations.md`: operação e troubleshooting.
-- `docs/adr/`: decisões arquiteturais, quando aplicável.
-- `docs/rfc/`: propostas de mudanças ou evoluções, quando aplicável.
-
-Crie apenas documentos com conteúdo sustentado por evidências ou explicitamente solicitado. Não produza páginas vazias para preencher uma estrutura predefinida.
+Crie arquivos só nos caminhos autorizados e reaproveite a estrutura existente quando for adequada. Sem estrutura prévia, considere: `docs/architecture.md`, `development.md`, `testing.md`, `configuration.md`, `operations.md`, `adr/` e `rfc/`. Crie apenas páginas com conteúdo sustentado por evidência ou pedido explícito; página vazia para "preencher estrutura" não ajuda ninguém.
 
 ### 5. Escrever o README
 
-Organize o README conforme as necessidades do projeto, preferencialmente nesta ordem:
+Siga esta ordem, adaptando ao projeto: nome e descrição factual; objetivo e público-alvo; estado e escopo conhecidos (sem presumir maturidade); pré-requisitos; instalação e inicialização; variáveis de ambiente; execução e verificação; testes, lint, type-check e build; links para a documentação complementar; limitações, troubleshooting e próximos passos, quando sustentados por evidência.
 
-1. Nome e descrição factual.
-2. Objetivo e público-alvo.
-3. Estado e escopo conhecidos, sem presumir maturidade ou estabilidade.
-4. Pré-requisitos.
-5. Guia de instalação e inicialização.
-6. Variáveis de ambiente.
-7. Execução e verificação do funcionamento.
-8. Testes, lint, type-check e build.
-9. Links para a documentação complementar.
-10. Limitações, troubleshooting e próximos passos, quando sustentados por evidências.
+O objetivo geral deve ser escrito ou validado pelo responsável humano. Sem confirmação, marque como `A validar pelo responsável`.
 
-O objetivo geral deve ser escrito ou validado pelo responsável humano. Quando não houver confirmação suficiente, marque o conteúdo como `A validar pelo responsável`.
-
-Para cada variável de ambiente relevante, documente:
-
-- Nome.
-- Finalidade.
-- Obrigatoriedade.
-- Formato esperado.
-- Exemplo seguro, quando possível.
-
-Nunca copie valores reais de arquivos `.env`, configurações de CI ou sistemas de secrets.
+Para cada variável de ambiente relevante, documente nome, finalidade, obrigatoriedade, formato esperado e exemplo seguro. Nunca copie valores reais de `.env`, CI ou sistemas de secrets.
 
 ### 6. Escrever a documentação complementar
 
-Priorize os assuntos mais relevantes para compreender, desenvolver, testar e operar o projeto.
-
-- Documente a arquitetura com base nos componentes e fluxos observados.
-- Explique como configurar e executar o ambiente de desenvolvimento.
-- Registre os comandos de teste e as verificações disponíveis.
-- Descreva as configurações necessárias e suas finalidades.
-- Documente procedimentos operacionais e troubleshooting somente quando houver evidências suficientes.
-
-Sempre que útil, inclua referências a arquivos, módulos, comandos e outras páginas da documentação.
-
-Identifique decisões que dependam de conhecimento humano e informações que ainda não puderam ser confirmadas.
+Priorize o que ajuda a compreender, desenvolver, testar e operar: arquitetura (componentes e fluxos observados), ambiente de desenvolvimento, comandos de teste, configuração e, só com evidência suficiente, operação e troubleshooting. Referencie arquivos, módulos, comandos e outras páginas. Aponte decisões que dependem de conhecimento humano e o que não foi confirmado.
 
 ### 7. Validar e revisar
 
-Execute as verificações pertinentes ao stack e às ferramentas disponíveis:
+Execute o que couber no stack: lint de Markdown/MDX, links e âncoras, comandos de instalação e inicialização, testes, lint, type-check e build, preview do site de docs e validação de exemplos, diagramas e frontmatter.
 
-- Sintaxe e lint de Markdown ou MDX.
-- Validação de links e âncoras.
-- Comandos de instalação e inicialização.
-- Testes, lint, type-check e build.
-- Renderização ou preview, quando houver um site de documentação.
-- Validação de exemplos, snippets, diagramas e frontmatter.
+Revise o diff procurando: alteração fora do escopo autorizado, segredo ou dado privado, comando inventado ou incorreto, afirmação sem evidência, conteúdo ambíguo ou desatualizado, TODO desnecessário e perda de conteúdo existente.
 
-Revise o diff para identificar:
-
-- Alterações fora do escopo autorizado.
-- Segredos ou dados privados.
-- Comandos inventados ou incorretos.
-- Afirmações sem evidências.
-- Conteúdo desatualizado ou ambíguo.
-- TODOs desnecessários.
-- Perda acidental de conteúdo existente.
-
-Registre o resultado de cada verificação como `pass`, `fail` ou `skipped`. Para verificações não executadas, informe o motivo.
+Registre cada verificação como `pass`, `fail` ou `skipped`, com o motivo quando não executada.
 
 ## Registro de evidências
 
-Mantenha um registro que relacione cada afirmação relevante da documentação à sua fonte.
-
-Utilize, no mínimo, os seguintes campos:
+Relacione cada afirmação relevante à sua fonte:
 
 ```text
 claim: afirmação documentada
@@ -190,73 +73,42 @@ confidence: high | medium | low
 verified: true | false
 ```
 
-A classificação deve refletir a origem da informação:
-
-- `code`: implementação do projeto.
-- `test`: testes automatizados ou verificações de comportamento.
-- `config`: manifests e arquivos de configuração.
-- `ci`: workflows e pipelines.
-- `existing-doc`: documentação existente.
-- `human-validation`: informação confirmada pelo responsável humano.
-- `inference`: conclusão inferida a partir das evidências disponíveis.
-
-A descrição do objetivo geral deve ser associada a `human-validation` quando houver confirmação do responsável. Enquanto isso não ocorrer, mantenha a afirmação identificada como pendente de validação.
+`kind` indica a origem: implementação (`code`), testes (`test`), manifests e configuração (`config`), pipelines (`ci`), documentação existente (`existing-doc`), confirmação do responsável (`human-validation`) ou conclusão inferida (`inference`). O objetivo geral só é `human-validation` depois da confirmação; até lá, fica pendente.
 
 ## Critérios de bloqueio
 
-Não considere a documentação concluída quando:
+Não dê a documentação por concluída quando:
 
-- Não for possível determinar como instalar ou executar o projeto.
-- Existirem conflitos relevantes entre implementação, testes e configuração.
-- Comandos críticos não puderem ser verificados.
-- Forem encontrados segredos ou dados privados que impeçam uma documentação segura.
-- A tarefa exigir alterações de código ou infraestrutura não autorizadas.
-- O objetivo geral depender de uma decisão humana ainda não fornecida.
+- não for possível determinar como instalar ou executar o projeto;
+- houver conflito relevante entre implementação, testes e configuração;
+- comandos críticos não puderem ser verificados;
+- houver segredo ou dado privado que impeça documentar com segurança;
+- a tarefa exigir alteração de código ou infraestrutura não autorizada;
+- o objetivo geral depender de decisão humana ainda não fornecida.
 
-Quando possível, entregue um rascunho parcial com `status: blocked` ou `status: planned`, identificando as lacunas, os riscos e as ações necessárias para prosseguir.
-
-Não invente informações para contornar um bloqueio.
+Nesses casos, entregue um rascunho parcial com `status: blocked` ou `planned`, listando lacunas, riscos e ações necessárias. Não invente informação para contornar o bloqueio.
 
 ## Formato de saída
 
-Retorne os resultados em JSON, preferencialmente seguindo esta estrutura:
+Retorne JSON com esta estrutura (ou os mesmos campos em Markdown, se o ambiente não permitir JSON), adaptando os valores ao resultado real:
 
 ```json
 {
   "status": "planned|changed|blocked",
   "skill": "source-grounded-documentation",
-  "scope": {
-    "repository": "...",
-    "commit": "...",
-    "paths": ["README.md", "docs/"]
-  },
+  "scope": {"repository": "...", "commit": "...", "paths": ["README.md", "docs/"]},
   "project_inventory": {
-    "stack": [],
-    "requirements": [],
-    "install_commands": [],
-    "env_files": [],
-    "external_services": []
+    "stack": [], "requirements": [], "install_commands": [],
+    "env_files": [], "external_services": []
   },
   "changed_files": [],
   "evidence": [],
-  "human_validation": [
-    "Objetivo geral precisa ser validado pelo responsável."
-  ],
-  "checks": [
-    {
-      "command": "...",
-      "result": "pass|fail|skipped",
-      "reason": "..."
-    }
-  ],
+  "human_validation": ["Objetivo geral precisa ser validado pelo responsável."],
+  "checks": [{"command": "...", "result": "pass|fail|skipped", "reason": "..."}],
   "unproven_or_stale": [],
   "risks": [],
   "next_steps": []
 }
 ```
 
-Adapte os valores ao resultado real da execução. Não invente evidências, verificações ou arquivos alterados.
-
-Se o ambiente não permitir JSON, utilize os mesmos campos em Markdown.
-
-Nunca marque um comando como validado sem executá-lo ou sem uma fonte autoritativa explícita que comprove seu comportamento.
+Não invente evidência, verificação nem arquivo alterado.
