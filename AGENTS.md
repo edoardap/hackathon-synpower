@@ -18,6 +18,7 @@ Os agentes ficam em `.claude/agents/` e as skills em `.claude/skills/`. Converse
 | Instrumentar código (traces, métricas, logs com `trace_id`) ou auditar cobertura de observabilidade | skill `observability-coverage` | Código a instrumentar, ou diff/branch a revisar | Instrumentação no padrão canônico; ou relatório com gravidade e veredito |
 | Migração de schema com Liquibase (criar/alterar tabela, `DROP`, backfill, rollback) | skill `liquibase-migration` | Mudança de schema | Changeset `--rollback` em `resources/liquibase/tables/`, rollback provado |
 | Checar se um deploy está pronto, promover ambiente ou definir rollback | skill `deploy-readiness` | Repositório e `infra/<serviço>/<ambiente>/` | Checklist pré/pós com veredito PRONTO/NÃO PRONTO |
+| Avaliar uma skill regenerando um artefato de um projeto real e comparando com o original | skill `regen-eval` | Skill-sob-teste e projeto(s) de referência | Diff + juízo do regenerado vs gabarito, veredito do usuário |
 
 Se o pedido tocar em mais de um, siga a ordem: `product-manager`, depois `designer` e `solutions-architect`.
 Os agentes de produto e de arquitetura não escrevem código: implementação e revisão ficam com a `implement-feature` e os
@@ -77,3 +78,5 @@ O arquiteto só consulta o grafo (`query`, `path`, `explain`); rodar `graphify u
 
 Os evals usam só o `claude plugin eval`. Os casos ficam em `evals/plugin-eval/` (o formato é dele, não o nosso) e os resultados em `evals/plugin-eval/results/`.
 Não altere a skill durante um eval, só teste e reporte.
+
+Como método complementar (não substitui o acima), a skill `regen-eval` avalia uma skill por regeneração: usa um projeto real como gabarito, apaga o artefato que a skill produz, roda a skill numa cópia sem git e compara o resultado com o original por diff e juiz LLM. Serve quando o acerto é subjetivo e já existe um exemplo bom para comparar.
