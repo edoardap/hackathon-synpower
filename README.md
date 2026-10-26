@@ -17,7 +17,7 @@ O plugin é único e construído por frentes de trabalho.
 | Arquitetura e Engenharia de Software | `solutions-architect` |
 | Implementação: backend, frontend e dados | `orchestrator`, `software-engineer` (no papel de `backend-engineer` e `frontend-engineer`) |
 | Qualidade, Testes e Segurança | `qa-engineer`, `security-reviewer`, `code-reviewer` |
-| DevOps, SRE e Operações | `devops-engineer`, `sre-engineer` |
+| DevOps, SRE e Operações | `devops-engineer` |
 | Documentação e Conhecimento Técnico | `tech-writer` |
 
 ## O que faz
@@ -38,13 +38,16 @@ números, prazos nem decisões.
 | `code-reviewer` | "revisa esse PR", "essa entrega pode ir para merge?" | `code-review-reliability` | Relatório único com gravidade, recomendação e veredito |
 | `qa-engineer` | "revisa a qualidade desse PR", "prova esse bug com um teste" | `code-review-reliability`, `test-generation` | Relatório e testes de regressão |
 | `security-reviewer` | "revisa a segurança desse PR", "dá pra uma empresa ver dados da outra?" | `code-review-reliability`, `secret-handling-review` | Relatório com a requisição que explora cada falha |
+| `devops-engineer` | "monta a observabilidade", "instrumenta essa rota", "cria a migração dessa tabela", "configura o CI", "esse deploy está pronto?" | `observability-structure`, `observability-coverage`, `liquibase-migration`, `synchro-github-actions-pipeline`, `synchro-gitlab-ci-pipeline`, `deploy-readiness` | Stack, instrumentação, migração reversível, pipeline e checklist de deploy |
+| `tech-writer` | "documenta esse projeto", "cria o README", "a doc precisa mudar com esse PR?" | `source-grounded-documentation`, `impact-aware-documentation` | `README.md` e `docs/` fiéis à fonte, ou só o que a mudança afeta |
 
 Ordem natural quando o pedido toca em mais de um: `product-manager`, depois `designer` e `solutions-architect`.
 
 **graphify (opcional).** O `solutions-architect` consulta o grafo do código quando existir `graphify-out/` no repositório alvo, para entender dependência e impacto. O `graphify` é uma ferramenta de linha de comando (pacote `graphifyy`) e este plugin não traz a skill dele: no repositório alvo, rode `graphify install --project` e gere o grafo com `/graphify .`. Sem o grafo, a `repo-orientation` segue sozinha.
 
 Para implementar, peça a funcionalidade em rodadas pequenas: a skill `implement-feature` conduz o plano, as fases, a
-revisão do PR e o encerramento. Deploy é dos agentes de DevOps.
+revisão do PR e o encerramento. Observabilidade, migração, CI e deploy são do `devops-engineer`; a documentação do
+repositório é do `tech-writer`.
 
 ### Skills (`.claude/skills/`)
 
@@ -66,6 +69,14 @@ revisão do PR e o encerramento. Deploy é dos agentes de DevOps.
 | `test-generation` | Testes para código existente, com o teste de regressão falhando antes da correção |
 | `secret-handling-review` | Busca de segredo exposto, com valores mascarados |
 | `diff-review` | Página de revisão de diff para uma pessoa anotar |
+| `observability-structure` | Monta a stack LGTM+Alloy e o `resources/observability/` a partir de templates, parametrizada pelo serviço |
+| `observability-coverage` | Instrumenta o código no padrão canônico (traces, métricas, logs com `trace_id`) ou audita a cobertura num PR |
+| `liquibase-migration` | Migração de schema com Liquibase, changeset com `--rollback` provado, só em banco local |
+| `synchro-github-actions-pipeline`, `synchro-gitlab-ci-pipeline` | Pipelines de CI no padrão Synchro: cria, revisa ou migra de GitLab para GitHub |
+| `deploy-readiness` | Checklist pré/pós de deploy no layout k8s/ArgoCD, com veredito PRONTO/NÃO PRONTO e rollback |
+| `source-grounded-documentation` | Cria o `README.md` e o `docs/` inicial fiel a código, teste, configuração e CI verificáveis |
+| `impact-aware-documentation` | Atualiza só o que um PR, MR ou diff entre branches afeta na documentação |
+| `regen-eval` | Avalia uma skill por regeneração: usa um projeto real como gabarito e compara o que a skill reproduz |
 | `tdd`, `verification-before-completion`, `receiving-code-review` | Teste antes do código, prova antes de dizer "pronto" e correção conferida, usadas pelo `software-engineer` |
 
 ## Onde ficam os resultados
@@ -124,7 +135,7 @@ claude plugin install hackathon-ai-swe@hackathon-synpower
 Para só experimentar, sem instalar, a partir da raiz do repo: `claude --plugin-dir .`
 
 **O que foi testado.** Instalamos o plugin a partir de uma cópia git local, com a configuração isolada: ele ficou
-`enabled`, e a cópia instalada trouxe as 8 skills e os 3 agentes de `.claude/`. O comando acima com `edoardap/hackathon-synpower`
+`enabled`, e a cópia instalada trouxe as skills e os agentes de `.claude/`. O comando acima com `edoardap/hackathon-synpower`
 só funciona depois que o `marketplace.json` estiver publicado no GitHub, e esse caminho em si ainda não foi exercitado.
 
 **Versão.** O `plugin.json` fixa a versão (`0.1.0`). Quem já instalou **só recebe atualização quando a versão muda**, então

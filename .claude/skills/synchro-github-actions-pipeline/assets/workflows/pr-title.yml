@@ -1,0 +1,44 @@
+# Pull request title convention: "[Tag] Capitalized description".
+# Separate workflow so editing a title does not re-run the whole CI.
+
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions: {}
+
+jobs:
+  validate-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title
+        env:
+          # Passed through env, never interpolated into the script: a crafted title must not run commands.
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          VALID_TAGS="Breaking|Feature|Fix|Refactor|Chore|Spike|Docs|Test"
+
+          if [ -z "$TITLE" ]; then
+            echo "❌ Erro: Título do Pull Request não encontrado (variável vazia)."
+            exit 1
+          fi
+
+          # Valida apenas se a Tag existe e está no formato correto
+          if ! printf '%s\n' "$TITLE" | grep -Eq "^\[($VALID_TAGS)\] "; then
+            echo "❌ Erro: O título do PR usa uma tag inválida ou ausente."
+            echo "   Tags aceitas: $VALID_TAGS"
+            echo "   Exemplo válido: [Feature] Adicionar endpoint de artifacts"
+            exit 1
+          fi
+
+          # Valida se a primeira letra após a Tag é maiúscula
+          if ! printf '%s\n' "$TITLE" | grep -Eq "^\[($VALID_TAGS)\] [A-Z]"; then
+            echo "❌ Erro: A descrição do título deve começar com letra maiúscula."
+            echo "   Exemplo válido: [Refactor] Ajustar validação do pipeline"
+            echo "   Exemplo inválido: [Refactor] ajustar validação do pipeline"
+            exit 1
+          fi
+
+          echo "✅ Título do PR validado com sucesso: $TITLE"

@@ -1,0 +1,84 @@
+discovery.docker "flog_scrape" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "flog_scrape" {
+  targets = discovery.docker.flog_scrape.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_log_stream"]
+    target_label  = "logstream"
+  }
+}
+
+loki.source.docker "flog_scrape" {
+  host             = "unix:///var/run/docker.sock"
+  targets          = discovery.relabel.flog_scrape.output
+  forward_to       = [loki.write.default.receiver]
+  refresh_interval = "15s"
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://__SERVICE__-loki:3100/loki/api/v1/push"
+  }
+
+  external_labels = {
+    environment = "development",
+    project     = "__SERVICE__",
+  }
+}
+
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+    logs    = [otelcol.processor.batch.default.input]
+    traces  = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.prometheus.default.input]
+    logs    = [otelcol.exporter.loki.default.input]
+    traces  = [otelcol.exporter.otlp.tempo.input]
+  }
+}
+
+otelcol.exporter.prometheus "default" {
+  forward_to = [prometheus.remote_write.metrics.receiver]
+}
+
+otelcol.exporter.loki "default" {
+  forward_to = [loki.write.default.receiver]
+}
+
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = "__SERVICE__-tempo:4317"
+
+    tls {
+      insecure = true
+    }
+  }
+}
+
+prometheus.remote_write "metrics" {
+  endpoint {
+    url = "http://__SERVICE__-prometheus:9090/api/v1/write"
+  }
+}
