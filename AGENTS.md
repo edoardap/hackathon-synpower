@@ -14,15 +14,19 @@ Os agentes ficam em `.claude/agents/` e as skills em `.claude/skills/`. Converse
 | Revisar um PR ou uma entrega | `code-reviewer` (chama `qa-engineer` e `security-reviewer`) | Diff ou *branch* | Relatório com gravidade, recomendação e veredito |
 | Revisar só qualidade, ou provar um defeito com teste | `qa-engineer` | Diff ou arquivos | Relatório e testes de regressão |
 | Revisar só segurança ou procurar segredo exposto | `security-reviewer` | Diff ou repositório | Relatório com a requisição que explora cada falha |
+| Documentar o projeto (criar README/`docs/`) ou atualizar a doc a partir de um PR/diff | `tech-writer` | Código, ou PR/diff entre branches | `README.md` e `docs/` fiéis à fonte, ou só o que a mudança afeta |
+| Montar a plataforma do serviço: observabilidade, migração, CI e prontidão de deploy | `devops-engineer` | Repositório e nome do serviço | Stack, instrumentação, migração reversível, pipeline e checklist de deploy |
 | Montar/padronizar a stack de observabilidade (Grafana, Prometheus, Loki, Tempo, Alloy) de um repo | skill `observability-structure` | Repositório e nome do serviço | Stack e `resources/observability/` no padrão, a partir de templates embutidos |
 | Instrumentar código (traces, métricas, logs com `trace_id`) ou auditar cobertura de observabilidade | skill `observability-coverage` | Código a instrumentar, ou diff/branch a revisar | Instrumentação no padrão canônico; ou relatório com gravidade e veredito |
 | Migração de schema com Liquibase (criar/alterar tabela, `DROP`, backfill, rollback) | skill `liquibase-migration` | Mudança de schema | Changeset `--rollback` em `resources/liquibase/tables/`, rollback provado |
 | Checar se um deploy está pronto, promover ambiente ou definir rollback | skill `deploy-readiness` | Repositório e `infra/<serviço>/<ambiente>/` | Checklist pré/pós com veredito PRONTO/NÃO PRONTO |
+| Configurar, revisar ou migrar o CI (GitHub Actions ou GitLab CI do padrão Synchro) | skill `synchro-github-actions-pipeline` / `synchro-gitlab-ci-pipeline` | Repositório e `.gitlab-ci.yml`/`.github/workflows/` | Pipeline autossuficiente no padrão Synchro |
 | Avaliar uma skill regenerando um artefato de um projeto real e comparando com o original | skill `regen-eval` | Skill-sob-teste e projeto(s) de referência | Diff + juízo do regenerado vs gabarito, veredito do usuário |
 
 Se o pedido tocar em mais de um, siga a ordem: `product-manager`, depois `designer` e `solutions-architect`.
 Os agentes de produto e de arquitetura não escrevem código: implementação e revisão ficam com a `implement-feature` e os
-agentes de implementação e qualidade; deploy é do DevOps.
+agentes de implementação e qualidade; plataforma, migração, CI e deploy são do `devops-engineer`; a documentação do
+repositório é do `tech-writer`.
 
 ## Onde salvar (cada arquivo só depois de o usuário aceitar)
 
@@ -37,6 +41,7 @@ agentes de implementação e qualidade; deploy é do DevOps.
 | Plano de uma rodada de implementação | `openspec/changes/<change>/`, apagada no encerramento depois de commitada |
 | Comportamento entregue (manual vivo) | `openspec/specs/<capacidade>/spec.md` |
 | Itens deferidos nas revisões | `openspec/backlog.md` |
+| Documentação do repositório | `README.md` e `docs/` do repositório alvo |
 
 `<nome>` em minúsculas e com hífens, o mesmo em todos os arquivos da feature. Nunca sobrescreva um arquivo existente sem avisar.
 
@@ -58,15 +63,24 @@ agentes de implementação e qualidade; deploy é do DevOps.
 - Migração e testes rodam só no banco local.
 - A revisão é a de um PR, no fim da rodada: o `code-reviewer` junta qualidade, segurança e arquitetura num relatório.
 
-## Observabilidade e deploy
+## Plataforma: observabilidade, CI e deploy
 
-Quatro skills reutilizáveis entre os repos Synpower (Python/uv, FastAPI + Dagster, stack LGTM+Alloy, Liquibase, k8s/ArgoCD),
-encadeadas: `observability-structure` monta a stack → `observability-coverage` instrumenta o código e audita a cobertura →
-`liquibase-migration` escreve a migração reversível → `deploy-readiness` checa que tudo (migração aplicada e sinal
-chegando) está pronto antes de subir. São parametrizadas pelo nome do serviço e autossuficientes (templates embutidos nos
-`assets/`), não presas a um repositório. A `observability-structure` e a `observability-coverage` reservam/preenchem o
-`src/shared/logging/opentelemetry_setup.py`; a `liquibase-migration` é a de Liquibase (a `database-migration-plan` cobre
-Alembic/golang-migrate). Todas pedem código enxuto: comentário só quando estritamente necessário.
+O `devops-engineer` monta e opera a plataforma dos repos Synpower (Python/uv, FastAPI + Dagster, stack LGTM+Alloy,
+Liquibase, k8s/ArgoCD) com skills reutilizáveis e encadeadas: `observability-structure` monta a stack →
+`observability-coverage` instrumenta o código e audita a cobertura → `liquibase-migration` escreve a migração reversível →
+`synchro-github-actions-pipeline`/`synchro-gitlab-ci-pipeline` configuram o CI → `deploy-readiness` checa que tudo
+(migração aplicada e sinal chegando) está pronto antes de subir. São parametrizadas pelo nome do serviço e autossuficientes
+(templates embutidos nos `assets/`), não presas a um repositório. A `observability-structure` e a `observability-coverage`
+reservam/preenchem o `src/shared/logging/opentelemetry_setup.py`; a `liquibase-migration` é a de Liquibase (a
+`database-migration-plan` cobre Alembic/golang-migrate). Todas pedem código enxuto: comentário só quando estritamente
+necessário.
+
+## Documentação do repositório
+
+O `tech-writer` cria e mantém a documentação fiel à fonte: `source-grounded-documentation` escreve o `README.md` e o
+`docs/` inicial a partir de código, teste, configuração e CI verificáveis; `impact-aware-documentation` atualiza só o que
+um PR, MR ou diff entre branches afeta. Nenhuma das duas inventa fato: o que não dá para verificar vira pergunta em aberto
+ou `A definir`.
 
 ## Grafo do código (graphify)
 
