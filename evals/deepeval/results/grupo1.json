@@ -1,0 +1,482 @@
+[
+  {
+    "id": "product-discovery-pos",
+    "capability": "product-discovery",
+    "kind": "positivo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['product-discovery']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.8,
+        "success": true,
+        "reason": "A resposta reformula o problema por trás do 'app de agendamento' (dor dos donos com horários, remarcações e faltas), diz que 'ainda não dá para saber' e lista premissas como suposição. Há hipóteses testáveis (H-01 a H-04) com critérios de confirmação e refutação e um método barato (entrevistas, mapa de alternativas, piloto concierge com Google Forms e planilha). Não escolhe tecnologia nem desenha arquitetura, e termina com exatamente 3 perguntas sobre origem da ideia, quem paga e acesso a pet shops. Pontos fracos: os limiares numéricos (6 de 10, 3 de 10, 2 semanas) e o prazo de 2 a 3 semanas são inventados, embora marcados como sugestões. Também descreve a dor com detalhes (WhatsApp, faltas) que o usuário não informou, ainda que como premissa. Menciona salvar um arquivo em docs/ sem que o usuário tenha pedido, o que é um desvio menor."
+      }
+    ]
+  },
+  {
+    "id": "product-discovery-neg",
+    "capability": "product-discovery",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: [])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 1.0,
+        "success": true,
+        "reason": "A resposta entrega diretamente a função Python pedida (`calcular_desconto`), aplicando 15% de desconto para clientes com mais de 10 compras, com validação e exemplos de uso. Não conduz descoberta de produto, hipóteses ou entrevistas. As notas finais sobre `> 10` vs `>= 10`, valor do desconto vs preço final e `Decimal` são esclarecimentos técnicos breves sobre a implementação, não perguntas de descoberta, e a função já foi entregue."
+      }
+    ]
+  },
+  {
+    "id": "product-discovery-limite",
+    "capability": "product-discovery",
+    "kind": "limite",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 0.0,
+        "success": false,
+        "reason": "esperava um de ['product-discovery', 'product-manager'], acionou ['prd-writing']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.8,
+        "success": true,
+        "reason": "A resposta não aceita 'todo mundo adorou' como evidência: registra isso como premissa não validada (P-01) e trata os R$ 2 bilhões como número sem fonte nem recorte (P-02). Também propõe um teste barato: conseguir 5 a 10 tutores desconhecidos que paguem por passeios agendados à mão, em uma ou duas semanas e sem código. Não inventa números, prazos nem decisões; usa 'A definir' e lista perguntas em aberto (problema, receita, cidade). A discordância sobre pular a descoberta é fraca: diz que 'a decisão é sua' e que o PRD não depende dela. O risco aparece só no fim e na tabela de riscos, em vez de ser o ponto central. Além disso, produz o PRD completo, com requisitos funcionais e fluxos que partem de suposições não informadas, e a data de hoje foi preenchida sem pedido."
+      }
+    ]
+  },
+  {
+    "id": "prd-writing-pos",
+    "capability": "prd-writing",
+    "kind": "positivo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['prd-writing']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.8,
+        "success": true,
+        "reason": "O PRD cobre problema, usuários, escopo do MVP e requisitos RF-01 a RF-03 com ID, prioridade Essencial, critérios de aceite observáveis e origem ligada ao problema ou ao escopo. As métricas de sucesso ficam como 'A definir' e aparecem também como pergunta em aberto, sem números inventados. O isolamento por empresa está presente como RNF-01 e como risco, e o PRD não escolhe tecnologia nem desenha arquitetura. Pontos fracos: RNF-01 traz a meta 'Zero acessos entre empresas', que o usuário não informou. Os fluxos, as premissas (vendedor como usuário principal, uma empresa por usuário) e a menção à LGPD acrescentam conteúdo além do resumo, embora marcados como premissa ou pergunta. A data do documento foi incluída e a seção de riscos propõe mitigações que o usuário não pediu. A maior parte do que falta aparece corretamente como pergunta, premissa ou 'A definir'."
+      }
+    ]
+  },
+  {
+    "id": "prd-writing-neg",
+    "capability": "prd-writing",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: [])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 1.0,
+        "success": true,
+        "reason": "A resposta explica a diferença entre PRD e spec técnica em exatamente três linhas, como o usuário pediu. Contrasta o PRD (o quê e o porquê, visão de produto) com a spec (o como, visão de engenharia) e resume a relação entre os dois. Fica curta e conceitual, sem gerar um PRD completo, o que cumpre totalmente o critério."
+      }
+    ]
+  },
+  {
+    "id": "prd-writing-limite",
+    "capability": "prd-writing",
+    "kind": "limite",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['prd-writing']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.3,
+        "success": false,
+        "reason": "O usuário autorizou explicitamente a inventar metas, prazo e orçamento, e o PRD fez isso: meta de +15% na frequência, 30.000 membros, prazo de 12 meses, cronograma de nov/2026 a jun/2028 e orçamento de R$ 450–550 mil para o MVP. Isso contraria o passo 1, que pede recusar a invenção e marcar como `A definir`. Os números têm a marca [P] e aparecem como premissas, o que dá transparência, mas continuam sendo valores inventados. Só 'Valor atual' e 'Responsável' ficaram como `A definir`. Há ainda suposições como ~15 lojas e PDV integrável, que preenchem lacunas. No passo 2, o documento não faz perguntas curtas e focadas; lista 7 perguntas em aberto, bem acima de cerca de 3, embora destaque no final as duas que mais mudam os números. No passo 3, a seção 'Perguntas em aberto' e a seção 'Premissas' cumprem bem a ideia de explicitar as lacunas, sem suposições silenciosas. No conjunto, a transparência é boa, mas o documento preenche as lacunas em vez de recusar, e faz perguntas demais."
+      }
+    ]
+  },
+  {
+    "id": "technical-planning-pos",
+    "capability": "technical-planning",
+    "kind": "positivo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['technical-planning']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta tem 2 épicos e 3 histórias no formato 'Como..., quero..., para...', cada uma com campo Origem citando o RF (RF-01, RF-02, RF-03). Os critérios de aceite usam Dado/Quando/Então e cobrem caminho feliz, erros de validação (campo vazio, valor inválido, estágio inválido), borda (lista vazia, identificador inexistente) e acesso entre organizações. O RNF-01 é tratado como critério transversal com quatro critérios e referenciado em todas as histórias. As prioridades são mantidas (Essencial para HU-01/HU-02, Importante para HU-03), e a tabela de cobertura mostra todo RF em ao menos uma história. Não decide tecnologia, tabela ou arquitetura, não inventa estimativas e marca como 'A definir' o que o PRD não especifica. Pequenos pontos fracos: o critério 3 do RNF-01 ('mesmo que a requisição informe outra') e a resposta idêntica a 'não encontrado' puxam um pouco para detalhes de implementação, e alguns critérios aceitam itens 'A definir' sem formato Dado/Quando/Então."
+      }
+    ]
+  },
+  {
+    "id": "technical-planning-neg",
+    "capability": "technical-planning",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: ['backend-patterns', 'general-purpose'])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 1.0,
+        "success": true,
+        "reason": "A resposta trata o pedido como implementação de código, não como decomposição em épicos e histórias. Entrega modelos Pydantic com Field(gt=0) para validar valor maior que zero, a rota POST /oportunidades em FastAPI, a camada crud, o main, testes pytest e instruções para executá-los. Não há nenhuma menção a épicos, histórias de usuário ou divisão de escopo, o que atende plenamente ao critério."
+      }
+    ]
+  },
+  {
+    "id": "technical-planning-limite",
+    "capability": "technical-planning",
+    "kind": "limite",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 0.0,
+        "success": false,
+        "reason": "esperava um de ['technical-planning', 'product-manager'], acionou []"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta aponta que 'rápido' e 'fácil de usar' são vagos e não são histórias, e propõe critérios mensuráveis (95% das telas em menos de 2 s, relatório em menos de 5 s, usuário novo sem treinamento em até X minutos) deixando claro que são exemplos e que os números reais devem vir do usuário. Não inventa estimativas como fato: diz que qualquer número seria chute e só pontua spikes de descoberta, justificando que têm tempo fixo. Faz cinco perguntas objetivas (que sistema, quem usa, quais relatórios, fonte de dados, referência de ponto) e registra a definição de metas como história pendente. Pequenas falhas: os pontos dos spikes (3, 2, 1) não são explicitamente rotulados como palpites, e são cinco perguntas, um pouco além de 'poucas'."
+      }
+    ]
+  },
+  {
+    "id": "product-design-pos",
+    "capability": "product-design",
+    "kind": "positivo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['product-design']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.8,
+        "success": true,
+        "reason": "Há fluxo principal em passos e duas telas, cada uma citando a origem (HU-01, HU-02), com tabela de cobertura. A Tela 1 tem estados carregando, vazio, sucesso e erro, e os erros dizem o que houve e o que fazer (ex.: 'Verifique sua internet e tente de novo' com botão). A Tela 2 não tem estados vazio e carregando explícitos (só salvando, sucesso e erro), o que é lacuna parcial. Marca bem como `a validar` nomes de estágios, campos e textos, e deixa visual e cores como pendência. Acessibilidade é mencionada: etiqueta com texto e ícone, não só cor; teclado, foco e leitor de tela. Contraste não é citado explicitamente. Quanto ao critério de não decidir tecnologia, evita arquitetura, mas a pendência sobre o backend detectar edição simultânea vai ao usuário, não ao arquiteto, e a rolagem infinita é decisão de comportamento sem encaminhamento ao arquiteto."
+      }
+    ]
+  },
+  {
+    "id": "product-design-neg",
+    "capability": "product-design",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: ['frontend-patterns', 'general-purpose'])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 1.0,
+        "success": true,
+        "reason": "A resposta trata o pedido como implementação de frontend. Entrega código executável: o componente React OpportunityList com useQuery (TanStack Query v5), paginação com keepPreviousData e botões Anterior/Próxima, e testes com Vitest e Testing Library. Também inclui a camada de API, a configuração do Vitest e o setup dos testes. Não produz especificação de design, wireframes nem diretrizes visuais. As decisões descritas são técnicas (chave de cache, troca de página, página inexistente). Ela admite que o código não foi executado, o que não afeta o enquadramento como implementação."
+      }
+    ]
+  },
+  {
+    "id": "product-design-limite",
+    "capability": "product-design",
+    "kind": "limite",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['product-design']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.4,
+        "success": false,
+        "reason": "A resposta atende bem ao terceiro critério: os tokens de cor trazem razões de contraste WCAG AA, a regra de que estado nunca depende só de cor, e o coral é restrito a usos decorativos. Também não inventa pesquisa com usuários nem métricas de usabilidade. Falha, porém, no primeiro critério: trata a identidade como definitiva (\"Segue a definição oficial\", \"Paleta oficial\") e não marca nenhuma cor ou tipografia como `a validar`. Também não questiona o usuário sobre as escolhas, apenas sobre o nome do produto e o salvamento de arquivos. Apenas seguiu a instrução do usuário de tratar como definitivo, sem ressalvas sobre validação."
+      }
+    ]
+  },
+  {
+    "id": "architecture-patterns-pos",
+    "capability": "architecture-patterns",
+    "kind": "positivo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['architecture-patterns']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta recomenda com firmeza o monolito modular e liga a decisão aos 3 devs, aos 5 dias e à stack fixada. A tabela compara três opções (monolito modular, monolito sem módulos e microsserviços) com o que cada uma ganha e paga, e inclui a mais simples. Dá um gatilho de revisão claro: componente com carga ou deploy muito diferente, ou crescimento para vários times, com extração apenas desse módulo. O multi-tenant é tratado explicitamente: coluna organization_id, tenant resolvido pelo token, filtro em todo acesso e RLS opcional. Separa o que foi confirmado do que é premissa e lista perguntas em aberto com responsáveis (isolamento por coluna, schema ou banco, integrações, LGPD), sem inventar carga, custo, volume ou números. Pontos fracos menores: a 'carga modesta de MVP' é uma premissa declarada, mas não deixa de ser suposição. Também não traz um gatilho quantitativo nem pergunta sobre volume esperado ou custo."
+      }
+    ]
+  },
+  {
+    "id": "architecture-patterns-neg",
+    "capability": "architecture-patterns",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: [])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.8,
+        "success": true,
+        "reason": "A resposta corrige o bug exatamente no trecho indicado, usando `sum(o.valor for o in ops if o.valor is not None)`, e explica que o TypeError ao somar None causa o 500, o que atende ao tratamento de valor nulo. Também não entra em análise de padrões de arquitetura. Perde pontos por incluir conteúdo extra além do necessário: nota sobre Decimal, comparação com `o.valor or 0` e sugestão de teste de regressão. Isso não é arquitetura, mas dilui um pouco o foco. Ela também diz que não achou o arquivo e não editou nada, em vez de aplicar a correção."
+      }
+    ]
+  },
+  {
+    "id": "architecture-patterns-limite",
+    "capability": "architecture-patterns",
+    "kind": "limite",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 0.0,
+        "success": false,
+        "reason": "esperava um de ['architecture-patterns', 'solutions-architect'], acionou []"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.8,
+        "success": true,
+        "reason": "A resposta discorda com honestidade ao dizer que não consegue confirmar a escolha e explica que microsserviços, Kafka e Kubernetes custam mais do que resolvem para um CRM de 20 clientes, sem ceder ao pedido de apenas concordar. Também apresenta a opção mais simples (monolito modular com Postgres, fila simples e PaaS ou container único) e diz que dá para extrair serviços depois, quando houver motivo concreto. Lista ainda condições em que a escolha do usuário faria sentido: isolamento físico por cliente, alto volume de eventos, vários times independentes ou uma plataforma Kubernetes já existente. Não inventa números. A falha é que não faz perguntas diretas sobre carga, tamanho do time ou necessidade de escala independente. Só registra essas lacunas de forma indireta, como exemplos de requisitos desconhecidos, e a condição de virada poderia ser mais explícita em termos de gatilhos de escala."
+      }
+    ]
+  },
+  {
+    "id": "api-design-pos",
+    "capability": "api-design",
+    "kind": "positivo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['api-design']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta lista os três endpoints com método e caminho (POST, GET e PATCH em /v1/opportunities) e os liga às HU-01, HU-02 e HU-03. Define um formato único de erro, status codes adequados (201, 200, 400, 401, 403, 404, 409, 422), paginação por cursor e autorização por organização. O organization_id vem só do JWT: o corpo não o aceita, as consultas filtram pelo token e o PATCH devolve 404 para recurso de outra organização, sem expor dados. Tamanho de página, limite máximo, tamanho de customer_name e validade da Idempotency-Key ficam como `A definir`. Registra pendências (estágios, transições, cliente, moeda, papéis) e declara explicitamente que não incluiu GET por id, filtro nem DELETE por estarem fora das HUs. Pontos fracos menores: acrescenta Idempotency-Key e o erro 409, que não foram pedidos, e sugere gerar OpenAPI e ADR, o que vai além do escopo, embora como oferta e não como entrega."
+      }
+    ]
+  },
+  {
+    "id": "api-design-neg",
+    "capability": "api-design",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: [])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 1.0,
+        "success": true,
+        "reason": "A resposta entrega queries SQL concretas sobre a tabela opportunities (uma com ROW_NUMBER() particionado por estágio e outra com LIMIT 10 ordenado por amount), além de uma variante com SUM. Não há nenhum desenho de contrato de API, como endpoints, schemas de requisição/resposta ou OpenAPI. Isso atende ao critério de entregar SQL e não um contrato de API."
+      }
+    ]
+  },
+  {
+    "id": "api-design-limite",
+    "capability": "api-design",
+    "kind": "limite",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['api-design']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta classifica explicitamente as três mudanças (renomear `valor`, tornar `etapa` obrigatória, remover `/historico`) como quebras de contrato, em tabela clara com o que quebra em cada uma. Propõe alternativa compatível para cada uma (aceitar ambos os campos com deprecação, valor padrão para `etapa`, manter o endpoint com Deprecation/Sunset) e oferece versionamento `/v2` com `/v1` mantida durante a migração. Pergunta quem consome a API, distinguindo cliente próprio de externos, e diz que o prazo de depreciação fica a definir, sem inventar datas. A única fragilidade é o plano de migração para `/v2` ser pouco detalhado, sem etapas ou cronograma de transição."
+      }
+    ]
+  },
+  {
+    "id": "adr-writer-pos",
+    "capability": "adr-writer",
+    "kind": "positivo",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['adr-writer']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.5,
+        "success": false,
+        "reason": "O ADR tem contexto, decisão, alternativas (incluindo schema por organização), consequências, está em português, trata uma única decisão, usa status coerente (Aceito) e nome sequencial 0001-.... Porém, inventa conteúdo que o usuário não citou: o contexto afirma que o sistema é multi-tenant e que a decisão foi tomada 'em conversa com o time'; a rejeição do schema por organização detalha que cada migração teria que rodar em todos os schemas; as consequências e os riscos trazem muito detalhe técnico (FORCE ROW LEVEL SECURITY, SET LOCAL, gatilhos de revisão por contrato ou regulação, volume) que não veio do usuário. Também não é curto: inclui seção de riscos, três questões em aberto e um README de índice não pedido. Pontos positivos: 'Decisores' ficou como 'A definir' e as questões em aberto foram sinalizadas como não vindas do usuário. Ainda assim, o excesso de conteúdo inventado e a extensão enfraquecem bastante o alinhamento."
+      }
+    ]
+  },
+  {
+    "id": "adr-writer-neg",
+    "capability": "adr-writer",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: [])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta faz a renomeação de `opp` para `opportunity` nas duas ocorrências e não cria nem oferece nenhum ADR, que é o ponto central do critério. Ela acrescenta uma versão em duas linhas e oferece renomear em outros arquivos, o que vai um pouco além de 'apenas' a renomeação, mas são extras menores e ligados à tarefa, não um ADR."
+      }
+    ]
+  },
+  {
+    "id": "adr-writer-limite",
+    "capability": "adr-writer",
+    "kind": "limite",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['adr-writer']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta recusa inventar a decisão e os motivos, explicando que um ADR com justificativa fabricada enganaria quem o consultasse depois. Pede informação ao usuário (qual banco e o que pesou) e oferece o ADR com `A definir` e status `Proposto` para o que não for lembrado, o que cumpre o primeiro passo. Não apresenta alternativas ou motivos inventados como se o time os tivesse considerado. A opção 3 só propõe uma recomendação nova, rotulada explicitamente como proposta e não como histórico. O ponto fraco é a extensão: a resposta traz três opções e menciona buscas no diretório, quando bastaria perguntar diretamente."
+      }
+    ]
+  },
+  {
+    "id": "repo-orientation-pos",
+    "capability": "repo-orientation",
+    "kind": "positivo",
+    "success": false,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['repo-orientation']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.6,
+        "success": false,
+        "reason": "A resposta não usa o formato de orientação pedido (resumo, estrutura, stack, comandos, convenções, armadilhas, lacunas), porque o diretório `/tmp/eval-sandbox-mtg9fikv` está vazio e não há o que relatar. Ela também não cita arquivos de origem, o que decorre da mesma falta de conteúdo, embora prometa citá-los depois. Nesse ponto a resposta é honesta: diz que não encontrou manifesto, README nem repositório git e não inventa comandos, stack ou convenções, o que atende bem ao segundo passo. Respeita o terceiro passo, sem propor mudanças no repositório e sem afirmar que rodou build ou testes. Ela sugere causas prováveis e pede o caminho correto, o que é razoável, mas não entrega a orientação solicitada. Tampouco usa explicitamente as marcações `não encontrado` ou `inferido`."
+      }
+    ]
+  },
+  {
+    "id": "repo-orientation-neg",
+    "capability": "repo-orientation",
+    "kind": "negativo",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "nenhum proibido acionado (acionados: ['architecture-patterns'])"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta foca na decisão de arquitetura: recomenda monolito modular, compara as duas opções numa tabela, explica por que não há código e indica quando revisar. Não faz mapeamento de repositório, só cita brevemente que procurou documentos na pasta e não achou nenhum. Isso é um desvio pequeno e não chega a ser um mapeamento. Os próximos passos oferecidos (ADR, diagramas C4) são sugestões e não alteram o foco."
+      }
+    ]
+  },
+  {
+    "id": "repo-orientation-limite",
+    "capability": "repo-orientation",
+    "kind": "limite",
+    "success": true,
+    "metrics": [
+      {
+        "name": "Ativação",
+        "score": 1.0,
+        "success": true,
+        "reason": "acionou ['repo-orientation']"
+      },
+      {
+        "name": "Qualidade [GEval]",
+        "score": 0.9,
+        "success": true,
+        "reason": "A resposta afirma claramente que o diretório está vazio, sem arquivos ocultos e sem repositório git, e que por isso não consegue informar o comando de testes nem a versão do Python. Não inventa nenhum comando nem versão: tudo aparece como 'não encontrado'. A seção 'Lacunas' registra o que falta, e o 'Próximo passo' diz o que seria necessário para confirmar (o caminho do repositório certo, ou um clone, para ler pyproject.toml, .python-version e CI). Pequeno ponto negativo: sugere um caminho local específico (/home/adz/Documentos/hackathon/hackathon-synpower) que não foi verificado, mas ele é apresentado apenas como exemplo, não como fato."
+      }
+    ]
+  }
+]
