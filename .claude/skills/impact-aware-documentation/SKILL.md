@@ -1,181 +1,99 @@
 ---
 name: impact-aware-documentation
-description: Analisar PRs, MRs, commits ou diffs entre branches para identificar impactos na documentação e atualizar somente o conteúdo afetado. Usar quando mudanças de código puderem afetar README.md, docs/, APIs, exemplos, configurações, diagramas ou changelogs.
+description: Analisar PRs, MRs, commits ou diffs entre branches para identificar o impacto na documentação e atualizar somente o conteúdo afetado (README.md, docs/, APIs, exemplos, configurações, diagramas, changelogs). Use sempre que houver um PR/MR ou uma comparação entre branches, tags ou commits e o usuário perguntar "a doc precisa mudar?", "atualiza a documentação desse PR", "o que esse diff quebra na doc?", ou quando uma mudança de código mexer em API, configuração, instalação, dependências, comandos, arquitetura ou comportamento visível, mesmo que ele não fale em documentação. Não use para criar a documentação inicial de um projeto sem base comparável; nesse caso use `source-grounded-documentation`.
 ---
 
 # Impact-Aware Documentation
 
-## Objetivo
+Avalia o impacto documental de uma mudança de código antes de editar qualquer arquivo. Compara uma versão `base` com uma `head`, relaciona o que mudou no código à documentação existente e atualiza só o conteúdo afetado, com base em evidência verificável. Editar só o necessário preserva o trabalho manual e mantém a revisão humana rápida.
 
-Avaliar o impacto documental de uma mudança de código antes de editar qualquer arquivo.
+## Entradas
 
-Comparar uma versão base com uma versão atualizada, relacionar as alterações de código à documentação existente e atualizar somente o conteúdo afetado, com base em evidências verificáveis.
+Obtenha: repositório e raiz Git, `base` e `head` (branch, tag ou commit), identificador e descrição do PR/MR, caminhos autorizados para escrita, políticas de aprovação, publicação e arquivos gerados, e as verificações obrigatórias do projeto.
 
-## Quando usar
-
-Use esta Skill quando houver:
-
-- Um pull request (PR) ou merge request (MR).
-- Uma comparação entre branches, tags ou commits.
-- Alterações em APIs, configurações, instalação, dependências, comandos, arquitetura, fluxos ou comportamentos visíveis aos usuários.
-- Necessidade de verificar se a documentação está pronta para acompanhar uma mudança.
-
-Não use esta Skill para criar a documentação inicial de um projeto sem uma base comparável. Nesse caso, utilize `source-grounded-documentation`.
-
-## Entradas necessárias
-
-Obtenha:
-
-- Repositório e raiz Git.
-- `base` e `head`, identificados por branch, tag ou commit.
-- Identificador e descrição do PR/MR, quando disponíveis.
-- Caminhos autorizados para escrita.
-- Políticas de aprovação, publicação e geração de arquivos.
-- Verificações obrigatórias do projeto.
-
-Se `base` ou `head` forem ambíguos, não presuma que correspondem a `main`, `master` ou à branch atual. Registre a ambiguidade e solicite confirmação quando ela puder alterar o resultado da análise.
+Se `base` ou `head` forem ambíguos, não presuma `main`, `master` nem a branch atual. Registre a ambiguidade e peça confirmação quando ela puder mudar o resultado.
 
 ## Workflow
 
 ### 1. Preparar a comparação
 
-1. Identifique as instruções aplicáveis e a estrutura documental do repositório.
-2. Verifique o estado da árvore de trabalho e identifique alterações preexistentes.
-3. Obtenha as estatísticas, a lista de arquivos alterados, o diff completo e o histórico relevante.
-4. Confirme que a comparação utiliza o merge-base correto ou a referência aprovada pelo PR/MR.
-5. Inventarie `README.md`, `docs/`, exemplos, schemas, OpenAPI, frontmatter, diagramas, changelogs e arquivos gerados.
+- Leia as instruções aplicáveis e identifique a estrutura documental.
+- Verifique a árvore de trabalho e identifique alterações preexistentes. Não as sobrescreva nem as misture ao diff analisado.
+- Obtenha estatísticas, arquivos alterados, diff completo e histórico relevante, confirmando que a comparação usa o merge-base correto ou a referência do PR/MR.
+- Inventarie `README.md`, `docs/`, exemplos, schemas, OpenAPI, frontmatter, diagramas, changelogs e arquivos gerados.
 
-Não sobrescreva alterações locais preexistentes nem as misture silenciosamente ao diff analisado.
+### 2. Mapear o impacto
 
-### 2. Mapear o impacto documental
+Para cada arquivo de código alterado, procure relação com símbolos, endpoints e comandos citados na documentação, configurações e variáveis de ambiente, manifests, lockfiles, Docker, `Makefile` e scripts, testes e exemplos de comportamento público, e páginas, links, âncoras, diagramas, índices e changelogs.
 
-Para cada arquivo de código alterado, investigue possíveis relações com:
-
-- Símbolos, classes, funções, endpoints e comandos mencionados na documentação.
-- Configurações e variáveis de ambiente.
-- Manifests, lockfiles, Docker, Compose, `Makefile` e scripts.
-- Testes e exemplos que descrevam comportamentos públicos.
-- Páginas, links, âncoras, diagramas, índices e changelogs.
-
-Registre os resultados em um mapa de impacto:
+Registre num mapa de impacto:
 
 ```text
 code_path | change | candidate_docs | reason | impact | confidence | action
 ```
 
-Não classifique um documento como afetado apenas por compartilhar palavras-chave com o código alterado. Identifique uma relação concreta entre a mudança e o conteúdo documental.
+Um documento só é afetado se houver relação concreta com a mudança; compartilhar palavra-chave não basta.
 
-### 3. Classificar as mudanças
+### 3. Classificar
 
-Classifique cada impacto identificado em uma das seguintes categorias:
+- `mechanical`: renomeação, caminho, assinatura ou exemplo diretamente rastreável.
+- `contractual`: API, schema, configuração, compatibilidade ou comportamento público.
+- `semantic`: arquitetura, fluxo, segurança, trade-off ou regra de negócio.
+- `unknown`: evidência insuficiente ou fontes em conflito.
+- `none-known`: nenhuma relação documental comprovada.
 
-- **Mecânico (`mechanical`):** renomeações, caminhos, assinaturas ou exemplos diretamente rastreáveis.
-- **Contratual (`contractual`):** alterações em APIs, schemas, configurações, compatibilidade ou comportamentos públicos.
-- **Semântico (`semantic`):** alterações de arquitetura, fluxos, segurança, trade-offs ou regras de negócio.
-- **Desconhecido (`unknown`):** evidências insuficientes ou conflitos entre fontes.
-- **Sem impacto conhecido (`none-known`):** nenhuma relação documental comprovada.
-
-Mudanças contratuais e semânticas exigem revisão humana. Mudanças classificadas como desconhecidas não devem ser atualizadas automaticamente.
+`contractual` e `semantic` exigem revisão humana. `unknown` não é atualizado automaticamente.
 
 ### 4. Planejar antes de editar
 
-Antes de modificar arquivos, produza um plano que identifique:
+Produza um plano com: documentos afetados e alterações necessárias, afirmações a reavaliar, documentos analisados que não mudam (com a evidência), fontes de cada afirmação, exemplos, diagramas e changelogs a atualizar, e verificações necessárias.
 
-- Documentos afetados e alterações necessárias.
-- Afirmações que precisam ser reavaliadas.
-- Documentos analisados que não precisam de alterações e as evidências que justificam essa decisão.
-- Estrutura prevista das alterações.
-- Fontes que sustentam cada afirmação.
-- Exemplos, diagramas e changelogs que precisam ser atualizados.
-- Verificações e revisões necessárias.
+Exija validação humana se a mudança afetar objetivo geral, escopo ou terminologia de negócio. Não edite enquanto houver ambiguidade relevante.
 
-Se a mudança afetar o objetivo geral, o escopo ou a terminologia de negócio, exija validação humana.
+### 5. Atualizar incrementalmente
 
-Não inicie a edição enquanto houver ambiguidades relevantes que possam comprometer a correção das alterações.
+- Altere só o necessário e preserve conteúdo manual e seções não afetadas.
+- Mantenha `README.md` e `docs/` como estrutura oficial.
+- Atualize requisitos, instalação, variáveis, execução e testes quando o diff os afetar; o mesmo vale para referências de API, schemas e exemplos quando contratos ou respostas mudarem.
+- Use operações idempotentes e delimitadas em blocos gerados.
+- Se a evidência de um conteúdo sumiu, marque-o como desatualizado e peça decisão; só remova com política explícita.
+- Não altere código, dependências, infraestrutura ou workflows para a documentação parecer correta ou passar nas verificações.
 
-### 5. Atualizar a documentação incrementalmente
+### 6. Validar
 
-Altere somente o conteúdo necessário para refletir a nova versão do projeto.
+Execute o que couber ao impacto: links, âncoras, frontmatter e navegação; exemplos e snippets afetados; comandos de instalação, execução e testes modificados; lint, type-check, build e testes relevantes; OpenAPI e schemas; diagramas e renderização.
 
-- Preserve conteúdo manual e seções não afetadas.
-- Mantenha `README.md` e `docs/` como estrutura documental oficial.
-- Atualize requisitos, instalação, variáveis de ambiente, execução e testes quando o diff afetar esses aspectos.
-- Atualize referências de API, schemas e exemplos quando contratos ou respostas forem alterados.
-- Utilize operações idempotentes e delimitadas para atualizar blocos gerados.
-- Não remova documentação apenas porque sua evidência desapareceu. Identifique o conteúdo como desatualizado e solicite uma decisão, salvo quando houver uma política explícita de remoção.
+Confirme que as afirmações afetadas refletem a nova versão, que nada relevante ficou desatualizado, que as mudanças documentais se ligam ao diff e que nada preexistente foi removido ou sobrescrito. Registre cada verificação como `pass`, `fail` ou `skipped`, com o motivo quando não executada.
 
-Não altere código, dependências, infraestrutura ou workflows para fazer a documentação parecer correta ou passar nas verificações.
+### 7. Reportar
 
-### 6. Validar as alterações
+Entregue um relatório para revisão humana rápida: resumo do impacto, código analisado, documentos alterados e documentos avaliados sem mudança (com evidência), verificações e resultados, conteúdo desatualizado ou sem comprovação, riscos, pendências e se há revisão humana necessária.
 
-Execute as verificações pertinentes ao impacto identificado:
-
-- Links, âncoras, frontmatter e navegação.
-- Exemplos e snippets afetados.
-- Comandos de instalação, execução e testes modificados.
-- Lint, type-check, build e testes relevantes.
-- Validação de OpenAPI e schemas.
-- Diagramas e renderização.
-- Verificações específicas da documentação.
-
-Confirme que:
-
-- As afirmações afetadas refletem a nova versão do código.
-- Nenhum conteúdo relevante ficou desatualizado.
-- As alterações documentais estão relacionadas ao diff analisado.
-- Nenhum conteúdo preexistente foi removido ou sobrescrito indevidamente.
-
-Registre cada verificação como `pass`, `fail` ou `skipped`. Informe o motivo das verificações não executadas.
-
-### 7. Reportar os resultados
-
-Produza um relatório que permita uma revisão humana rápida.
-
-Inclua:
-
-- Resumo do impacto documental.
-- Arquivos de código analisados e suas mudanças relevantes.
-- Documentos alterados.
-- Documentos avaliados, mas mantidos sem alterações.
-- Evidências que sustentam as decisões.
-- Verificações executadas e seus resultados.
-- Conteúdo desatualizado ou sem comprovação.
-- Riscos, pendências e próximos passos.
-- Necessidade de revisão humana.
-
-Não execute commits, pushes, merges, publicações ou auto-merge por padrão.
+Não faça commit, push, merge, publicação nem auto-merge por padrão.
 
 ## Critérios de bloqueio
 
-Bloqueie a conclusão ou solicite revisão humana quando:
+Bloqueie ou peça revisão humana quando:
 
-- `base` ou `head` forem ambíguos.
-- O diff contiver mudanças relevantes de segurança, privacidade, contratos ou compatibilidade.
-- Não houver evidências suficientes para determinar se um documento foi afetado.
-- A atualização exigir interpretar intenções de produto ou regras de negócio.
-- Comandos ou conteúdo documental não puderem ser validados.
-- O PR/MR misturar alterações locais não relacionadas.
-- A remoção de uma página ou afirmação exigir uma decisão editorial.
+- `base` ou `head` forem ambíguos;
+- o diff tiver mudança relevante de segurança, privacidade, contrato ou compatibilidade;
+- faltar evidência para saber se um documento foi afetado;
+- a atualização exigir interpretar intenção de produto ou regra de negócio;
+- comandos ou conteúdo documental não puderem ser validados;
+- o PR/MR misturar alterações locais não relacionadas;
+- remover página ou afirmação exigir decisão editorial.
 
-Quando possível, apresente os resultados parciais, identifique os bloqueios e indique as ações necessárias para prosseguir.
-
-Não invente informações nem declare a análise concluída para contornar um bloqueio.
+Quando possível, apresente o resultado parcial, os bloqueios e as ações para prosseguir. Não invente informação nem declare a análise concluída para contornar um bloqueio.
 
 ## Formato de saída
 
-Retorne os resultados em JSON, preferencialmente seguindo esta estrutura:
+Retorne JSON com esta estrutura (ou os mesmos campos em Markdown, se o ambiente não permitir JSON), adaptando os valores ao resultado real:
 
 ```json
 {
   "status": "changed|unchanged|blocked",
   "skill": "impact-aware-documentation",
-  "scope": {
-    "repository": "...",
-    "base": "...",
-    "head": "...",
-    "pr_or_mr": "...",
-    "paths": []
-  },
+  "scope": {"repository": "...", "base": "...", "head": "...", "pr_or_mr": "...", "paths": []},
   "changed_code": [],
   "impact_map": [
     {
@@ -190,13 +108,7 @@ Retorne os resultados em JSON, preferencialmente seguindo esta estrutura:
   "changed_docs": [],
   "reviewed_without_change": [],
   "stale_or_unproven": [],
-  "checks": [
-    {
-      "command": "...",
-      "result": "pass|fail|skipped",
-      "reason": "..."
-    }
-  ],
+  "checks": [{"command": "...", "result": "pass|fail|skipped", "reason": "..."}],
   "human_validation": [],
   "review_required": true,
   "risks": [],
@@ -204,8 +116,4 @@ Retorne os resultados em JSON, preferencialmente seguindo esta estrutura:
 }
 ```
 
-Adapte os valores ao resultado real da análise. Não invente arquivos alterados, evidências ou verificações.
-
-Se o ambiente não permitir JSON, utilize os mesmos campos em Markdown.
-
-Nunca classifique uma página como `no-change` sem registrar as evidências que justificam a decisão. Nunca marque uma verificação como `pass` sem executá-la ou sem uma fonte autoritativa explícita que comprove o resultado.
+Não invente arquivo alterado, evidência ou verificação. Não classifique uma página como `no-change` sem registrar a evidência, nem uma verificação como `pass` sem executá-la ou sem fonte autoritativa explícita.
