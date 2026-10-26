@@ -1,0 +1,12 @@
+[project]
+name = "hackathon-synpower"
+version = "0.0.0"
+description = "Hook de observabilidade com Opik."
+requires-python = ">=3.11"
+dependencies = [
+    "opentelemetry-exporter-otlp-proto-http>=1.45.1",
+    "opentelemetry-sdk>=1.45.1",
+]
+
+[tool.uv]
+package = false
