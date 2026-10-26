@@ -1,0 +1,130 @@
+# Release workflow: runs when a tag v* is pushed.
+# Tags pushed by another workflow with GITHUB_TOKEN will NOT start this workflow (see custom-jobs.md, create-tag).
+# Tests ran on the branch before tagging, so they are not repeated here (GitLab re-ran them in the tag pipeline).
+
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------- docker (release)
+  docker-build-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: <image-name>
+            dockerfile: docker/<image-name>.Dockerfile
+            context: .
+            target: ""
+            private_index: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute image reference
+        id: ref
+        run: |
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.name }}" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          target: ${{ matrix.target }}
+          push: true
+          # The git tag is used as-is (tags are expected as vX.Y.Z). Confirm; see job-recipes.md.
+          tags: ${{ steps.ref.outputs.image }}:${{ github.ref_name }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          secrets: |
+            ${{ matrix.private_index && format('gitlab_token={0}', secrets.INTERNAL_PYPI_PASSWORD) || '' }}
+
+  # ---------------------------------------------------------------------- changelog
+  generate-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      # cliff.toml in the repository defines groups and headings.
+      - run: uvx git-cliff --latest --strip header -o RELEASE_NOTES.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: RELEASE_NOTES.md
+          retention-days: 7
+
+  create-release:
+    needs: [generate-changelog, docker-build-release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file RELEASE_NOTES.md
+
+  # ------------------------------------------------------------ SDK (optional job)
+  # Keep only if the project exposes a versioned OpenAPI contract for SDK consumers.
+  publish-python-sdk:
+    needs: docker-build-release
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ./src/
+      UV_PUBLISH_USERNAME: ${{ secrets.INTERNAL_PYPI_USERNAME }}
+      UV_PUBLISH_PASSWORD: ${{ secrets.INTERNAL_PYPI_PASSWORD }}
+      PUBLISH_URL: ${{ vars.INTERNAL_PYPI_PUBLISH_URL }}
+      CHECK_URL: ${{ vars.INTERNAL_PYPI_SIMPLE_URL }}
+      # Add UV_INDEX_<NAME>_USERNAME / _PASSWORD here if the project installs from a private uv index.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --all-groups
+      - name: Compute SDK version
+        run: echo "SDK_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      - name: Validate OpenAPI spec
+        run: uv run python -m cli.main sdk validate -i docs/api/openapi.yaml
+      - name: Generate Python SDK
+        run: uv run python -m cli.main sdk generate-python --version "$SDK_VERSION"
+      - name: Build SDK
+        run: uv build --project .generated/sdk/python --clear
+      - name: Smoke test
+        run: >
+          uv run --no-project --with .generated/sdk/python/dist/*.whl
+          python -m cli.commands.sdk smoke-python --expected-version "$SDK_VERSION"
+      - name: Publish to the internal registry
+        run: >
+          uv publish .generated/sdk/python/dist/*
+          --publish-url "$PUBLISH_URL"
+          --check-url "$CHECK_URL"
+          --no-attestations
+          --trusted-publishing never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-sdk-dist
+          path: .generated/sdk/python/dist/
+          retention-days: 30
