@@ -51,13 +51,21 @@ Para cada variável de ambiente relevante, documente nome, finalidade, obrigator
 
 ### 6. Escrever a documentação complementar
 
-Priorize o que ajuda a compreender, desenvolver, testar e operar: arquitetura (componentes e fluxos observados), ambiente de desenvolvimento, comandos de teste, configuração e, só com evidência suficiente, operação e troubleshooting. Referencie arquivos, módulos, comandos e outras páginas. Aponte decisões que dependem de conhecimento humano e o que não foi confirmado.
+Priorize o que ajuda a compreender, desenvolver, testar e operar: arquitetura (componentes e fluxos observados), ambiente de desenvolvimento, comandos de teste, configuração e, só com evidência suficiente, operação e troubleshooting. Aponte decisões que dependem de conhecimento humano e o que não foi confirmado.
+
+As páginas de `docs/` são texto para ser lido, não inventário. Antes de escrever qualquer uma, leia `references/estilo-docs.md`: ele define o tom (prosa explicativa, como um capítulo de livro técnico), o uso contido de tabelas e a regra de diagramas Mermaid. Em resumo:
+
+- **Prosa primeiro.** Cada seção abre com parágrafos que explicam o que é, por que existe e como funciona, na ordem em que um leitor novo precisa entender. Tabela e lista entram só para apoiar o texto, nunca para substituí-lo.
+- **Poucas tabelas.** No máximo uma ou duas por página, e só para dado realmente tabular (variáveis, comandos, portas). Nunca use tabela para descrever componentes, camadas ou fluxos.
+- **Arquivos citados no meio da frase**, com moderação (`o roteamento fica em `src/routes.ts``), em vez de uma coluna ou lista de caminhos. Cite só o que ajuda o leitor a achar o código.
+- **Mermaid para sequências e estruturas.** Todo fluxo com mais de dois participantes (requisição, autenticação, job, pipeline) ganha um `sequenceDiagram`, e a visão geral de componentes ganha um `flowchart`, sempre acompanhado de texto que o explica. Desenhe só o que foi observado no código.
+- **Rigor intacto.** Escrever em prosa não autoriza suposição: afirmação sem fonte vira lacuna dita em linguagem natural ("não encontrei no código como X é feito") ou fica em `A validar`, e o registro de evidências continua valendo.
 
 ### 7. Validar e revisar
 
 Execute o que couber no stack: lint de Markdown/MDX, links e âncoras, comandos de instalação e inicialização, testes, lint, type-check e build, preview do site de docs e validação de exemplos, diagramas e frontmatter.
 
-Revise o diff procurando: alteração fora do escopo autorizado, segredo ou dado privado, comando inventado ou incorreto, afirmação sem evidência, conteúdo ambíguo ou desatualizado, TODO desnecessário e perda de conteúdo existente.
+Revise o diff procurando: alteração fora do escopo autorizado, segredo ou dado privado, comando inventado ou incorreto, afirmação sem evidência, conteúdo ambíguo ou desatualizado, TODO desnecessário e perda de conteúdo existente. Passe também a checagem final de `references/estilo-docs.md` nas páginas de `docs/` (prosa antes de tabela, diagramas Mermaid onde há sequência).
 
 Registre cada verificação como `pass`, `fail` ou `skipped`, com o motivo quando não executada.
 
