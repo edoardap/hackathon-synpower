@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "skills": {
+    "opik": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik/SKILL.md",
+      "computedHash": "8e3f3f7d41c333ccda0d4d393f1445c8870aa58b41897f23e24d80f517e3b648"
+    },
+    "opik-compare": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-compare/SKILL.md",
+      "computedHash": "504c21ef74073c8187dfb2d58d1d0c830ca7598018386c9b1062ead89021f0fc"
+    },
+    "opik-diagnose": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-diagnose/SKILL.md",
+      "computedHash": "f4f3e3e93a8de4655552320db9d415187d1b35237088547a7293074b1f894739"
+    },
+    "opik-evaluate": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-evaluate/SKILL.md",
+      "computedHash": "36997fa8b6979aea758671dbe826777bfda3653049c0304ca77af09c99d6ac1c"
+    },
+    "opik-explain": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-explain/SKILL.md",
+      "computedHash": "a5cafe7cb2b558ab048af12d28511bf5ddcc45b822e013f531699acb2a9cc048"
+    },
+    "opik-instrument": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-instrument/SKILL.md",
+      "computedHash": "f9c693f3f09f3ac46de3420f594bc05ecfe18f0f18d34e1cf7bd5d20a409fb05"
+    },
+    "opik-online-eval": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-online-eval/SKILL.md",
+      "computedHash": "708360cd51cf7036f6fa82d074f4964ef17e4eebc458e5ca47d0473b7055a7cb"
+    },
+    "opik-optimize": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-optimize/SKILL.md",
+      "computedHash": "9a18f90bae0b9b225888bc57fceb6c047e525c93979aaf81d5a98ee217ba50c6"
+    },
+    "opik-test": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-test/SKILL.md",
+      "computedHash": "b4486b301b43077b5375d3af0e934685b68620bf76cd4c0b7b8aa3e7bd4bdd15"
+    },
+    "opik-verify": {
+      "source": "comet-ml/opik-skills",
+      "sourceType": "github",
+      "skillPath": "skills/opik-verify/SKILL.md",
+      "computedHash": "6f2d5c7b2d978772d9b6fcbc1c6b11676b94cf7ef30852731565c4f4c40e7d77"
+    }
+  }
+}

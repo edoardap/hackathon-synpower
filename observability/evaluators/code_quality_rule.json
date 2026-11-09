@@ -1,0 +1,39 @@
+{
+  "type": "llm_as_judge",
+  "action": "evaluator",
+  "name": "code_quality",
+  "enabled": true,
+  "project_ids": [],
+  "sampling_rate": 1,
+  "filters": [
+    {
+      "field": "tags",
+      "operator": "contains",
+      "value": "code_written"
+    }
+  ],
+  "code": {
+    "model": {
+      "name": "claude-haiku-5-5",
+      "temperature": 0
+    },
+    "messages": [
+      {
+        "role": "USER",
+        "content": "Você avalia o código que um agente escreveu para atender a um pedido.\n\nPedido do usuário:\n{{pedido}}\n\nCódigo escrito no turno:\n{{codigo}}\n\nCritérios:\n\n1. O código atende ao pedido: faz o que foi pedido, sem deixar parte de fora e sem fazer o que não foi pedido.\n2. O código evita abstração desnecessária: sem camada, opção ou generalização que o pedido não exige, e com o que a\n   biblioteca padrão e o próprio código já oferecem.\n\nNota de 0 a 1:\n\n- 1,0: atende ao pedido por completo e é o mínimo necessário.\n- 0,5: atende em parte, ou atende com excesso claro de abstração.\n- 0,0: não atende ao pedido.\n\nSe o código termina com um marcador de truncamento, julgue só o que aparece e não puna o que falta por causa do corte.\n\nDê a nota e uma justificativa de uma ou duas frases que cite o trecho que a motivou."
+      }
+    ],
+    "variables": {
+      "pedido": "input.value",
+      "codigo": "metadata.artifact.code"
+    },
+    "schema": [
+      {
+        "name": "code_quality",
+        "type": "DOUBLE",
+        "description": "Nota de 0 a 1: o código atende ao pedido e evita abstração desnecessária."
+      }
+    ],
+    "max_cost_usd": 5.0
+  }
+}

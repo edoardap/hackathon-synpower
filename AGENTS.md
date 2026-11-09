@@ -59,6 +59,10 @@ O `graphify` é uma ferramenta de linha de comando (pacote `graphifyy`, instalad
 Se `graphify-out/graph.json` existir, comece perguntas sobre o código com `graphify query "<pergunta>"` (use `./.venv/bin/graphify` quando existir, senão o `graphify` do `PATH`). Se o executável não funcionar, leia os arquivos direto e reporte a limitação. Sem o grafo, a `repo-orientation` segue sozinha.
 O arquiteto só consulta o grafo (`query`, `path`, `explain`); rodar `graphify update` depois de alterar código é de quem alterou.
 
+## Observabilidade (Opik)
+
+O agente opera o Opik só pelo MCP, passa `project_name` = `hackathon-synpower` em todo list, read e write e cria outro projeto, mesmo de teste, só quando o usuário pedir.
+
 ## Evals
 
 Os evals usam só o `claude plugin eval`. Os casos ficam em `evals/plugin-eval/` (o formato é dele, não o nosso) e os resultados em `evals/plugin-eval/results/`.
