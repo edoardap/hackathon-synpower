@@ -1,7 +1,7 @@
 {
   "name": "hackathon-ai-swe",
   "displayName": "Hackathon AI Software Engineering",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Plugin com agentes e skills que cobrem o ciclo de engenharia de software, construído por frentes de trabalho no hackathon.",
   "author": {
     "name": "Hackathon AI Software Engineering"
@@ -31,7 +31,9 @@
     "./.claude/agents/software-engineer.md",
     "./.claude/agents/code-reviewer.md",
     "./.claude/agents/qa-engineer.md",
-    "./.claude/agents/security-reviewer.md"
+    "./.claude/agents/security-reviewer.md",
+    "./.claude/agents/devops-engineer.md",
+    "./.claude/agents/tech-writer.md"
   ],
   "experimental": {
     "evals": "evals/plugin-eval"

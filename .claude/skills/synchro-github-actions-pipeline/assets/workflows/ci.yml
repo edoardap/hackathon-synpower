@@ -1,0 +1,296 @@
+# Starting point for a Synchro / ia_produtos CI workflow (self-contained: no internal workflows or actions).
+# Replace every <PLACEHOLDER>, delete jobs that do not apply, and read SKILL.md ("Open questions") first.
+# Action versions are major tags for readability: verify the current major of each and pin per org policy.
+
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+# Only if pyproject.toml has an explicit [[tool.uv.index]] pointing at the internal registry.
+# Replace PROJETOS_IA with the uppercased index name.
+# env:
+#   UV_INDEX_PROJETOS_IA_USERNAME: ${{ secrets.INTERNAL_PYPI_USERNAME }}
+#   UV_INDEX_PROJETOS_IA_PASSWORD: ${{ secrets.INTERNAL_PYPI_PASSWORD }}
+
+jobs:
+  # ---------------------------------------------------------------- path filters
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      docker: ${{ steps.filter.outputs.docker }}
+      openapi: ${{ steps.filter.outputs.openapi }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docker:
+              - 'docker/**/*.Dockerfile'
+            # Paths below come from data-pipeline-orchestrator. Keep only paths that exist in this project:
+            # the generator command module, the source and schema folders, and the committed spec.
+            openapi:
+              - '.github/workflows/ci.yml'
+              - 'Makefile'
+              - 'src/cli/commands/openapi.py'
+              - 'src/api/**'
+              - 'src/shared/schemas/**'
+              - 'docs/api/openapi.yaml'
+              - 'pyproject.toml'
+              - 'uv.lock'
+            # Add one filter per drift check (see references/custom-jobs.md).
+
+  # ------------------------------------------------------- security (advisory only)
+  gitleaks:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # The official gitleaks-action needs a license on organization repos, so run the container directly.
+      # Pin an image version instead of latest.
+      - name: Scan history for secrets
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest \
+            detect --source /repo --config /repo/.gitleaks.toml --redact --verbose
+
+  checkov:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      # .checkov-iac.yml must list the framework github_actions (not gitlab_ci / gitlab_configuration).
+      - uses: bridgecrewio/checkov-action@v12
+        with:
+          config_file: .checkov-iac.yml
+
+  sbom:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Generate CycloneDX SBOM
+        run: npx --yes @cyclonedx/cdxgen -r -o bom.json src
+      - name: Upload SBOM to Dependency-Track
+        env:
+          DTRACK_URL: ${{ vars.DTRACK_URL }}
+          DTRACK_API_KEY: ${{ secrets.DTRACK_API_KEY }}
+          PROJECT_NAME: <PROJECT_NAME>
+          PROJECT_VERSION: ${{ github.head_ref || github.ref_name }}
+        run: |
+          curl --fail-with-body -sS -X POST "$DTRACK_URL/api/v1/bom" \
+            -H "X-Api-Key: $DTRACK_API_KEY" \
+            -F autoCreate=true \
+            -F projectName="$PROJECT_NAME" \
+            -F projectVersion="$PROJECT_VERSION" \
+            -F parentName="IA_Produtos" \
+            -F bom=@bom.json
+
+  # ----------------------------------------------------------------- code checks
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --no-default-groups --group lint
+      - run: uv run ruff check src/ --output-format=github
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --no-default-groups --group lint
+      - run: uv run ruff format --diff
+
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --no-default-groups --group lint
+      - run: uv run mdformat --check . --exclude .venv --exclude .pytest_cache
+
+  import-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --all-groups
+      - run: PYTHONPATH=./src uv run lint-imports
+
+  uv-lock-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Check that uv.lock matches pyproject.toml
+        run: |
+          uv lock --check || {
+            echo ""
+            echo "❌ O lockfile está desatualizado ou inconsistente com o pyproject.toml."
+            echo "   Execute 'uv lock' localmente e faça commit do uv.lock atualizado."
+            exit 1
+          }
+
+  dockerfile-lint:
+    needs: changes
+    # Same trigger as GitLab: push to dev when a Dockerfile changed. Add pull_request here to lint earlier.
+    if: ${{ github.event_name == 'push' && github.ref_name == 'dev' && needs.changes.outputs.docker == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint every Dockerfile with hadolint
+        run: |
+          status=0
+          while IFS= read -r file; do
+            echo "::group::$file"
+            docker run --rm -i hadolint/hadolint < "$file" || status=1
+            echo "::endgroup::"
+          done < <(find docker -name '*.Dockerfile')
+          exit $status
+
+  # Add drift checks here (one job per committed generated artifact). See references/custom-jobs.md.
+  # openapi-check:
+  #   needs: changes
+  #   if: ${{ github.event_name == 'pull_request' && needs.changes.outputs.openapi == 'true' }}
+  #   ...
+
+  # Aggregate gate: the single status to require in branch protection. It also keeps skipped jobs
+  # (path filters) from skipping everything downstream.
+  code-checks:
+    if: ${{ !cancelled() }}
+    needs:
+      - lint
+      - format
+      - markdown-lint
+      - import-linter
+      - uv-lock-check
+      - dockerfile-lint
+      # - openapi-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any code check failed
+        env:
+          RESULTS: ${{ toJSON(needs.*.result) }}
+        run: |
+          echo "$RESULTS"
+          if echo "$RESULTS" | grep -Eq '"(failure|cancelled)"'; then
+            exit 1
+          fi
+
+  # ----------------------------------------------------------------------- tests
+  pytest:
+    needs: code-checks
+    runs-on: ubuntu-latest
+    # Add `services:` (database, MinIO, ...) here if integration tests need them.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --locked --all-groups
+      # pyproject.toml addopts already produce coverage.xml and enforce --cov-fail-under.
+      - run: uv run pytest
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage
+          path: coverage.xml
+          retention-days: 7
+
+  sonarqube:
+    needs: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: coverage
+      # sonar-project.properties already sets qualitygate.wait and the coverage.xml path.
+      - uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+
+  # ----------------------------------------------------------------- docker (dev)
+  docker-build-dev:
+    needs: [pytest, sonarqube]
+    # Trigger is To define (default: push to dev).
+    if: ${{ github.event_name == 'push' && github.ref_name == 'dev' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: <image-name>
+            dockerfile: docker/<image-name>.Dockerfile
+            context: .
+            target: ""
+            private_index: false
+          # - name: <another-image>
+          #   dockerfile: docker/<another-image>.Dockerfile
+          #   context: .
+          #   target: <build-target>     # only for multi-stage Dockerfiles
+          #   private_index: true        # image installs private SDKs from the internal index
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute image reference
+        id: ref
+        run: |
+          echo "image=ghcr.io/${GITHUB_REPOSITORY,,}/${{ matrix.name }}" >> "$GITHUB_OUTPUT"
+          echo "tag=v$(date +%Y.%m.%d).${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          target: ${{ matrix.target }}
+          push: true
+          tags: |
+            ${{ steps.ref.outputs.image }}:${{ steps.ref.outputs.tag }}
+            ${{ steps.ref.outputs.image }}:latest
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+          # The secret id stays gitlab_token so existing Dockerfiles work unchanged; its value is now the
+          # internal registry credential. Rename id and Dockerfile together in a follow-up.
+          secrets: |
+            ${{ matrix.private_index && format('gitlab_token={0}', secrets.INTERNAL_PYPI_PASSWORD) || '' }}
